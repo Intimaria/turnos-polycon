@@ -5,48 +5,57 @@ module Polycon
     class Professional
       attr_accessor :name, :surname, :path
 
-      def initialize(name, surname)
+      def initialize(name: name, surname: surname)
         self.name = name
         self.surname = surname
-        self.path = (@name + "_" + @surname).upcase
+        self.path = (@name + "_" + @surname + '/').upcase
       end
 
+      def self.all()
+        
+      end 
+
       def self.create(name:, **)
-        Polycon::Storage.create_root unless Polycon::Storage.root_exist? 
+        Polycon::Store::ensure_root_exists
         firstname, surname = name.split(" ")
-        raise ProfessionalCreationError unless professional = new(name, surname)
-        Polycon::Storage.save(professional: professional.path)
+        professional = new(name: firstname, surname: surname)
+        raise InvalidProfessional unless professional.valid?
+        raise AlreadyExists if Polycon::Store::exist?(professional)
+        professional.save()
         professional
       end
 
-
       def delete(name: nil)
-        # etc
+        Polycon::Store::ensure_root_exists
+        Polycon::Store::delete(professional: self) unless self.has_appointments?
       end
-
-      def delete_all_appointments 
+      def has_appointments?
+        Polycon::Store::ensure_root_exists
+        Polycon::Store::zero?(self.path)
       end 
 
-      def list(*)
-        # etc
+      def rename(old_name:, new_name:)
+        Polycon::Store::ensure_root_exists
+        old_professional = new(old_name)
+        new_professional = new(new_name)
+        Polycon::Store.rename(old_name: old_name, new_name: new_name)
       end
 
-      def rename(old_name:, new_name:, **)
-        Polycon::Storage.rename(old_name: old_name.path, new_name: new_name.path, professional: "true")
-        # etc
-      end
+      def save()
+        Polycon::Store::save(professional: self, appointment: nil)
+      end 
 
       def to_s
         "name: " + (@name + " " + @surname).upcase + " => file path: " + Storage::ROOT_DIR+self.path
       end 
 
 
-      class ProfessionalCreationError < StandardError
+      class ProfessionalCreationError < Error
         def message 
           "Could not create professional."
         end 
       end 
-      class ProfessionalRenameError < StandardError
+      class ProfessionalRenameError < Error
         def message 
           "Could not rename professional."
         end 

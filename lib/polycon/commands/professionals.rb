@@ -7,8 +7,7 @@ module Polycon
         desc 'Create a professional'
 
         argument :name, required: true, desc: 'Full name of the professional'
-        #option :new, type: :boolean, default: true, desc: 'create new professional'
-         
+       
         example [
           '"Alma Estevez"      # Creates a new professional named "Alma Estevez"',
           '"Ernesto Fernandez" # Creates a new professional named "Ernesto Fernandez"'
@@ -16,19 +15,12 @@ module Polycon
 
         def call(name:, **options)
           # warn "TODO: Implementar creación de un o una profesional con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
-          options.each do |key, value|
-            puts "key: #{key} => #{value}"
-          end
           begin
-            new_prof = Polycon::Model::Professional.create(name)
-            puts "created professional #{new_prof.to_s}"
-          rescue ProfessionalCreationError => e 
-            warn e.message 
-          rescue DirectoryCreationError => e 
-            warn e.message 
-          rescue StandardError => e
+            Professional.create(name: name)
+          rescue Polycon::Model::Error => e
             warn "sorry, something went wrong #{e.message}"
           end
+
         end
       end
 
@@ -44,7 +36,11 @@ module Polycon
 
         def call(name: nil)
           warn "TODO: Implementar borrado de la o el profesional con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
-          # Polycon::Model::Professional.delete(name: nil)
+          begin
+            Polycon::Model::Professional.delete(name: name)
+          rescue Polycon::Model::Error => e
+            warn "sorry, something went wrong #{e.message}"
+          end
         end
       end
 
@@ -57,7 +53,11 @@ module Polycon
 
         def call(*)
           warn "TODO: Implementar listado de profesionales.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
-          # Polycon::Model::Professional.list(*)
+          begin
+            Polycon::Model::Professional.all()
+          rescue Polycon::Model::Error => e
+            warn "sorry, something went wrong #{e.message}"
+          end
         end
       end
 
@@ -76,19 +76,11 @@ module Polycon
           # old_firstname, old_surname = old_name.split(" ")
           # new_firstname, new_surname = new_name.split(" ")
           begin
-            old_professional = Polycon::Model::Professional.create(old_name)
-            new_professional = Polycon::Model::Professional.create(new_name)
+            old_professional.rename(old_name:old_name, new_name: new_name)
+            puts "professional #{old_name}"
+            puts "renamed to #{new_name}"
 
-            old_professional.rename(old_name: old_professional, new_name: new_professional)
-
-            puts "professional #{old_professional.to_s}"
-            puts "renamed to #{new_professional.to_s}"
-            
-          rescue ProfessionalRenamingError => e 
-            warn e.message 
-          rescue DirectoryCreationError => e 
-            warn e.message 
-          rescue StandardError => e
+          rescue Polycon::Model::Error => e
             warn "sorry, something went wrong #{e.message}"
           end
         end

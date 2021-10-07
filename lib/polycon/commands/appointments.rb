@@ -23,11 +23,8 @@ module Polycon
           warn "TODO: Implementar creación de un turno con fecha '#{date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           options = {}
           begin
-            appointment =  Polycon::Model::Appointment.new(date, professional, name, surname, phone, notes)
-            Polycon::Files.ensure_root_exists
-            appointment.create
-            Polycon::Files::save(appointment:appointment, profesional:appointment.profesional)
-          rescue StandardError => e
+            Polycon::Model::Appointment.create(date, professional, name, surname, phone, notes)
+          rescue Polycon::Model::Error => e
             warn "sorry, something went wrong #{e.message}"
             exit 1
           end
