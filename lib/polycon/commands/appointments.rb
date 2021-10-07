@@ -16,9 +16,13 @@ module Polycon
         ]
 
         def call(date:, professional:, name:, surname:, phone:, notes: nil)
-          warn "TODO: Implementar creación de un turno con fecha '#{date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          #warn "TODO: Implementar creación de un turno con fecha '#{date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          appointment =  Polycon::Model::Appointment.new(date, professional, name, surname, phone, notes)
+          Polycon::Files.ensure_root_exists
+          Polycon::Files::save(appointment:appointment, profesional:appointment.profesional)
         end
       end
+
 
       class Show < Dry::CLI::Command
         desc 'Show details for an appointment'

@@ -2,12 +2,15 @@ GEM
   remote: https://rubygems.org/
   specs:
     dry-cli (0.7.0)
+    dry-files (0.1.0)
 
 PLATFORMS
   x86_64-darwin-20
+  x86_64-linux
 
 DEPENDENCIES
   dry-cli (~> 0.7)
+  dry-files (~> 0.1.0)
 
 RUBY VERSION
    ruby 2.7.4p191
