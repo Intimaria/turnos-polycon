@@ -55,22 +55,22 @@ module Polycon
     end 
 
   end
-  class DirectoryNotFoundError < NotFound
+  class DirectoryNotFoundError < IOError
     def message
       "The directory was not found."
     end
   end
-  class NoPolyconRootError < NotFound
+  class NoPolyconRootError < IOError
     def message
       "The .polycon root folder was not found in the user's home directory."
     end
   end
-  class DirectoryCreationError < StandardError
+  class DirectoryCreationError < IOError
     def message 
       "Could not create directory"
     end 
   end 
-  class DirectoryRenameError < StandardError
+  class DirectoryRenameError < IOError
     def message 
       "Could not rename directory"
     end 

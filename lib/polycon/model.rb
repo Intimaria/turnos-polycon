@@ -4,5 +4,6 @@ module Polycon
   module Model
     autoload :Professional, 'polycon/model/professional'
     autoload :Appointment, 'polycon/model/appointment'
-  end
+    autoload :Error, 'polycon/model/error'
+    end
 end
