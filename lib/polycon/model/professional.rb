@@ -12,7 +12,8 @@ module Polycon
       end
 
       def self.all()
-        
+        Polycon::Store::ensure_root_exists
+        Polycon::Store::entries(Polycon::Store::PATH)
       end 
 
       def self.create(name:, **)

@@ -30,8 +30,8 @@ module Polycon
       def self.create(date:, professional:, **options)
       begin 
         Polycon::Store::ensure_root_exists
-        raise AppointmentCreationError unless appointment = new(date: date, professional: professional, options)
-        raise InvalidAppointment unless appointment.valid? (date: self.date, professional: self.professional)
+        raise InvalidAppointment unless appointment.valid? (date: date, professional: professional)
+        raise AppointmentCreationError unless appointment = new(date: date, professional: professional, **options)
         #puts "creating Appointment for #{professional} on #{date}"
         appointment.save()
         appointment
@@ -39,23 +39,29 @@ module Polycon
 
 
       def show(date:, professional:)
+        Polycon::Store::ensure_root_exists
       end
 
       def cancel(date:, professional:)
+        Polycon::Store::ensure_root_exists
       end
 
       def cancel_all(professional:)
+        Polycon::Store::ensure_root_exists
 
       end
 
       def reschedule(old_date:, new_date:, professional:)
+        Polycon::Store::ensure_root_exists
       end
 
       def edit(date:, professional:, **options)
-      end
+        Polycon::Store::ensure_root_exists
 
       def to_s 
-        date.to_s + ' => ' + surname +', '+ name + ' with ' professional.to_s 
+        'Date: '+self.date.to_s+ ': appt for client => '+/
+         self.surname +', '+ self.name+' with: '+/
+         self.professional.surname+self.professional.name
       end 
 
       def self.valid? (date:, professional:)
