@@ -65,7 +65,10 @@ module Polycon
           begin
             # Polycon::Model::Appointment.cancel(date:, professional:)
           rescue Polycon::Model::Error => e
-            warn "sorry, something went wrong: #{e.message}"
+            warn "sorry, something went wrong with Appointment: #{e.message}"
+            exit 1
+          rescue Dry::Files::Error => e 
+            warn "sorry, something went wrong with Store: #{e.message}"
             exit 1
           end
         end
@@ -85,7 +88,10 @@ module Polycon
           begin
             # Polycon::Model::Appointment.cancel_all(professional:)
           rescue Polycon::Model::Error => e
-            warn "sorry, something went wrong: #{e.message}"
+            warn "sorry, something went wrong with Appointment: #{e.message}"
+            exit 1
+          rescue Dry::Files::Error => e 
+            warn "sorry, something went wrong with Store: #{e.message}"
             exit 1
           end
         end
@@ -107,7 +113,10 @@ module Polycon
           begin
             puts Polycon::Model::Appointment.all(profesional:professional, date: date)
           rescue Polycon::Model::Error => e
-            warn "sorry, something went wrong: #{e.message}"
+            warn "sorry, something went wrong with Appointment: #{e.message}"
+            exit 1
+          rescue Dry::Files::Error => e 
+            warn "sorry, something went wrong with Store: #{e.message}"
             exit 1
           end
         end
@@ -129,7 +138,10 @@ module Polycon
           begin
             # Polycon::Model::Appointment.reschedule(old_date:, new_date:, professional:)
           rescue Polycon::Model::Error => e
-            warn "sorry, something went wrong: #{e.message}"
+            warn "sorry, something went wrong with Appointment: #{e.message}"
+            exit 1
+          rescue Dry::Files::Error => e 
+            warn "sorry, something went wrong with Store: #{e.message}"
             exit 1
           end
         end
@@ -157,7 +169,10 @@ module Polycon
           begin
             # Polycon::Model::Appointment.edit(date:, professional:, **options)
           rescue Polycon::Model::Error => e
-            warn "sorry, something went wrong: #{e.message}"
+            warn "sorry, something went wrong with Appointment: #{e.message}"
+            exit 1
+          rescue Dry::Files::Error => e 
+            warn "sorry, something went wrong with Store: #{e.message}"
             exit 1
           end
         end

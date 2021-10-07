@@ -4,7 +4,7 @@ module Polycon
   module Model
 
     class Appointment
-      FORMAT = '%Y-%m-%d-%H-%M'
+      FORMAT = '%Y-%m-%d_%H-%M'
       attr_accessor :date, :professional, :name,  :surname, :phone, :notes
 
       def self.all(professional:, date: nil)

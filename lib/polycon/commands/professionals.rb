@@ -18,9 +18,12 @@ module Polycon
           begin
             Professional.create(name: name)
           rescue Polycon::Model::Error => e
-            warn "sorry, something went wrong #{e.message}"
+            warn "sorry, something went wrong with Professional: #{e.message}"
+            exit 1
+          rescue Dry::Files::Error => e 
+            warn "sorry, something went wrong with Store: #{e.message}"
+            exit 1
           end
-
         end
       end
 
@@ -39,7 +42,11 @@ module Polycon
           begin
             Polycon::Model::Professional.delete(name: name)
           rescue Polycon::Model::Error => e
-            warn "sorry, something went wrong #{e.message}"
+            warn "sorry, something went wrong with Professional: #{e.message}"
+            exit 1
+          rescue Dry::Files::Error => e 
+            warn "sorry, something went wrong with Store: #{e.message}"
+            exit 1
           end
         end
       end
@@ -56,7 +63,11 @@ module Polycon
           begin
             puts Polycon::Model::Professional.all()
           rescue Polycon::Model::Error => e
-            warn "sorry, something went wrong #{e.message}"
+            warn "sorry, something went wrong with Professional: #{e.message}"
+            exit 1
+          rescue Dry::Files::Error => e 
+            warn "sorry, something went wrong with Store: #{e.message}"
+            exit 1
           end
         end
       end
@@ -77,9 +88,12 @@ module Polycon
             Polycon::Model::Professional.rename(old_name:old_name, new_name: new_name)
             puts "professional #{old_name}"
             puts "renamed to #{new_name}"
-
           rescue Polycon::Model::Error => e
-            warn "sorry, something went wrong #{e.message}"
+            warn "sorry, something went wrong with Professional: #{e.message}"
+            exit 1
+          rescue Dry::Files::Error => e 
+            warn "sorry, something went wrong with Store: #{e.message}"
+            exit 1
           end
         end
       end
