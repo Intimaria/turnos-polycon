@@ -64,9 +64,9 @@ module Polycon
         if directory then
           Dir.entries(PATH+directory)
         else 
-          raise Dry::Files::Error, "Nil value argument." 
+          raise IOError, "Nil value argument." 
         end 
-      rescue Dry::Files::Error => exception
+      rescue IOError => exception
         raise exception
       end
     end 

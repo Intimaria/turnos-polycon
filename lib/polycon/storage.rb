@@ -6,36 +6,11 @@ module Polycon
     
     attr_accessor :dir
 
-    def initialize
-    end
-
-    def self.root_exist?
-      Dir.exist?(ROOT_DIR)
-    end
-
-    def self.create_root
-      begin
-        FileUtils.mkdir_p(ROOT_DIR)
-      rescue NotFound => e
-        warn e.message
-      end
-    end 
 
     def self.get_full_path(file)
       #File.absolute_path
     end 
 
-    def self.save( **args)
-      save_dir(args[:professional].chomp)
-    end
-
-    def self.rename(old_name:, new_name:, **args)
-     if args[:professional] then
-      rename_dir(old_name: old_name, new_name:new_name) 
-     else 
-      rename_file(old_name: old_name, new_name:new_nam) 
-     end 
-    end 
 
     private
 
