@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Polycon
   module Commands
     module Professionals
@@ -5,14 +7,28 @@ module Polycon
         desc 'Create a professional'
 
         argument :name, required: true, desc: 'Full name of the professional'
-
+        #option :new, type: :boolean, default: true, desc: 'create new professional'
+         
         example [
           '"Alma Estevez"      # Creates a new professional named "Alma Estevez"',
           '"Ernesto Fernandez" # Creates a new professional named "Ernesto Fernandez"'
         ]
 
-        def call(name:, **)
-          warn "TODO: Implementar creación de un o una profesional con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+        def call(name:, **options)
+          # warn "TODO: Implementar creación de un o una profesional con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          options.each do |key, value|
+            puts "key: #{key} => #{value}"
+          end
+          begin
+            new_prof = Polycon::Model::Professional.create(name)
+            puts "created professional #{new_prof.to_s}"
+          rescue ProfessionalCreationError => e 
+            warn e.message 
+          rescue DirectoryCreationError => e 
+            warn e.message 
+          rescue StandardError => e
+            warn "sorry, something went wrong #{e.message}"
+          end
         end
       end
 
@@ -28,6 +44,7 @@ module Polycon
 
         def call(name: nil)
           warn "TODO: Implementar borrado de la o el profesional con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          # Polycon::Model::Professional.delete(name: nil)
         end
       end
 
@@ -40,6 +57,7 @@ module Polycon
 
         def call(*)
           warn "TODO: Implementar listado de profesionales.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          # Polycon::Model::Professional.list(*)
         end
       end
 
@@ -50,11 +68,29 @@ module Polycon
         argument :new_name, required: true, desc: 'New name for the professional'
 
         example [
-          '"Alna Esevez" "Alma Estevez" # Renames the professional "Alna Esevez" to "Alma Estevez"',
+          '"Alna Esevez" "Alma Estevez" # Renames the professional "Alna Esevez" to "Alma Estevez"'
         ]
 
         def call(old_name:, new_name:, **)
-          warn "TODO: Implementar renombrado de profesionales con nombre '#{old_name}' para que pase a llamarse '#{new_name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          #warn "TODO: Implementar renombrado de profesionales con nombre '#{old_name}' para que pase a llamarse '#{new_name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          # old_firstname, old_surname = old_name.split(" ")
+          # new_firstname, new_surname = new_name.split(" ")
+          begin
+            old_professional = Polycon::Model::Professional.create(old_name)
+            new_professional = Polycon::Model::Professional.create(new_name)
+
+            old_professional.rename(old_name: old_professional, new_name: new_professional)
+
+            puts "professional #{old_professional.to_s}"
+            puts "renamed to #{new_professional.to_s}"
+            
+          rescue ProfessionalRenamingError => e 
+            warn e.message 
+          rescue DirectoryCreationError => e 
+            warn e.message 
+          rescue StandardError => e
+            warn "sorry, something went wrong #{e.message}"
+          end
         end
       end
     end

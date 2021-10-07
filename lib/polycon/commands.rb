@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Polycon
   module Commands
     autoload :Professionals, 'polycon/commands/professionals'
@@ -26,4 +28,3 @@ module Polycon
     register 'version', Version, aliases: ['v', '-v', '--version']
   end
 end
-
