@@ -7,9 +7,16 @@ module Polycon
       FORMAT = '%Y-%m-%d-%H-%M'
       attr_accessor :date, :professional, :name,  :surname, :phone, :notes
 
-      def self.all()
+      def self.all(professional:, date: nil)
         Polycon::Store::ensure_root_exists
-        Polycon::Store::
+        prof = Polycon::Model::Professional.create(name: professional)
+        raise InvalidProfessional unless prof.valid?
+        appointments  = Polycon::Store::entries(prof.path)
+        if date then 
+          raise InvalidDate unless valid_date?(date)
+          appointments.filter! {|appt| appt.date == date }
+        end 
+        appointments
       end 
 
       def initialize(date:, professional:, **kwargs)
@@ -30,8 +37,6 @@ module Polycon
         appointment
       end
 
-      def self.all()
-      end 
 
       def show(date:, professional:)
       end
@@ -41,9 +46,6 @@ module Polycon
 
       def cancel_all(professional:)
 
-      end
-
-      def list(profesional:)
       end
 
       def reschedule(old_date:, new_date:, professional:)
@@ -56,19 +58,23 @@ module Polycon
         date.to_s + ' => ' + surname +', '+ name + ' with ' professional.to_s 
       end 
 
-      def valid? (date:, professional:)
+      def self.valid? (date:, professional:)
           valid_professional? && valid_date?
       end 
 
       protected 
-      def valid_professional?()
+      def save()
+        Polycon::Store::save(self)
+      end 
+
+      def self.valid_professional?(professional)
           professional && professional.valid?
           true 
         rescue 
           false 
       end   
 
-      def self.valid_date?()
+      def self.valid_date?(date)
           Date.strptime(date.to_s, FORMAT)  
           true 
         rescue 

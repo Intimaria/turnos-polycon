@@ -29,9 +29,10 @@ module Polycon
         Polycon::Store::ensure_root_exists
         Polycon::Store::delete(professional: self) unless self.has_appointments?
       end
+
       def has_appointments?
         Polycon::Store::ensure_root_exists
-        Polycon::Store::zero?(self.path)
+        Polycon::Store::entries(self.path).empty?
       end 
 
       def rename(old_name:, new_name:)
@@ -42,7 +43,7 @@ module Polycon
       end
 
       def save()
-        Polycon::Store::save(professional: self, appointment: nil)
+        Polycon::Store::save(self)
       end 
 
       def to_s

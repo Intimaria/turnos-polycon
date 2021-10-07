@@ -55,7 +55,19 @@ module Polycon
           raise Dry::Files::Error, "Nil value argument." 
         end 
       rescue Dry::Files::Error => exception
-        warn exception.message
+        raise exception
+      end
+    end 
+
+    def self.entries(directory:)
+      begin
+        if directory then
+          Dir.entries(PATH+directory)
+        else 
+          raise Dry::Files::Error, "Nil value argument." 
+        end 
+      rescue Dry::Files::Error => exception
+        raise exception
       end
     end 
 
