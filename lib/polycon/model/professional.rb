@@ -35,33 +35,24 @@ module Polycon
         Polycon::Store::entries(self.path).empty?
       end 
 
-      def rename(old_name:, new_name:)
+      def self.rename(old_name:, new_name:)
         Polycon::Store::ensure_root_exists
-        old_professional = new(old_name)
-        new_professional = new(new_name)
+        old_professional = create(name:old_name)
+        new_professional = create(name:new_name)
         Polycon::Store.rename(old_name: old_name, new_name: new_name)
       end
-
-      def save()
-        Polycon::Store::save(self)
-      end 
 
       def to_s
         "name: " + (@name + " " + @surname).upcase + " => file path: " + Storage::ROOT_DIR+self.path
       end 
-
-
-      class ProfessionalCreationError < Error
-        def message 
-          "Could not create professional."
-        end 
-      end 
-      class ProfessionalRenameError < Error
-        def message 
-          "Could not rename professional."
-        end 
+      protected
+      def save()
+        Polycon::Store::save(self)
       end 
 
     end
+
+
+
   end
 end

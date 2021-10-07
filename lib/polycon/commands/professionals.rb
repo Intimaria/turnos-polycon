@@ -54,7 +54,7 @@ module Polycon
         def call(*)
           warn "TODO: Implementar listado de profesionales.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-            Polycon::Model::Professional.all()
+            puts Polycon::Model::Professional.all()
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong #{e.message}"
           end
@@ -73,10 +73,8 @@ module Polycon
 
         def call(old_name:, new_name:, **)
           #warn "TODO: Implementar renombrado de profesionales con nombre '#{old_name}' para que pase a llamarse '#{new_name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
-          # old_firstname, old_surname = old_name.split(" ")
-          # new_firstname, new_surname = new_name.split(" ")
           begin
-            old_professional.rename(old_name:old_name, new_name: new_name)
+            Polycon::Model::Professional.rename(old_name:old_name, new_name: new_name)
             puts "professional #{old_name}"
             puts "renamed to #{new_name}"
 

@@ -19,13 +19,10 @@ module Polycon
 
         def call(date:, professional:, name:, surname:, phone:, notes: nil)
           #warn "TODO: Implementar creación de un turno con fecha '#{date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
-          # def call(date:, professional:, name:, surname:, phone:, notes: nil)
-          warn "TODO: Implementar creación de un turno con fecha '#{date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
-          options = {}
           begin
-            Polycon::Model::Appointment.create(date, professional, name, surname, phone, notes)
-          rescue Polycon::Model::Error => e
-            warn "sorry, something went wrong #{e.message}"
+            Polycon::Model::Appointment.create(date:date, professional:professional, name:name, surname:surname, phone:phone, notes:notes)
+          rescue Polycon::Error => e
+            warn "sorry, something went wrong: #{e.message}"
             exit 1
           end
         end
@@ -46,9 +43,9 @@ module Polycon
           warn "TODO: Implementar detalles de un turno con fecha '#{date}' y profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
             # Polycon::Model::Appointment.show(date:, professional:)
-          rescue StandardError => e
-            warn e.message
-          else
+          rescue Polycon::Model::Error => e
+            warn "sorry, something went wrong: #{e.message}"
+            exit 1
           end
         end
       end
@@ -67,8 +64,9 @@ module Polycon
           warn "TODO: Implementar borrado de un turno con fecha '#{date}' y profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
             # Polycon::Model::Appointment.cancel(date:, professional:)
-          rescue StandardError => e
-            warn e.message
+          rescue Polycon::Model::Error => e
+            warn "sorry, something went wrong: #{e.message}"
+            exit 1
           end
         end
       end
@@ -86,8 +84,9 @@ module Polycon
           warn "TODO: Implementar borrado de todos los turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
             # Polycon::Model::Appointment.cancel_all(professional:)
-          rescue StandardError => e
-            warn e.message
+          rescue Polycon::Model::Error => e
+            warn "sorry, something went wrong: #{e.message}"
+            exit 1
           end
         end
       end
@@ -106,9 +105,10 @@ module Polycon
         def call(professional:)
           warn "TODO: Implementar listado de turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-            # Polycon::Model::Appointment.list(profesional:)
-          rescue StandardError => e
-            warn e.message
+            puts Polycon::Model::Appointment.all(profesional:professional, date: date)
+          rescue Polycon::Model::Error => e
+            warn "sorry, something went wrong: #{e.message}"
+            exit 1
           end
         end
       end
@@ -128,8 +128,9 @@ module Polycon
           warn "TODO: Implementar cambio de fecha de turno con fecha '#{old_date}' para que pase a ser '#{new_date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
             # Polycon::Model::Appointment.reschedule(old_date:, new_date:, professional:)
-          rescue StandardError => e
-            warn e.message
+          rescue Polycon::Model::Error => e
+            warn "sorry, something went wrong: #{e.message}"
+            exit 1
           end
         end
       end
@@ -152,7 +153,13 @@ module Polycon
 
         def call(date:, professional:, **options)
           warn "TODO: Implementar modificación de un turno de la o el profesional '#{professional}' con fecha '#{date}', para cambiarle la siguiente información: #{options}.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
-          # Polycon::Model::Appointment.edit(date:, professional:, **options)
+
+          begin
+            # Polycon::Model::Appointment.edit(date:, professional:, **options)
+          rescue Polycon::Model::Error => e
+            warn "sorry, something went wrong: #{e.message}"
+            exit 1
+          end
         end
       end
     end
