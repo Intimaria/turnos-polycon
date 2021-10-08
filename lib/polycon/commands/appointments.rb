@@ -23,6 +23,9 @@ module Polycon
             appointment = Polycon::Model::Appointment.create(date:date, professional:professional, name:name, surname:surname, phone:phone, notes:notes)
             appointment.save
             puts "Sucess: created appointment for #{appointment.date}"
+          rescue Polycon::Model::AlreadyExists
+            exit 0 
+            warn "That appointment already exists:- please either cancel or edit."
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1
@@ -49,6 +52,9 @@ module Polycon
           begin
             appointment = Polycon::Model::Appointment.from_file(date: date, professional: professional)
             puts "Appointment is - #{appointment}"
+          rescue Polycon::Model::NotFound
+            exit 0 
+            warn "That appointment doesn't exist yet."
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong: #{e.message}"
             exit 1
@@ -74,6 +80,9 @@ module Polycon
           begin
             Polycon::Model::Appointment.cancel(date:date , professional: professional)
             puts "Cancellation successful"
+          rescue Polycon::Model::NotFound
+            warn "That appointment doesn't exist yet."
+            exit 0
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1
@@ -94,9 +103,12 @@ module Polycon
         ]
 
         def call(professional:)
-          warn "TODO: Implementar borrado de todos los turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          warn# "TODO: Implementar borrado de todos los turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-            # Polycon::Model::Appointment.cancel_all(professional:)
+            Polycon::Model::Appointment.cancel_all(professional: professional)
+            puts "Success: you have cancelled all appointments for #{professional}"
+          rescue Polycon::Model::NotFound
+            warn "There are no appointments for that professional"
           rescue Polycon::Model::Error  => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1
@@ -121,8 +133,14 @@ module Polycon
         def call(professional:, **options)
           #warn "TODO: Implementar listado de turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-            puts "Appointments for #{professional}: "
-            Polycon::Model::Appointment.all(professional:professional, **options)
+
+            appts = Polycon::Model::Appointment.all(professional:professional, **options)
+            if appts.empty? then 
+              puts "No appointments for #{professional}"
+            else 
+              (puts "Appointments for #{professional}: #{options[:date] if options[:date]}")
+              puts appts
+            end 
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1

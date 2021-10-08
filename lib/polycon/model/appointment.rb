@@ -32,7 +32,9 @@ module Polycon
             time = date_arr[1].gsub(/[-]/,":")
             date_arr[0]+"_"+time
           end 
-          appointments.each {|appt| puts Appointment.from_file(date: appt, professional: professional)}
+          all = []
+          appointments.each {|appt| all << Appointment.from_file(date: appt, professional: professional)}
+          all
         end 
 
         def create(date:, professional:, **options)
@@ -57,13 +59,20 @@ module Polycon
         def cancel(date:, professional:)
           Polycon::Store::ensure_root_exists
           path = make_path(professional:professional, date: date)
-          raise NotFound unless  Polycon::Store::exist?(path)
+          raise NotFound unless Polycon::Store::exist?(path)
           Polycon::Store::delete(path)
           raise AppointmentDeletionError if Polycon::Store::exist?(path)
         end
 
         def cancel_all(professional:)
           Polycon::Store::ensure_root_exists
+          prof = Professional.create(name: professional)
+          raise NotFound if Polycon::Store::empty?(directory:prof.path)
+          all_appointments = all(professional: professional)
+          all_appointments.each do |appt| 
+            date = appt.date.to_s.split(' ')
+            cancel(professional: professional, date: date[0]+' '+date[1] )
+          end 
         end
 
         def make_path(professional:, date:)

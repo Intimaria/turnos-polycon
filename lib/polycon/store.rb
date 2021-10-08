@@ -110,7 +110,6 @@ module Polycon
 
     def self.write(obj)
       begin
-        puts "writing #{PATH+obj.path}"
         @files.write(PATH+obj.path, obj.surname)
         @files.append(PATH+obj.path, obj.name) 
         @files.append(PATH+obj.path, obj.phone)
