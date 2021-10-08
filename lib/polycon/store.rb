@@ -66,7 +66,8 @@ module Polycon
     def self.entries(directory:)
       begin
         if directory then
-          Dir.entries(directory).reject {|f| f.start_with?(".")}
+          files = Dir.entries(directory).reject {|f| f.start_with?(".") }
+          files.map! { |f| File.basename(f, File.extname(f)) }
         else 
           raise Dry::Files::Error, "Nil value argument." 
         end 

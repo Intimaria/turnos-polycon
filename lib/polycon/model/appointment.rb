@@ -14,11 +14,16 @@ module Polycon
         def all(professional:, date: nil)
           Polycon::Store::ensure_root_exists
           prof = Professional.create(name: professional)
-          raise InvalidProfessional unless prof.valid?
-          appointments  = Polycon::Store::entries(prof.path)
+          raise InvalidProfessional unless Professional.valid?(prof)
+          appointments  = Polycon::Store::entries(directory:Polycon::Store::PATH+prof.path)
           if date then 
-            raise InvalidDate unless valid_date?(date)
-            appointments.filter! {|appt| appt.date == date }
+            begin 
+              in_date = Date.parse(date)
+            rescue 
+              raise ParameterError, "the date parameter is invalid"
+            end 
+            appointments.map!    { |appt| appt = Date.parse(appt) }
+            appointments.filter! { |appt| appt == in_date} 
           end 
           appointments
         end 
@@ -41,6 +46,10 @@ module Polycon
           surname, name, phone, notes = Polycon::Store::read(path)
           appointment = create(date:date, professional:professional, name:name, surname:surname, phone:phone, notes:notes)
           appointment
+        end
+
+        def cancel_all(professional:)
+          Polycon::Store::ensure_root_exists
         end
 
         def make_path(professional:, date:)
@@ -79,6 +88,7 @@ module Polycon
           end 
         end 
 
+
   
       end 
 
@@ -92,10 +102,6 @@ module Polycon
       end
 
       def cancel(date:, professional:)
-        Polycon::Store::ensure_root_exists
-      end
-
-      def cancel_all(professional:)
         Polycon::Store::ensure_root_exists
       end
 
