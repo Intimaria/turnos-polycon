@@ -12,7 +12,7 @@ Se toma la decision de usar opciones en la linea de comandos.
 
 [Dry::CLI::Command documentation](https://dry-rb.org/gems/dry-cli/0.6/)
 
-## Errores para Modelo
+## Definicion de Excepciones 
 
 Se toma la decision de definir errores especifico al Modelo en el archivo error.rb del modulo Polycon::Model. 
 
@@ -29,11 +29,11 @@ __Gemas (not included )__
 
 Correr ``` bundle install ``` al clonar el repo. 
 
-Se incluye el modulo Polycon::Store que tiene metodos relacionados con el manejo de archivos, inclusive metodos helper para saber si existen archivos, y tambien es el modulo que sabe crear directorios, para el archivo root, y para guardar profesionales y leer archivos de turnos en Polycon. 
+Se incluye en la libreria el modulo Polycon::Store que tiene metodos relacionados con el manejo de archivos. Incluye metodos helper para saber si existen archivos. Tambien sabe crear directorios, para el archivo root y para guardar profesionales. Y sabe leer archivos de turnos de  Polycon. 
 
-Se considero usar un modulo Utils pero se considera que Store maneja las responsabilidades de archivos para Polycon, la utilidad de un modulo Utils que haga queries por existencia de archivos o directorios se hace redundante. 
+Se considero usar un modulo llamado Utils o Helpers pero no por ahora ya que Store maneja las responsabilidades de archivos para Polycon. La utilidad de un modulo Utils que haga queries por existencia de archivos o directorios se hace redundante para esta funcionalidad. No se descarta crear este modulo como forma de modularizar las validaciones y otras utilities si fuera necesario. 
 
-Al principio se usaban las clases Dir y FileUtils, pero luego investgando las gemas de 'dry-rb', se decidio utilizar la gema Dry::Files ya que se adecua de una manera mas limpia a casi todas las utilidades necesarias para el sistema de archivos, y algunas funcoinalidades para modificacion de archivos utiles. Sin embargo, se usa FileUtils y Dir adonde se considera necesario. 
+Al principio se usaban las clases principalmente Dir y FileUtils adentro de Store, pero luego investgando las gemas de 'dry-rb', se instala la gema Dry::Files ya que se adecua de una manera mas limpia a las utilidades necesarias para el sistema de archivos, y tiene una agilidad deseable para modificar archivos. Sin embargo, se usa FileUtils y Dir adonde se considera necesario y adonde Dry::Files no alcanza. 
 
 Esta gema define sus propios errores Dry::File::Error y Dry::File::IOError.
 
