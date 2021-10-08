@@ -1,3 +1,8 @@
+Planificacion 
+
+Se desarrolla un esqumea para los datos. Se considera los objetos y las clases. Se hace un dibujo o esquema para poder visualizar las relaciones. Las relaciones son acotadas. Se considera la necesidad de una entidad que trabaje con archivos para separar el comportamiento de la logica del modelo. Funciona como un adaptador.
+
+Se toma nota de los requisitos a partir del enunciado y se escriben breves historias de usuario para dividir la funcionalidad en partes y priorizar. Se consideran algunas tareas adicionales de modelado y de diseño. Se planifica con Jira. 
 
 Options
 
