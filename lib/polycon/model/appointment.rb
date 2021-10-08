@@ -6,7 +6,8 @@ module Polycon
   module Model
 
     class Appointment
-      attr_accessor :date, :professional, :name,  :surname, :phone, :notes, :path
+      attr_accessor :date, :professional, :name,  :surname, :phone, :notes
+      attr_reader :path
       FORMAT = '%Y-%m-%d_%H-%M' 
       class << self 
 
