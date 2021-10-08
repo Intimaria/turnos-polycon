@@ -51,10 +51,10 @@ module Polycon
 
     end 
 
-    def self.delete(obj)
+    def self.delete(path)
       begin
-        if obj then
-          @files.directory?(PATH+obj.path) ? @files.delete_directory(PATH+obj.path) : @files.delete(PATH+obj.path)
+        if path then
+          @files.directory?(PATH+path) ? @files.delete_directory(PATH+path) : @files.delete(PATH+path)
         else 
           raise Dry::Files::Error, "Nil value argument." 
         end 

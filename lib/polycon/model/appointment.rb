@@ -39,7 +39,6 @@ module Polycon
           begin 
             Polycon::Store::ensure_root_exists
             path = make_path(professional: professional, date: date)
-            #raise AlreadyExists if Polycon::Store::exist?(path)
             raise AppointmentCreationError unless appointment = new(date: date, professional: professional, **options)
             valid?(date: appointment.date, professional: appointment.professional)
             appointment
@@ -53,6 +52,14 @@ module Polycon
           surname, name, phone, notes = Polycon::Store::read(path)
           appointment = create(date:date, professional:professional, name:name, surname:surname, phone:phone, notes:notes)
           appointment
+        end
+
+        def cancel(date:, professional:)
+          Polycon::Store::ensure_root_exists
+          path = make_path(professional:professional, date: date)
+          raise NotFound unless  Polycon::Store::exist?(path)
+          Polycon::Store::delete(path)
+          raise AppointmentDeletionError if Polycon::Store::exist?(path)
         end
 
         def cancel_all(professional:)
@@ -108,9 +115,7 @@ module Polycon
         end
       end
 
-      def cancel(date:, professional:)
-        Polycon::Store::ensure_root_exists
-      end
+
 
       def reschedule(old_date:, new_date:, professional:)
         Polycon::Store::ensure_root_exists
@@ -125,6 +130,8 @@ module Polycon
       end 
 
       def save()
+        Polycon::Store::ensure_root_exists
+        raise AlreadyExists if Polycon::Store::exist?(self.path)
         Polycon::Store::save(appointment: self)
       end 
     
@@ -133,6 +140,10 @@ module Polycon
           def message; end; end 
 
         class AppointmentCreationError < AppointmentError
+          def message; end
+        end 
+
+        class AppointmentDeletionError < AppointmentError
           def message; end
         end 
 
