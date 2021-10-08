@@ -13,7 +13,7 @@ module Polycon
 
         def all(professional:, date: nil)
           Polycon::Store::ensure_root_exists
-          prof = Polycon::Model::Professional.create(name: professional)
+          prof = Professional.create(name: professional)
           raise InvalidProfessional unless prof.valid?
           appointments  = Polycon::Store::entries(prof.path)
           if date then 
@@ -26,6 +26,8 @@ module Polycon
         def create(date:, professional:, **options)
           begin 
             Polycon::Store::ensure_root_exists
+            path = make_path(professional: professional, date: date)
+            raise AlreadyExists if Polycon::Store::exist?(path)
             raise AppointmentCreationError unless appointment = new(date: date, professional: professional, **options)
             valid?(date: appointment.date, professional: appointment.professional)
             appointment
@@ -61,7 +63,7 @@ module Polycon
 
         def valid_professional?(professional)
           begin 
-            (professional && Polycon::Model::Professional.valid?(professional))
+            (professional && Professional.valid?(professional))
           rescue 
             false 
           end 
@@ -81,9 +83,9 @@ module Polycon
       end 
 
       def initialize(date:, professional:, **options)
+        @path = Appointment.make_path(professional: professional, date: date)
         self.date = Time.parse(date)
-        self.professional = Polycon::Model::Professional.create(name: professional)
-        @path = self.professional.path+self.date.strftime(FORMAT)+'.paf'
+        self.professional = Professional.create(name: professional)
         options.each do |key, value|
           self.send(:"#{key}=", value)
         end
