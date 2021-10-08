@@ -20,9 +20,11 @@ module Polycon
         def call(date:, professional:, name:, surname:, phone:, notes: nil)
           #warn "TODO: Implementar creación de un turno con fecha '#{date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-            puts Polycon::Model::Appointment.create(date:date, professional:professional, name:name, surname:surname, phone:phone, notes:notes)
-          rescue Polycon::Error => e
-            warn "sorry, something went wrong: #{e.message}"
+            appointment = Polycon::Model::Appointment.create(date:date, professional:professional, name:name, surname:surname, phone:phone, notes:notes)
+            appointment.save
+            puts "Sucess: created appointment for #{appointment.date}"
+          rescue Polycon::Model::Error => e
+            warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1
           rescue Dry::Files::Error => e 
             warn "sorry, something went wrong with Store: #{e.message}"
@@ -94,7 +96,7 @@ module Polycon
           warn "TODO: Implementar borrado de todos los turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
             # Polycon::Model::Appointment.cancel_all(professional:)
-          rescue Polycon::Model::Error => e
+          rescue Polycon::Model::Error  => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1
           rescue Dry::Files::Error => e 

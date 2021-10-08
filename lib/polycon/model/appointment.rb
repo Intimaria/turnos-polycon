@@ -1,13 +1,15 @@
 # frozen_string_literal: true
+require 'date'
+require 'time'
 
 module Polycon
   module Model
 
     class Appointment
-      attr_accessor :date, :professional, :name,  :surname, :phone, :notes
-      
+      attr_accessor :date, :professional, :name,  :surname, :phone, :notes, :path
+      FORMAT = '%Y-%m-%d_%H-%M' 
       class << self 
-        FORMAT = '%Y-%m-%d_%H-%M'
+
 
         def all(professional:, date: nil)
           Polycon::Store::ensure_root_exists
@@ -22,41 +24,53 @@ module Polycon
         end 
 
         def create(date:, professional:, **options)
-        begin 
-          Polycon::Store::ensure_root_exists
-          raise InvalidAppointment unless (appointment.valid? (date: date, professional: professional))
-          raise AppointmentCreationError unless (appointment = new(date: date, professional: professional, **options))
-          #puts "creating Appointment for #{professional} on #{date}"
-          appointment.save()
-          appointment
-        end
+          begin 
+            Polycon::Store::ensure_root_exists
+            raise AppointmentCreationError unless appointment = new(date: date, professional: professional, **options)
+            valid?(date: appointment.date, professional: appointment.professional)
+            appointment
+          end
+        end 
 
         protected 
 
         def valid? (date:, professional:)
-          valid_professional? && valid_date?
+          begin 
+            valid_professional?(professional) && valid_date?(date)
+          rescue 
+            false 
+          end 
         end 
 
         def valid_professional?(professional)
-            professional && professional.valid?
-            true 
+          puts "in validatn of professional"
+          begin 
+            (professional && Polycon::Model::Professional.valid?(professional))
           rescue 
             false 
+          end 
         end   
 
         def valid_date?(date)
-            Date.strptime(date.to_s, FORMAT)  
-            true 
-          rescue 
+          puts "in validation of time"
+          begin 
+            d = DateTime.new(date)
+            d.strptime(date.to_s, FORMAT)
+            true  
+          rescue
             false 
-        end
+          end 
+        end 
       end 
 
       def initialize(date:, professional:, **options)
-        self.date = Time.new(date)
+        self.date = Time.parse(date)
+        puts @date
         self.professional = Polycon::Model::Professional.create(name: professional)
+        puts @professional
+        @path = self.professional.path+self.date.strftime(FORMAT)+'.paf'
         options.each do |key, value|
-          self.send(:"#{key}", value)
+          self.send(:"#{key}=", value)
         end
       end
 
@@ -75,7 +89,6 @@ module Polycon
 
       def cancel_all(professional:)
         Polycon::Store::ensure_root_exists
-
       end
 
       def reschedule(old_date:, new_date:, professional:)
@@ -84,19 +97,45 @@ module Polycon
 
       def edit(date:, professional:, **options)
         Polycon::Store::ensure_root_exists
+      end 
 
       def to_s 
-        "Date: #{self.date.to_s} appt for client =>"/
-         "#{self.surname}, #{self.name} with: "/
-         "#{self.professional.surname}, #{self.professional.name}"/
-         "#{self.notes unless self.notes.nil?}"
+          "Date: #{self.date.to_s} appt for client =>/"
+          "#{self.surname}, #{self.name} with: /"
+          "#{self.professional.surname}, #{self.professional.name}/"
+          "#{self.notes unless self.notes.nil?}"
       end 
 
       def save()
         Polycon::Store::save(appointment: self)
       end 
+    
+      #Appointment Errors
+        class AppointmentError < Error 
+          def message; end; end 
 
+        class AppointmentCreationError < AppointmentError
+          def message; end
+        end 
 
-    end
+        class InvalidAppointment < AppointmentError 
+          def message
+            'the appointment is invalid'
+          end 
+        end
+
+        class InvalidAppointmentDate < InvalidAppointment 
+          def message
+            'the date is invalid'
+          end 
+        end
+
+        class InvalidAppointmentProfessional < InvalidAppointment 
+          def message
+            'the date is invalid'
+          end 
+        end
+        
+    end 
   end
 end

@@ -22,8 +22,10 @@ module Polycon
         if professional then
           write_dir(professional) 
         else 
-          write(Pobj)
+          write(appointment)
         end 
+      rescue FileCreationError
+        raise Dry::Files::Error, "couldn't write file"
       rescue NoMethodError
         raise Dry::Files::Error, "Nil value argument."
       rescue 
@@ -102,12 +104,13 @@ module Polycon
 
     def self.write(obj)
       begin
+        puts "writing #{PATH+obj.path}"
         @files.write(PATH+obj.path, obj.surname)
         @files.append(PATH+obj.path, obj.name) 
         @files.append(PATH+obj.path, obj.phone)
         @files.append(PATH+obj.path, obj.notes) if obj.notes
       rescue 
-        raise FileCreationError
+        return FileCreationError
       end
     end 
 

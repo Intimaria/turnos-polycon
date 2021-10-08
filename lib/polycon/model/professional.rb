@@ -38,7 +38,7 @@ module Polycon
 
 
       def valid?(professional)
-        professional && professional.name && professional.surname
+        professional && !professional.name.nil? && !professional.surname.nil?
       end  
 
     end 
@@ -74,12 +74,12 @@ module Polycon
     class ProfessionalError <Error 
       def message; end; end 
 
-    class ProfessionalCreationError < Error
+    class ProfessionalCreationError < ProfessionalError
       def message 
         "Could not create professional."
       end 
     end 
-    class ProfessionalRenameError < Error
+    class ProfessionalRenameError < ProfessionalError
       def message 
         "Could not rename professional."
       end 
