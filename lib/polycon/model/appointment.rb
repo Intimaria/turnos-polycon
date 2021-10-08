@@ -75,6 +75,16 @@ module Polycon
           end 
         end
 
+        def reschedule(old_date:, new_date:, professional:)
+          Polycon::Store::ensure_root_exists
+          old_path = make_path(professional:professional, date: old_date)
+          raise NotFound unless Polycon::Store::exist?(old_path)
+          new_path = make_path(professional:professional, date: new_date)
+          Polycon::Store::rename(old_name: old_path, new_name: new_path)
+        end
+
+        #utility
+
         def make_path(professional:, date:)
           name, surname = professional.split(" ")
           directory = (name + "_" + surname + '/').upcase
@@ -134,9 +144,7 @@ module Polycon
         :notes=>notes}
       end 
 
-      def reschedule(old_date:, new_date:, professional:)
-        Polycon::Store::ensure_root_exists
-      end
+
 
       def edit(date:, professional:, **options)
         Polycon::Store::ensure_root_exists

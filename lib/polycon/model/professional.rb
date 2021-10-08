@@ -27,7 +27,7 @@ module Polycon
         new_professional = create(name:new_name)
         raise InvalidProfessional unless valid?(old_professional)
         raise InvalidProfessional unless valid?(new_professional)
-        Polycon::Store.rename(old_name: old_professional, new_name: new_professional)
+        Polycon::Store.rename(old_name: old_professional.path, new_name: new_professional.path)
       end
 
       def delete(name:)
@@ -51,7 +51,7 @@ module Polycon
       end
 
       def to_h 
-        {}:name=>name, :surname=>surname}
+        {:name=>name, :surname=>surname}
       end 
 
       def has_appointments?

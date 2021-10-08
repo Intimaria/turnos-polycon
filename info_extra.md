@@ -37,12 +37,16 @@ Al principio se usaban las clases principalmente Dir y FileUtils adentro de Stor
 
 Esta gema define sus propios errores Dry::File::Error y Dry::File::IOError.
 
+__Refactoring a futuro__
+
+Se agregan metodos to_h a professional y appointment para tener mayor facilidad de refactorizar algunas funcionalidades en un futuro.  
 
 
 ### Preguntas 
 -> herencia de errores en la jerarquia de namespaces 
 -> separacion utils de storage para el futuro
 -> como usar options en dry::cli 
+-> como hacer monkey patching dentro de un programa asi? (agregar funcionalidad a Dry::Files)
 
 ### Errores / Bugs
 -> ~~Al renombrar la separacion de nombre y apellido no se hace correctamente~~
@@ -51,4 +55,6 @@ Esta gema define sus propios errores Dry::File::Error y Dry::File::IOError.
 -> Chequear que la hora esta en un rango (guardar rango en clase no hardcoradearlo) para evitar bug de que se crea bien aunque no se pasen bien los horarios y quede 00-00
 -> ~~Necesito preguntar en "create" si ya existe el profesional? solo estoy creando un objeto. Como mucho, en save() deberia haber ese chequeo~~
 -> Ordenar los appointment por fecha en el List sin fecha
+-> A futuro: Agarrar todos los appointment del sistema?
+
 

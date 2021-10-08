@@ -166,15 +166,19 @@ module Polycon
         ]
 
         def call(old_date:, new_date:, professional:)
-          warn "TODO: Implementar cambio de fecha de turno con fecha '#{old_date}' para que pase a ser '#{new_date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          #warn "TODO: Implementar cambio de fecha de turno con fecha '#{old_date}' para que pase a ser '#{new_date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-            # Polycon::Model::Appointment.reschedule(old_date:, new_date:, professional:)
+            Polycon::Model::Appointment.reschedule(old_date: old_date, new_date: new_date, professional: professional)
+            puts "Success: you have rescheduled appointment with #{professional}  for #{new_date}"
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1
           rescue Dry::Files::Error => e 
             warn "sorry, something went wrong with Store: #{e.message}"
             exit 2
+          rescue ArgumentError, NoMethodError => e 
+            warn "Please check the parameters you have entered, it's possible there is a problem."
+            exit 3
           end
         end
       end

@@ -44,8 +44,10 @@ module Polycon
 
     def self.rename(old_name:, new_name:)
       begin
-         FileUtils.mv(PATH+old_name.path, PATH+new_name.path)
-      rescue 
+         FileUtils.mv(PATH+old_name, PATH+new_name)
+      rescue ArgumentError
+        raise Dry::Files::Error, "it's possible there is a problem with the date."
+      rescue Dry::Files::Error
         raise Dry::Files::Error, "problem renaming"
       end
 
