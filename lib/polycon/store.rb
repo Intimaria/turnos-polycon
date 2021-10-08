@@ -1,6 +1,6 @@
 module Polycon
   module Store 
-    #TODO -> define custom errors 
+    #TODO -> define custom errors DONE-ISH
     #     -> return true or false instead of exception (some methods) & validate at Model level
     #     -> import into Models?
     
