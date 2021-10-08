@@ -16,13 +16,15 @@ module Polycon
         def call(name:, **options)
           # warn "TODO: Implementar creación de un o una profesional con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-            Professional.create(name: name)
+            professional = Polycon::Model::Professional.create(name: name)
+            professional.save()
+            puts "Success: created professional #{name}"
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Professional: #{e.message}"
             exit 1
           rescue Dry::Files::Error => e 
             warn "sorry, something went wrong with Store: #{e.message}"
-            exit 1
+            exit 2
           end
         end
       end
@@ -38,15 +40,16 @@ module Polycon
         ]
 
         def call(name: nil)
-          warn "TODO: Implementar borrado de la o el profesional con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          #warn "TODO: Implementar borrado de la o el profesional con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
             Polycon::Model::Professional.delete(name: name)
+            puts "Success: deleted professional #{name}"
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Professional: #{e.message}"
             exit 1
           rescue Dry::Files::Error => e 
             warn "sorry, something went wrong with Store: #{e.message}"
-            exit 1
+            exit 2
           end
         end
       end
@@ -59,7 +62,7 @@ module Polycon
         ]
 
         def call(*)
-          warn "TODO: Implementar listado de profesionales.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          #warn "TODO: Implementar listado de profesionales.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
             puts Polycon::Model::Professional.all()
           rescue Polycon::Model::Error => e
@@ -67,7 +70,7 @@ module Polycon
             exit 1
           rescue Dry::Files::Error => e 
             warn "sorry, something went wrong with Store: #{e.message}"
-            exit 1
+            exit 2
           end
         end
       end
@@ -86,14 +89,13 @@ module Polycon
           #warn "TODO: Implementar renombrado de profesionales con nombre '#{old_name}' para que pase a llamarse '#{new_name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
             Polycon::Model::Professional.rename(old_name:old_name, new_name: new_name)
-            puts "professional #{old_name}"
-            puts "renamed to #{new_name}"
+            puts "Success: professional #{old_name} renamed to #{new_name}"
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Professional: #{e.message}"
             exit 1
           rescue Dry::Files::Error => e 
             warn "sorry, something went wrong with Store: #{e.message}"
-            exit 1
+            exit 2
           end
         end
       end

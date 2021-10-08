@@ -13,24 +13,26 @@ module Polycon
       begin
         @files.mkdir(PATH) unless @files.directory?(PATH)
       rescue 
-        raise Dry::Files::Error
+        raise Dry::Files::Error, "problem with root directory"
       end
     end
 
-    def self.save(obj)
+    def self.save(professional:nil, appointment:nil)
       begin
-        if obj then
-          @files.directory?(PATH+obj.path) ? write_dir(PATH+obj.path) : write(obj)
+        if professional then
+          write_dir(professional) 
         else 
-          raise Dry::Files::Error, "Nil value argument." 
+          write(Pobj)
         end 
+      rescue NoMethodError
+        raise Dry::Files::Error, "Nil value argument."
       rescue 
-        raise Dry::Files::Error
+        raise Dry::Files::Error, "problem saving"
       end
     end
 
     def self.read(obj)
-      return nil if @files.directory?(PATH+obj.path)
+      return nil if @files.directory?(PATH+mock_obj.path)
       begin
         File.open(PATH+obj.path, 'r') do |f| 
           obj.surname   = f.gets.chomp
@@ -47,14 +49,9 @@ module Polycon
 
     def self.rename(old_name:, new_name:)
       begin
-        if old_name && new_name then
-          @files.directory?(PATH+old_name.path) ? @files.copy_dir(old_name,new_name) : @files.copy_file(old_name,new_name)
-          delete(old_name)
-        else 
-          raise Dry::Files::Error, "Nil value argument." 
-        end 
+         FileUtils.mv(PATH+old_name.path, PATH+new_name.path)
       rescue 
-        raise Dry::Files::Error
+        raise Dry::Files::Error, "problem renaming"
       end
 
     end 
@@ -62,51 +59,44 @@ module Polycon
     def self.delete(obj)
       begin
         if obj then
-          @files.directory?(PATH+obj.path) ? @files.rm_rf(PATH+obj.path) : @files.rm(PATH+obj.path)
+          @files.directory?(PATH+obj.path) ? @files.delete_directory(PATH+obj.path) : @files.delete(PATH+obj.path)
         else 
           raise Dry::Files::Error, "Nil value argument." 
         end 
       rescue 
-        raise Dry::Files::Error
+        raise Dry::Files::Error, "problem deleting"
       end
     end 
 
     def self.entries(directory:)
       begin
         if directory then
-          Dir.entries(PATH+directory)
+          Dir.entries(directory).reject {|f| f.start_with?(".")}
         else 
           raise Dry::Files::Error, "Nil value argument." 
         end 
       rescue  
-        raise Dry::Files::Error
+        raise Dry::Files::Error, "problem retrieving entries"
       end
     end 
 
-    protected
-
-    def copy_dir(old_name,new_name)
+    def self.empty?(directory:)
       begin
-        FileUtils.mv PATH+old_name.path, PATH+new_name.path
-      rescue  
-        raise Dry::Files::Error
-      end
-    end
-
-    def copy_file(old_name,new_name)
-      begin
-          @files.cp PATH+old_name.path, PATH+new_name.path
-      rescue  
-        raise Dry::Files::Error
-      end
+        if directory then
+          Dir.empty?(PATH+directory)
+        else 
+          raise Dry::Files::Error, "Nil value argument." 
+        end 
+      end 
     end 
+
 
     def self.write_dir(obj)
       begin 
         raise Dry::Files::Error if @files.directory?(PATH+obj.path)
         @files.mkdir(PATH+obj.path)
       rescue 
-         raise Dry::Files::Error
+        raise DirectoryCreationError
       end 
     end 
 
@@ -117,8 +107,34 @@ module Polycon
         @files.append(PATH+obj.path, obj.phone)
         @files.append(PATH+obj.path, obj.notes) if obj.notes
       rescue 
-        raise Dry::Files::Error 
+        raise FileCreationError
       end
+    end 
+
+    class DirectoryNotFoundError < Dry::Files::Error 
+      def message
+        "The directory was not found."
+      end
+    end
+    class NoPolyconRootError < Dry::Files::Error 
+      def message
+        "The .polycon root folder was not found in the user's home directory."
+      end
+    end
+    class DirectoryCreationError < Dry::Files::Error 
+      def message 
+        "Could not create directory"
+      end 
+    end 
+    class FileCreationError < Dry::Files::Error 
+      def message 
+        "Could not create file"
+      end 
+    end 
+    class DirectoryRenameError < IOError
+      def message 
+        "Could not rename directory"
+      end 
     end 
 
   end 

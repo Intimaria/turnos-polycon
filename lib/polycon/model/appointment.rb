@@ -4,42 +4,69 @@ module Polycon
   module Model
 
     class Appointment
-      FORMAT = '%Y-%m-%d_%H-%M'
       attr_accessor :date, :professional, :name,  :surname, :phone, :notes
+      
+      class << self 
+        FORMAT = '%Y-%m-%d_%H-%M'
 
-      def self.all(professional:, date: nil)
-        Polycon::Store::ensure_root_exists
-        prof = Polycon::Model::Professional.create(name: professional)
-        raise InvalidProfessional unless prof.valid?
-        appointments  = Polycon::Store::entries(prof.path)
-        if date then 
-          raise InvalidDate unless valid_date?(date)
-          appointments.filter! {|appt| appt.date == date }
+        def all(professional:, date: nil)
+          Polycon::Store::ensure_root_exists
+          prof = Polycon::Model::Professional.create(name: professional)
+          raise InvalidProfessional unless prof.valid?
+          appointments  = Polycon::Store::entries(prof.path)
+          if date then 
+            raise InvalidDate unless valid_date?(date)
+            appointments.filter! {|appt| appt.date == date }
+          end 
+          appointments
         end 
-        appointments
+
+        def create(date:, professional:, **options)
+        begin 
+          Polycon::Store::ensure_root_exists
+          raise InvalidAppointment unless (appointment.valid? (date: date, professional: professional))
+          raise AppointmentCreationError unless (appointment = new(date: date, professional: professional, **options))
+          #puts "creating Appointment for #{professional} on #{date}"
+          appointment.save()
+          appointment
+        end
+
+        protected 
+
+        def valid? (date:, professional:)
+          valid_professional? && valid_date?
+        end 
+
+        def valid_professional?(professional)
+            professional && professional.valid?
+            true 
+          rescue 
+            false 
+        end   
+
+        def valid_date?(date)
+            Date.strptime(date.to_s, FORMAT)  
+            true 
+          rescue 
+            false 
+        end
       end 
 
-      def initialize(date:, professional:, **kwargs)
+      def initialize(date:, professional:, **options)
         self.date = Time.new(date)
         self.professional = Polycon::Model::Professional.create(name: professional)
-        kwargs.each do |key, value|
+        options.each do |key, value|
           self.send(:"#{key}", value)
         end
       end
 
-      def self.create(date:, professional:, **options)
-      begin 
+
+      def from_file(date:, professional:)
         Polycon::Store::ensure_root_exists
-        raise InvalidAppointment unless appointment.valid? (date: date, professional: professional)
-        raise AppointmentCreationError unless appointment = new(date: date, professional: professional, **options)
-        #puts "creating Appointment for #{professional} on #{date}"
-        appointment.save()
+        obj = new(date: date, professional: professional)
+        appointment = Polycon::Store::read(obj)
+        raise InvalidAppointment unless (appointment && appointment.valid?)
         appointment
-      end
-
-
-      def show(date:, professional:)
-        Polycon::Store::ensure_root_exists
       end
 
       def cancel(date:, professional:)
@@ -59,33 +86,17 @@ module Polycon
         Polycon::Store::ensure_root_exists
 
       def to_s 
-        'Date: '+self.date.to_s+ ': appt for client => '+/
-         self.surname +', '+ self.name+' with: '+/
-         self.professional.surname+self.professional.name
+        "Date: #{self.date.to_s} appt for client =>"/
+         "#{self.surname}, #{self.name} with: "/
+         "#{self.professional.surname}, #{self.professional.name}"/
+         "#{self.notes unless self.notes.nil?}"
       end 
 
-      def self.valid? (date:, professional:)
-          valid_professional? && valid_date?
-      end 
-
-      protected 
       def save()
-        Polycon::Store::save(self)
+        Polycon::Store::save(appointment: self)
       end 
 
-      def self.valid_professional?(professional)
-          professional && professional.valid?
-          true 
-        rescue 
-          false 
-      end   
 
-      def self.valid_date?(date)
-          Date.strptime(date.to_s, FORMAT)  
-          true 
-        rescue 
-          false 
-      end
     end
   end
 end
