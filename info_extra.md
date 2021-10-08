@@ -45,5 +45,9 @@ Esta gema define sus propios errores Dry::File::Error y Dry::File::IOError.
 -> como usar options en dry::cli 
 
 ### Errores / Bugs
--> Al renombrar la separacion de nombre y apellido no se hace correctamente 
--> Cuestiones de lanzamiento de excepciones 
+-> ~~Al renombrar la separacion de nombre y apellido no se hace correctamente~~
+-> ~~Cuestiones de lanzamiento de excepciones~~ 
+-> From file tiene bug - se reescribe el to_s
+-> Chequear que la hora esta en un rango (guardar rango en clase no hardcoradearlo) para 
+-> evitar que no se lean bien los horarios 00-00
+->  

@@ -32,6 +32,23 @@ module Polycon
           end
         end 
 
+        def from_file(date:, professional:)
+          Polycon::Store::ensure_root_exists
+          path = make_path(professional: professional, date: date)
+          raise NotFound unless  Polycon::Store::exist?(path)
+          surname, name, phone, notes = Polycon::Store::read(path)
+          appointment = create(date:date, professional:professional, name:name, surname:surname, phone:phone, notes:notes)
+          appointment
+        end
+
+        def make_path(professional:, date:)
+          name, surname = professional.split(" ")
+          directory = (name + "_" + surname + '/').upcase
+          file = Time.parse(date).strftime(FORMAT)+'.paf'
+          directory+file
+        end 
+  
+
         protected 
 
         def valid? (date:, professional:)
@@ -43,7 +60,6 @@ module Polycon
         end 
 
         def valid_professional?(professional)
-          puts "in validatn of professional"
           begin 
             (professional && Polycon::Model::Professional.valid?(professional))
           rescue 
@@ -52,7 +68,6 @@ module Polycon
         end   
 
         def valid_date?(date)
-          puts "in validation of time"
           begin 
             d = DateTime.new(date)
             d.strptime(date.to_s, FORMAT)
@@ -61,26 +76,17 @@ module Polycon
             false 
           end 
         end 
+
+  
       end 
 
       def initialize(date:, professional:, **options)
         self.date = Time.parse(date)
-        puts @date
         self.professional = Polycon::Model::Professional.create(name: professional)
-        puts @professional
         @path = self.professional.path+self.date.strftime(FORMAT)+'.paf'
         options.each do |key, value|
           self.send(:"#{key}=", value)
         end
-      end
-
-
-      def from_file(date:, professional:)
-        Polycon::Store::ensure_root_exists
-        obj = new(date: date, professional: professional)
-        appointment = Polycon::Store::read(obj)
-        raise InvalidAppointment unless (appointment && appointment.valid?)
-        appointment
       end
 
       def cancel(date:, professional:)
@@ -100,10 +106,7 @@ module Polycon
       end 
 
       def to_s 
-          "Date: #{self.date.to_s} appt for client =>/"
-          "#{self.surname}, #{self.name} with: /"
-          "#{self.professional.surname}, #{self.professional.name}/"
-          "#{self.notes unless self.notes.nil?}"
+          "Date: #{@date} for client: #{@surname}, #{@name}"
       end 
 
       def save()

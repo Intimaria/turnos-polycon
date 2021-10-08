@@ -45,9 +45,10 @@ module Polycon
         ]
 
         def call(date:, professional:)
-          warn "TODO: Implementar detalles de un turno con fecha '#{date}' y profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          #warn "TODO: Implementar detalles de un turno con fecha '#{date}' y profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-            puts Polycon::Model::Appointment.from_file(date: date, professional: professional)
+            appointment = Polycon::Model::Appointment.from_file(date: date, professional: professional)
+            puts "Appointment is - #{appointment}"
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong: #{e.message}"
             exit 1

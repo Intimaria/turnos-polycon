@@ -33,19 +33,12 @@ module Polycon
       end
     end
 
-    def self.read(obj)
-      return nil if @files.directory?(PATH+mock_obj.path)
+    def self.read(path)
+      return nil if @files.directory?(PATH+path)
       begin
-        File.open(PATH+obj.path, 'r') do |f| 
-          obj.surname   = f.gets.chomp
-          obj.name      = f.gets.chomp 
-          obj.phone     = f.gets.chomp 
-          obj.notes     = f.gets.chomp
-        end
-      rescue NoMethodError 
-      ensure 
-        #validation done at Model level
-        obj
+          File.read(PATH+path).split(/\n/)
+      rescue 
+        raise Dry::Files::Error, "problem reading from file"
       end
     end 
 
@@ -82,6 +75,16 @@ module Polycon
       end
     end 
 
+    def self.exist?(path)
+      begin
+        if path then
+          @files.exist?(PATH+path)
+        else 
+          raise Dry::Files::Error, "The file doesn't exist" 
+        end 
+      end 
+    end 
+
     def self.empty?(directory:)
       begin
         if directory then
@@ -95,7 +98,9 @@ module Polycon
 
     def self.write_dir(obj)
       begin 
-        raise Dry::Files::Error if @files.directory?(PATH+obj.path)
+         if @files.directory?(PATH+obj.path) then 
+          raise Dry::Files::Error, "the directory already exists"
+         end 
         @files.mkdir(PATH+obj.path)
       rescue 
         raise DirectoryCreationError
@@ -134,7 +139,7 @@ module Polycon
         "Could not create file"
       end 
     end 
-    class DirectoryRenameError < IOError
+    class DirectoryRenameError < Dry::Files::Error
       def message 
         "Could not rename directory"
       end 
