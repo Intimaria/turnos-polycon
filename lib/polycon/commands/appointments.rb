@@ -24,14 +24,17 @@ module Polycon
             appointment.save
             puts "Sucess: created appointment for #{appointment.date}"
           rescue Polycon::Model::AlreadyExists
-            exit 0 
             warn "That appointment already exists:- please either cancel or edit."
+            exit 0 
           rescue Polycon::Model::Error => e
-            warn "sorry, something went wrong with Appointment: #{e.message}"
+            warn "sorry, something went wrong: #{e.message}"
             exit 1
           rescue Dry::Files::Error => e 
             warn "sorry, something went wrong with Store: #{e.message}"
             exit 2
+          rescue ArgumentError => e 
+            warn "You may have entered a non-existent time, please check and try again"
+            exit 3
           end
         end
       end

@@ -123,8 +123,16 @@ module Polycon
           self.send(:"#{key}=", value)
         end
       end
-
-
+      
+      def to_h
+        {:date=>date.to_s,
+        :professional=>professional.name+' '+professional.surname,
+        :surname=>surname,
+        :name=>name,
+        :phone=>phone,
+        :path=>path,
+        :notes=>notes}
+      end 
 
       def reschedule(old_date:, new_date:, professional:)
         Polycon::Store::ensure_root_exists

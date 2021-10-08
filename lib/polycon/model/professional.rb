@@ -50,8 +50,8 @@ module Polycon
         self.path = (@name + "_" + @surname + '/').upcase
       end
 
-      def to_a 
-        [@name, @surname]
+      def to_h 
+        {}:name=>name, :surname=>surname}
       end 
 
       def has_appointments?
