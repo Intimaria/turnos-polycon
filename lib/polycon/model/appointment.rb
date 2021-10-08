@@ -22,17 +22,23 @@ module Polycon
             rescue 
               raise ParameterError, "the date parameter is invalid"
             end 
-            appointments.map!    { |appt| appt = Date.parse(appt) }
-            appointments.filter! { |appt| appt == in_date} 
+            appointments.filter! do  |appt| 
+              Date.parse(appt) == in_date
+            end 
           end 
-          appointments
+          appointments.map! do |appt| 
+            date_arr = appt.split(/_/)
+            time = date_arr[1].gsub(/[-]/,":")
+            date_arr[0]+"_"+time
+          end 
+          appointments.each {|appt| puts Appointment.from_file(date: appt, professional: professional)}
         end 
 
         def create(date:, professional:, **options)
           begin 
             Polycon::Store::ensure_root_exists
             path = make_path(professional: professional, date: date)
-            raise AlreadyExists if Polycon::Store::exist?(path)
+            #raise AlreadyExists if Polycon::Store::exist?(path)
             raise AppointmentCreationError unless appointment = new(date: date, professional: professional, **options)
             valid?(date: appointment.date, professional: appointment.professional)
             appointment

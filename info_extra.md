@@ -49,4 +49,4 @@ Esta gema define sus propios errores Dry::File::Error y Dry::File::IOError.
 -> ~~Cuestiones de lanzamiento de excepciones~~ 
 -> From file tiene bug - se guardan las variables "correctamente" pero reescribe el to_s de tal manera que queda "notas" como representacion.
 -> Chequear que la hora esta en un rango (guardar rango en clase no hardcoradearlo) para evitar bug de que se crea bien aunque no se pasen bien los horarios y quede 00-00
-->  
+->  Necesito preguntar en "create" si ya existe el profesional? solo estoy creando un objeto. Como mucho, en save() deberia haber ese chequeo.

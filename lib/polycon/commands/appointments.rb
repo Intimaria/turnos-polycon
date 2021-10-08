@@ -122,7 +122,7 @@ module Polycon
           #warn "TODO: Implementar listado de turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
             puts "Appointments for #{professional}: "
-            puts Polycon::Model::Appointment.all(professional:professional, **options)
+            Polycon::Model::Appointment.all(professional:professional, **options)
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1
