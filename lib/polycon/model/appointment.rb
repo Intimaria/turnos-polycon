@@ -157,9 +157,6 @@ module Polycon
         #check options if phone then edit third line
         #check options if notes then edit the fourth line to eof 
         #can I iterate over the hash like in options?
-        options.each do |key, value|
-          self.send({":{key}=", value)
-        end 
         #or I could rewrite my own variables with the new values 
         #and then just wwrite myself to file
         Polycon::Store::modify(file: self, **options)
