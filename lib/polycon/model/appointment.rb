@@ -56,14 +56,6 @@ module Polycon
           appointment
         end
 
-        def cancel(date:, professional:)
-          Polycon::Store::ensure_root_exists
-          path = make_path(professional:professional, date: date)
-          raise NotFound unless Polycon::Store::exist?(path)
-          Polycon::Store::delete(path)
-          raise AppointmentDeletionError if Polycon::Store::exist?(path)
-        end
-
         def cancel_all(professional:)
           Polycon::Store::ensure_root_exists
           prof = Professional.create(name: professional)
@@ -75,12 +67,25 @@ module Polycon
           end 
         end
 
+        #if this was an instance method, it would only receive the new date
+        #it would then not need to make a path or ensure it exists
+        #commands would need to create it and tell it to reschedule itself 
         def reschedule(old_date:, new_date:, professional:)
           Polycon::Store::ensure_root_exists
           old_path = make_path(professional:professional, date: old_date)
           raise NotFound unless Polycon::Store::exist?(old_path)
           new_path = make_path(professional:professional, date: new_date)
           Polycon::Store::rename(old_name: old_path, new_name: new_path)
+        end
+
+        #if this was instance method it would not receive parameters
+        #the commands would create it and then ask it to cancel itself 
+        def cancel(date:, professional:)
+          Polycon::Store::ensure_root_exists
+          path = make_path(professional:professional, date: date)
+          raise NotFound unless Polycon::Store::exist?(path)
+          Polycon::Store::delete(path)
+          raise AppointmentDeletionError if Polycon::Store::exist?(path)
         end
 
         #utility
@@ -145,9 +150,19 @@ module Polycon
       end 
 
 
-
-      def edit(date:, professional:, **options)
+      def edit(**options)
         Polycon::Store::ensure_root_exists
+        #check options if name then edit second line 
+        #check options if surname then edit first line 
+        #check options if phone then edit third line
+        #check options if notes then edit the fourth line to eof 
+        #can I iterate over the hash like in options?
+        options.each do |key, value|
+          self.send({":{key}=", value)
+        end 
+        #or I could rewrite my own variables with the new values 
+        #and then just wwrite myself to file
+        Polycon::Store::modify(file: self, **options)
       end 
 
       def to_s 

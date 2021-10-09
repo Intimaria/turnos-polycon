@@ -56,5 +56,6 @@ Se agregan metodos to_h a professional y appointment para tener mayor facilidad 
 -> ~~Necesito preguntar en "create" si ya existe el profesional? solo estoy creando un objeto. Como mucho, en save() deberia haber ese chequeo~~
 -> Ordenar los appointment por fecha en el List sin fecha
 -> A futuro: Agarrar todos los appointment del sistema?
+-> Pasar cancel y reschedule a metodos de instancia
 
 

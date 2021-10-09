@@ -200,10 +200,11 @@ module Polycon
         ]
 
         def call(date:, professional:, **options)
-          warn "TODO: Implementar modificación de un turno de la o el profesional '#{professional}' con fecha '#{date}', para cambiarle la siguiente información: #{options}.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
-
+          #warn "TODO: Implementar modificación de un turno de la o el profesional '#{professional}' con fecha '#{date}', para cambiarle la siguiente información: #{options}.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          appointment = Polycon::Models::Appointment.create(professional: professional, date:date)
+          appointment.edit(**options)
           begin
-            # Polycon::Model::Appointment.edit(date:, professional:, **options)
+            Polycon::Model::Appointment.edit(date:date, professional:professional, **options)
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1

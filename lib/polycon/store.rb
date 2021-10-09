@@ -50,7 +50,16 @@ module Polycon
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem renaming"
       end
+    end 
 
+    def self.modify(file:, **options)
+      begin 
+        options.each do |k,v| 
+        files.replace_first_line(PATH+file.path, file[key], value)
+      end
+      rescue Dry::Files::Error
+        raise Dry::Files::Error, "problem modifying"
+      end
     end 
 
     def self.delete(path)
