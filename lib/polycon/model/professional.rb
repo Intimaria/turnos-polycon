@@ -36,6 +36,7 @@ module Polycon
         Polycon::Store::_delete(professional) unless professional.has_appointments?
       end
 
+      # utility 
 
       def valid?(professional)
         professional && !professional.name.nil? && !professional.surname.nil?
@@ -58,6 +59,18 @@ module Polycon
         Polycon::Store::ensure_root_exists
         !Polycon::Store::empty?(directory: self.path)
       end 
+
+      def rename(new_name:)
+        Polycon::Store::ensure_root_exists
+        new_professional = Professional.create(name:new_name)
+        raise InvalidProfessional unless Professional.valid?(new_professional)
+        Polycon::Store.rename(old_name:@path, new_name: new_professional.path)
+      end
+
+      def delete()
+        Polycon::Store::ensure_root_exists
+        Polycon::Store::delete(@path) unless self.has_appointments?
+      end
 
       def to_s
         "name: " + (@name + " " + @surname) + " => file path: " + Polycon::Store::PATH+self.path

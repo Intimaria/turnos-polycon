@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'date'
 require 'time'
 
 module Polycon
@@ -97,8 +96,7 @@ module Polycon
 
         def valid_date?(date)
           begin 
-            d = DateTime.new(date)
-            d.strptime(date.to_s, FORMAT)
+            Time.strptime(date.to_s, FORMAT)
             true  
           rescue
             false 

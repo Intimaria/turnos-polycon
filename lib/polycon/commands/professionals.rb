@@ -17,7 +17,7 @@ module Polycon
           # warn "TODO: Implementar creación de un o una profesional con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
             professional = Polycon::Model::Professional.create(name: name)
-            professional.save()
+            professional.save
             puts "Success: created professional #{name}"
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Professional: #{e.message}"
@@ -42,10 +42,12 @@ module Polycon
           '"Ernesto Fernandez" # Deletes a new professional named "Ernesto Fernandez" if they have no appointments'
         ]
 
-        def call(name: nil)
+        def call(name:)
           #warn "TODO: Implementar borrado de la o el profesional con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-            Polycon::Model::Professional.delete(name: name)
+            #Polycon::Model::Professional.delete(name: name)
+            professional = Polycon::Model::Professional.create(name: name)
+            professional.delete
             puts "Success: deleted professional #{name}"
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Professional: #{e.message}"
@@ -97,7 +99,9 @@ module Polycon
         def call(old_name:, new_name:, **)
           #warn "TODO: Implementar renombrado de profesionales con nombre '#{old_name}' para que pase a llamarse '#{new_name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-            Polycon::Model::Professional.rename(old_name:old_name, new_name: new_name)
+            #Polycon::Model::Professional.rename(old_name:old_name, new_name: new_name)
+            professional = Polycon::Model::Professional.create(name: old_name)
+            professional.rename(new_name: new_name)
             puts "Success: professional #{old_name} renamed to #{new_name}"
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Professional: #{e.message}"

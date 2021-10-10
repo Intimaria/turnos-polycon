@@ -37,6 +37,10 @@ Al principio se usaban las clases principalmente Dir y FileUtils adentro de Stor
 
 Esta gema define sus propios errores Dry::File::Error y Dry::File::IOError.
 
+Metodos (clase e instancia)
+
+Originalmente la mayoria de los metodos eran de clase, se refactoriza para usar metodos de instancia para toda la funcionalidad que actua sobre una sola instancia (editar, borrar). Se utiliza metodos de clase para creacion, en la busqueda de una instancia desde un archivo o cuando se debe trabajar sobre varias instancias. 
+
 __Refactoring a futuro__
 
 Se agregan metodos to_h a professional y appointment para tener mayor facilidad de refactorizar algunas funcionalidades en un futuro.  
