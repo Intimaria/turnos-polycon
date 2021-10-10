@@ -24,7 +24,7 @@ module Polycon
             appointment.save
             puts "Sucess: created appointment for #{appointment.date}"
           rescue Polycon::Model::AlreadyExists
-            warn "That appointment already exists:- please either cancel or edit."
+            warn "That appointment already exists."
             exit 0 
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong: #{e.message}"
@@ -152,7 +152,8 @@ module Polycon
 
             appts = Polycon::Model::Appointment.all(professional:professional, **options)
             if appts.empty? then 
-              puts "No appointments for #{professional}"
+              warn "No appointments for #{professional}"
+              exit 0
             else 
               (puts "Appointments for #{professional}: #{options[:date] if options[:date]}")
               puts appts

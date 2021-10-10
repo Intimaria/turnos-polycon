@@ -18,10 +18,10 @@ module Polycon
         Polycon::Store::ensure_root_exists
         firstname, surname = name.split(" ")
         professional = new(name: firstname, surname: surname)
-        raise AlreadyExists if Polycon::Store::exist?(professional.path)
         raise InvalidProfessional unless valid?(professional)
         professional
       end
+
       def find(name:, **)
         Polycon::Store::ensure_root_exists
         firstname, surname = name.split(" ")
@@ -69,10 +69,12 @@ module Polycon
       end
 
       def to_s
-        "name: " + (@name + " " + @surname) + " => file path: " + Polycon::Store::PATH+self.path
+        "name: " + (@name + " " + @surname) + "\nfile path: " + Polycon::Store::PATH+self.path
       end 
 
       def save()
+        Polycon::Store::ensure_root_exists
+        raise AlreadyExists if Polycon::Store::exist?(@path)
         Polycon::Store::save(professional:self)
       end 
 
