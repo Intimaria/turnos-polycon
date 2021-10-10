@@ -25,6 +25,9 @@ module Polycon
           rescue Dry::Files::Error => e 
             warn "sorry, something went wrong with Store: #{e.message}"
             exit 2
+          rescue ArgumentError, NoMethodError => e 
+            warn "Please check the parameters you have entered, it's possible there is a problem. #{e.message}"
+            exit 3
           end
         end
       end
@@ -50,6 +53,9 @@ module Polycon
           rescue Dry::Files::Error => e 
             warn "sorry, something went wrong with Store: #{e.message}"
             exit 2
+          rescue ArgumentError, NoMethodError => e 
+            warn "Please check the parameters you have entered, it's possible there is a problem. #{e.message}"
+            exit 3
           end
         end
       end
@@ -71,6 +77,9 @@ module Polycon
           rescue Dry::Files::Error => e 
             warn "sorry, something went wrong with Store: #{e.message}"
             exit 2
+          rescue ArgumentError, NoMethodError => e 
+            warn "Please check the parameters you have entered, it's possible there is a problem. #{e.message}"
+            exit 3
           end
         end
       end
@@ -96,6 +105,9 @@ module Polycon
           rescue Dry::Files::Error => e 
             warn "sorry, something went wrong with Store: #{e.message}"
             exit 2
+          rescue ArgumentError, NoMethodError => e 
+            warn "Please check the parameters you have entered, it's possible there is a problem. #{e.message}"
+            exit 3
           end
         end
       end

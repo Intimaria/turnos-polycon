@@ -185,8 +185,6 @@ module Polycon
           begin
             #Polycon::Model::Appointment.reschedule(old_date: old_date, new_date: new_date, professional: professional)
             appointment = Polycon::Model::Appointment.from_file(date: old_date, professional: professional)
-            puts old_date
-            puts new_date
             appointment.reschedule(new_date: new_date)
             puts "Success: you have rescheduled appointment with #{professional}  for #{new_date}"
           rescue Polycon::Model::Error => e
