@@ -10,7 +10,6 @@ module Polycon
 
       def all()
         Polycon::Store::ensure_root_exists
-        puts Polycon::Store::PATH
         Polycon::Store::entries(directory: Polycon::Store::PATH)
       end 
 
@@ -29,6 +28,7 @@ module Polycon
         raise NotFound unless Polycon::Store::exist?(professional.path)
         professional
       end
+
       # utility 
 
       def valid?(professional)
@@ -62,9 +62,7 @@ module Polycon
 
       def delete()
         Polycon::Store::ensure_root_exists
-        if self.has_appointments? then 
-          raise ProfessionalDeletionError
-        end 
+        raise ProfessionalDeletionError if self.has_appointments? 
         Polycon::Store::delete(@path)
       end
 
@@ -89,11 +87,13 @@ module Polycon
         "Could not create professional."
       end 
     end 
+
     class ProfessionalDeletionError < ProfessionalError
       def message 
         "Could not delete professional as they have appointments."
       end 
     end 
+
     class ProfessionalRenameError < ProfessionalError
       def message 
         "Could not rename professional."

@@ -32,7 +32,7 @@ module Polycon
             date_arr[0]+"_"+time
           end 
           all = []
-          appointments.each {|appt| all << Appointment.from_file(date: appt, professional: professional)}
+          appointments.each {|date| all << Appointment.from_file(date: date, professional: professional)}
           all
         end 
 
@@ -179,7 +179,7 @@ module Polycon
 
         class InvalidAppointmentProfessional < InvalidAppointment 
           def message
-            'the date is invalid'
+            'the profess is invalid'
           end 
         end
         
