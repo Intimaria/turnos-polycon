@@ -33,7 +33,7 @@ module Polycon
           end 
           all = []
           appointments.each {|date| all << Appointment.from_file(date: date, professional: professional)}
-          all
+          all.sort_by { |a| a.date }
         end 
 
         def create(date:, professional:, **options)
@@ -60,10 +60,7 @@ module Polycon
           prof = Professional.create(name: professional)
           raise NotFound if Polycon::Store::empty?(directory:prof.path)
           all_appointments = all(professional: professional)
-          all_appointments.each do |appt| 
-            date = appt.date.to_s.split(' ')
-            cancel(professional: professional, date: date[0]+' '+date[1] )
-          end 
+          all_appointments.each {|appt| appt.cancel}
         end
 
         #utility
@@ -138,6 +135,7 @@ module Polycon
       def reschedule(new_date:)
         Polycon::Store::ensure_root_exists
         new_path = Appointment.make_path(professional:self.to_h[:professional], date: new_date)
+        raise AlreadyExists if Polycon::Store::exist?(new_path)
         Polycon::Store::rename(old_name: @path, new_name: new_path)
       end
 

@@ -10,7 +10,7 @@ module Polycon
 
       def all()
         Polycon::Store::ensure_root_exists
-        Polycon::Store::entries(directory: Polycon::Store::PATH)
+        Polycon::Store::entries(directory: Polycon::Store::PATH).map! {|p| p.gsub(/_/, " ")}.sort
       end 
 
       def create(name:, **)

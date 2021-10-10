@@ -37,7 +37,7 @@ Al principio se usaban las clases principalmente Dir y FileUtils adentro de Stor
 
 Esta gema define sus propios errores Dry::File::Error y Dry::File::IOError.
 
-Metodos (clase e instancia)
+## Metodos (clase e instancia)
 
 Originalmente la mayoria de los metodos eran de clase, se refactoriza para usar metodos de instancia para toda la funcionalidad que actua sobre una sola instancia (editar, borrar). Se utiliza metodos de clase para creacion, en la busqueda de una instancia desde un archivo o cuando se debe trabajar sobre varias instancias. 
 
@@ -51,15 +51,17 @@ Se agregan metodos to_h a professional y appointment para tener mayor facilidad 
 -> separacion utils de storage para el futuro
 -> como usar options en dry::cli 
 -> como hacer monkey patching dentro de un programa asi? (agregar funcionalidad a Dry::Files)
+-> Porque no se rescatan todos los argument errors para algunos metodos a pesar de estar en el rescue
+
 
 ### Errores / Bugs
 -> ~~Al renombrar la separacion de nombre y apellido no se hace correctamente~~
 -> ~~Cuestiones de lanzamiento de excepciones~~ 
--> From file tiene bug - se guardan las variables "correctamente" pero reescribe el to_s de tal manera que queda "notas" como representacion.
+-> From file tiene bug - se guardan las variables "correctamente" pero reescribe el to_s de tal manera que queda "notas" como representacion. Esto solo se ve si hago "puts appointment". Si hago "puts appointment.variable, imprime correctamente las variables.
 -> Chequear que la hora esta en un rango (guardar rango en clase no hardcoradearlo) para evitar bug de que se crea bien aunque no se pasen bien los horarios y quede 00-00
 -> ~~Necesito preguntar en "create" si ya existe el profesional? solo estoy creando un objeto. Como mucho, en save() deberia haber ese chequeo~~
--> Ordenar los appointment por fecha en el List sin fecha
+-> ~~Ordenar los appointment por fecha en el List sin fecha~~
 -> A futuro: Agarrar todos los appointment del sistema?
--> Pasar cancel y reschedule a metodos de instancia
+-> ~~Pasar cancel y reschedule a metodos de instancia~~
 
 
