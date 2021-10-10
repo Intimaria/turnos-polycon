@@ -67,17 +67,6 @@ module Polycon
           end 
         end
 
-        #if this was an instance method, it would only receive the new date
-        #it would then not need to make a path or ensure it exists
-        #commands would need to fetch it from file and tell it to reschedule itself 
-        def reschedule(old_date:, new_date:, professional:)
-          Polycon::Store::ensure_root_exists
-          old_path = make_path(professional:professional, date: old_date)
-          raise NotFound unless Polycon::Store::exist?(old_path)
-          new_path = make_path(professional:professional, date: new_date)
-          Polycon::Store::rename(old_name: old_path, new_name: new_path)
-        end
-
         #utility
 
         def make_path(professional:, date:)
