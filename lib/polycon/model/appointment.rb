@@ -50,7 +50,7 @@ module Polycon
         def from_file(date:, professional:)
           Polycon::Store::ensure_root_exists
           path = make_path(professional: professional, date: date)
-          raise NotFound unless  Polycon::Store::exist?(path)
+          raise NotFound unless Polycon::Store::exist?(path)
           surname, name, phone, notes = Polycon::Store::read(path)
           appointment = create(date:date, professional:professional, name:name, surname:surname, phone:phone, notes:notes)
           appointment
@@ -154,6 +154,11 @@ module Polycon
         Polycon::Store::ensure_root_exists
         Polycon::Store::modify(file: self, **options)
       end 
+      def cancel()
+        Polycon::Store::ensure_root_exists
+        Polycon::Store::delete(@path)
+        raise AppointmentDeletionError if Polycon::Store::exist?(@path)
+      end
 
       def to_s 
           "Date: #{@date} for client: #{@surname}, #{@name}"

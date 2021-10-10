@@ -56,8 +56,8 @@ module Polycon
             appointment = Polycon::Model::Appointment.from_file(date: date, professional: professional)
             puts "Appointment is - #{appointment}"
           rescue Polycon::Model::NotFound
+            warn "That appointment doesn't exist."
             exit 0 
-            warn "That appointment doesn't exist yet."
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong: #{e.message}"
             exit 1
@@ -81,7 +81,9 @@ module Polycon
         def call(date:, professional:)
           #warn "TODO: Implementar borrado de un turno con fecha '#{date}' y profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-            Polycon::Model::Appointment.cancel(date:date , professional: professional)
+            #Polycon::Model::Appointment.cancel(date:date , professional: professional)
+            appointment = Polycon::Model::Appointment.from_file(date: date, professional: professional)
+            appointment.cancel()
             puts "Cancellation successful"
           rescue Polycon::Model::NotFound
             warn "That appointment doesn't exist yet."
