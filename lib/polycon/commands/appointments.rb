@@ -54,7 +54,8 @@ module Polycon
           #warn "TODO: Implementar detalles de un turno con fecha '#{date}' y profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
             appointment = Polycon::Model::Appointment.from_file(date: date, professional: professional)
-            puts "Appointment is - #{appointment}"
+            puts "Showing appointment - "
+            puts "#{appointment}"
           rescue Polycon::Model::NotFound
             warn "That appointment doesn't exist."
             exit 0 
@@ -83,7 +84,7 @@ module Polycon
           begin
             #Polycon::Model::Appointment.cancel(date:date , professional: professional)
             appointment = Polycon::Model::Appointment.from_file(date: date, professional: professional)
-            appointment.cancel()
+            appointment.cancel
             puts "Cancellation successful"
           rescue Polycon::Model::NotFound
             warn "That appointment doesn't exist yet."
@@ -170,7 +171,11 @@ module Polycon
         def call(old_date:, new_date:, professional:)
           #warn "TODO: Implementar cambio de fecha de turno con fecha '#{old_date}' para que pase a ser '#{new_date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-            Polycon::Model::Appointment.reschedule(old_date: old_date, new_date: new_date, professional: professional)
+            #Polycon::Model::Appointment.reschedule(old_date: old_date, new_date: new_date, professional: professional)
+            appointment = Polycon::Model::Appointment.from_file(date: old_date, professional: professional)
+            puts old_date
+            puts new_date
+            appointment.reschedule(new_date: new_date)
             puts "Success: you have rescheduled appointment with #{professional}  for #{new_date}"
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
@@ -179,7 +184,7 @@ module Polycon
             warn "sorry, something went wrong with Store: #{e.message}"
             exit 2
           rescue ArgumentError, NoMethodError => e 
-            warn "Please check the parameters you have entered, it's possible there is a problem."
+            warn "Please check the parameters you have entered, it's possible there is a problem. #{e.message}"
             exit 3
           end
         end

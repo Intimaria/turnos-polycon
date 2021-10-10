@@ -78,16 +78,6 @@ module Polycon
           Polycon::Store::rename(old_name: old_path, new_name: new_path)
         end
 
-        #if this was instance method it would not receive parameters
-        #the commands would fetch it from file and then ask it to cancel itself 
-        def cancel(date:, professional:)
-          Polycon::Store::ensure_root_exists
-          path = make_path(professional:professional, date: date)
-          raise NotFound unless Polycon::Store::exist?(path)
-          Polycon::Store::delete(path)
-          raise AppointmentDeletionError if Polycon::Store::exist?(path)
-        end
-
         #utility
 
         def make_path(professional:, date:)
@@ -140,12 +130,13 @@ module Polycon
       end
       
       def to_h
-        {:date=>date.to_s,
+        {
         :professional=>professional.name+' '+professional.surname,
+        :date=>date.to_s,
         :surname=>surname,
         :name=>name,
         :phone=>phone,
-        :path=>path,
+        #:path=>path,
         :notes=>notes}
       end 
 
@@ -159,9 +150,16 @@ module Polycon
         Polycon::Store::delete(@path)
         raise AppointmentDeletionError if Polycon::Store::exist?(@path)
       end
+      def reschedule(new_date:)
+        Polycon::Store::ensure_root_exists
+        new_path = Appointment.make_path(professional:self.to_h[:professional], date: new_date)
+        Polycon::Store::rename(old_name: @path, new_name: new_path)
+      end
 
       def to_s 
-          "Date: #{@date} for client: #{@surname}, #{@name}"
+        s = String.new
+        self.to_h.each {|key,value| s << "#{key}: #{value}\n"}
+        s
       end 
 
       def save()
