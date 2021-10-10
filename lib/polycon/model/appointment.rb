@@ -69,7 +69,7 @@ module Polycon
 
         #if this was an instance method, it would only receive the new date
         #it would then not need to make a path or ensure it exists
-        #commands would need to create it and tell it to reschedule itself 
+        #commands would need to fetch it from file and tell it to reschedule itself 
         def reschedule(old_date:, new_date:, professional:)
           Polycon::Store::ensure_root_exists
           old_path = make_path(professional:professional, date: old_date)
@@ -79,7 +79,7 @@ module Polycon
         end
 
         #if this was instance method it would not receive parameters
-        #the commands would create it and then ask it to cancel itself 
+        #the commands would fetch it from file and then ask it to cancel itself 
         def cancel(date:, professional:)
           Polycon::Store::ensure_root_exists
           path = make_path(professional:professional, date: date)
@@ -152,13 +152,6 @@ module Polycon
 
       def edit(**options)
         Polycon::Store::ensure_root_exists
-        #check options if name then edit second line 
-        #check options if surname then edit first line 
-        #check options if phone then edit third line
-        #check options if notes then edit the fourth line to eof 
-        #can I iterate over the hash like in options?
-        #or I could rewrite my own variables with the new values 
-        #and then just wwrite myself to file
         Polycon::Store::modify(file: self, **options)
       end 
 

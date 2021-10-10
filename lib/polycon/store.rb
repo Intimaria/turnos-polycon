@@ -54,11 +54,11 @@ module Polycon
 
     def self.modify(file:, **options)
       begin 
-        options.each do |k,v| 
-        files.replace_first_line(PATH+file.path, file[key], value)
+        options.each do |key,value| 
+        @files.replace_first_line(PATH+file.path, file.to_h[key], value)
       end
       rescue Dry::Files::Error
-        raise Dry::Files::Error, "problem modifying"
+        raise Dry::Files::Error, "problem modifying file"
       end
     end 
 
@@ -83,7 +83,7 @@ module Polycon
           raise Dry::Files::Error, "Nil value argument." 
         end 
       rescue  
-        raise Dry::Files::Error, "problem retrieving entries"
+        raise Dry::Files::Error, "problem retrieving entries, are you sure that directory exists?"
       end
     end 
 
