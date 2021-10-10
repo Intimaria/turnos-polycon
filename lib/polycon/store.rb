@@ -92,7 +92,7 @@ module Polycon
         if path then
           @files.exist?(PATH+path)
         else 
-          raise Dry::Files::Error, "The file doesn't exist" 
+          raise Dry::Files::Error, "The directory or file doesn't exist" 
         end 
       end 
     end 

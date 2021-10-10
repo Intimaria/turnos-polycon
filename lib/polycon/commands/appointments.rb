@@ -90,7 +90,7 @@ module Polycon
             appointment.cancel
             puts "Cancellation successful"
           rescue Polycon::Model::NotFound
-            warn "That appointment doesn't exist yet."
+            warn "That appointment doesn't exist."
             exit 0
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
@@ -121,6 +121,7 @@ module Polycon
             puts "Success: you have cancelled all appointments for #{professional}"
           rescue Polycon::Model::NotFound
             warn "There are no appointments for that professional"
+            exit 0
           rescue Polycon::Model::Error  => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1
@@ -187,6 +188,9 @@ module Polycon
             appointment = Polycon::Model::Appointment.from_file(date: old_date, professional: professional)
             appointment.reschedule(new_date: new_date)
             puts "Success: you have rescheduled appointment with #{professional}  for #{new_date}"
+          rescue Polycon::Model::NotFound
+            warn "That appointment doesn't exist."
+            exit 0
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1
@@ -223,6 +227,9 @@ module Polycon
             appointment = Polycon::Model::Appointment.from_file(professional: professional, date:date)
             appointment.edit(**options)
             puts "Success: you have edited appointment on date #{date}"
+          rescue Polycon::Model::NotFound
+            warn "That appointment doesn't exist."
+            exit 0
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1

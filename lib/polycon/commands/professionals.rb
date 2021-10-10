@@ -19,6 +19,9 @@ module Polycon
             professional = Polycon::Model::Professional.create(name: name)
             professional.save
             puts "Success: created professional #{name}"
+          rescue Polycon::Model::AlreadyExists
+            warn "That professional already exists."
+            exit 0
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Professional: #{e.message}"
             exit 1
@@ -46,7 +49,7 @@ module Polycon
           #warn "TODO: Implementar borrado de la o el profesional con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
             #Polycon::Model::Professional.delete(name: name)
-            professional = Polycon::Model::Professional.create(name: name)
+            professional = Polycon::Model::Professional.find(name: name)
             professional.delete
             puts "Success: deleted professional #{name}"
           rescue Polycon::Model::Error => e
@@ -100,7 +103,7 @@ module Polycon
           #warn "TODO: Implementar renombrado de profesionales con nombre '#{old_name}' para que pase a llamarse '#{new_name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
             #Polycon::Model::Professional.rename(old_name:old_name, new_name: new_name)
-            professional = Polycon::Model::Professional.create(name: old_name)
+            professional = Polycon::Model::Professional.find(name: old_name)
             professional.rename(new_name: new_name)
             puts "Success: professional #{old_name} renamed to #{new_name}"
           rescue Polycon::Model::Error => e
