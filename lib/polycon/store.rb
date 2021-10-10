@@ -36,7 +36,7 @@ module Polycon
     def self.read(path)
       return nil if @files.directory?(PATH+path)
       begin
-          File.read(PATH+path).split(/\n/)
+          @files.read(PATH+path).split(/\n/)
       rescue 
         raise Dry::Files::Error, "problem reading from file"
       end
