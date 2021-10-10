@@ -3,7 +3,8 @@
 module Polycon
   module Model
     class Professional
-      attr_accessor :name, :surname, :path
+      attr_accessor :name, :surname
+      attr_reader :path
 
     class << self 
 

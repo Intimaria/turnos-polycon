@@ -103,8 +103,6 @@ module Polycon
           end 
         end 
 
-
-  
       end 
 
       def initialize(date:, professional:, **options)
