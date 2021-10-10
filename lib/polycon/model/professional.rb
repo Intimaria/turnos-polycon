@@ -21,21 +21,6 @@ module Polycon
         professional
       end
 
-      def rename(old_name:, new_name:)
-        Polycon::Store::ensure_root_exists
-        old_professional = create(name:old_name)
-        new_professional = create(name:new_name)
-        raise InvalidProfessional unless valid?(old_professional)
-        raise InvalidProfessional unless valid?(new_professional)
-        Polycon::Store.rename(old_name: old_professional.path, new_name: new_professional.path)
-      end
-
-      def delete(name:)
-        Polycon::Store::ensure_root_exists
-        professional = create(name: name)
-        Polycon::Store::_delete(professional) unless professional.has_appointments?
-      end
-
       # utility 
 
       def valid?(professional)
