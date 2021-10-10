@@ -41,7 +41,7 @@ module Polycon
         raise ParameterError if (name.nil? || surname.nil?)
         self.name = name
         self.surname = surname
-        self.path = (@name + "_" + @surname + '/').upcase
+        @path = (@name + "_" + @surname + '/').upcase
       end
 
       def to_h 
@@ -62,7 +62,10 @@ module Polycon
 
       def delete()
         Polycon::Store::ensure_root_exists
-        Polycon::Store::delete(@path) unless self.has_appointments?
+        if self.has_appointments? then 
+          raise ProfessionalDeletionError
+        end 
+        Polycon::Store::delete(@path)
       end
 
       def to_s
@@ -82,6 +85,11 @@ module Polycon
     class ProfessionalCreationError < ProfessionalError
       def message 
         "Could not create professional."
+      end 
+    end 
+    class ProfessionalDeletionError < ProfessionalError
+      def message 
+        "Could not delete professional as they have appointments."
       end 
     end 
     class ProfessionalRenameError < ProfessionalError
