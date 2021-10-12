@@ -147,7 +147,7 @@ module Polycon
 
       def save()
         Polycon::Store::ensure_root_exists
-        raise AlreadyExists if Polycon::Store::exist?(self.path)
+        raise AlreadyExists if Polycon::Store::exist?(@path)
         Polycon::Store::save(appointment: self)
       end 
     

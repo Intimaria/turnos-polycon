@@ -10,7 +10,7 @@ module Polycon
 
       def all()
         Polycon::Store::ensure_root_exists
-        Polycon::Store::entries(directory: Polycon::Store::PATH).map! {|p| p.gsub(/_/, " ")}.sort
+        Polycon::Store::entries(directory: Polycon::Store::PATH).map! {|p| p.gsub(/_/, " ") }.sort
       end 
 
       def create(name:, **)
@@ -50,7 +50,7 @@ module Polycon
 
       def has_appointments?
         Polycon::Store::ensure_root_exists
-        !Polycon::Store::empty?(directory: self.path)
+        !Polycon::Store::empty?(directory: @path)
       end 
 
       def rename(new_name:)
@@ -67,7 +67,7 @@ module Polycon
       end
 
       def to_s
-        "name: " + (@name + " " + @surname) + "\nfile path: " + Polycon::Store::PATH+self.path
+        "name: " + (@name + " " + @surname) + "\nfile path: " + Polycon::Store::PATH+@path
       end 
 
       def save()
