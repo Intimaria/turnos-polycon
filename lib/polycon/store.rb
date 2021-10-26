@@ -3,15 +3,27 @@ module Polycon
     #TODO -> define custom errors DONE-ISH
     #     -> return true or false instead of exception (some methods) & validate at Model level
     #     -> import into Models?
-    
     PATH = Dir.home+'/.polycon/'
 
     @files = Dry::Files.new
     
+    def self.root()
+        ensure_root_exists
+        Dir.home+'/.polycon/'
+    end 
+
+   def self.make_path(appointment:nil,professional:nil)
+    begin
+      appointment ? appointment.date.strftime('%Y-%m-%d_%H-%I') +'.paf' : professional.name.upcase+'_'+professional.surname.upcase
+    rescue 
+      raise Dry::Files::Error, "problem with making file path"
+    end
+   end 
 
     def self.ensure_root_exists()
       begin
-        @files.mkdir(PATH) unless @files.directory?(PATH)
+        path = Dir.home+'/.polycon/'
+        @files.mkdir(path) unless @files.directory?(path)
       rescue 
         raise Dry::Files::Error, "problem with root directory"
       end
