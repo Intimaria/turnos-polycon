@@ -7,11 +7,7 @@ module Polycon
     PATH = Dir.home+'/.polycon/'
 
     @files = Dry::Files.new
-
-    def self.root 
-      self.ensure_root_exists
-      PATH
-    end 
+    
 
     def self.ensure_root_exists()
       begin
@@ -38,9 +34,9 @@ module Polycon
     end
 
     def self.read(path)
-      return nil if @files.directory?(self.root+path)
+      return nil if @files.directory?(PATH+path)
       begin
-          @files.read(self.root+path).split(/\n/)
+          @files.read(PATH+path).split(/\n/)
       rescue 
         raise Dry::Files::Error, "problem reading from file"
       end
