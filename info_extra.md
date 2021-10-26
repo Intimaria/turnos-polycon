@@ -64,4 +64,17 @@ Se agregan metodos to_h a professional y appointment para tener mayor facilidad 
 - A futuro: Agarrar todos los appointment del sistema?
 - ~~Pasar cancel y reschedule a metodos de instancia~~
 
+#### __Entrega 1:__
 
+- Si la primera operación que se llama es una de lectura (appointments list, por ejemplo) y el directorio ~/.polycon no existe, el programa tira un error ("sorry, something went wrong with Store: problem retrieving entries, are you sure that directory exists?"). Esto se resuelve con tener un method que llama a ensure root exists en Store, y que devuelve el path a root. Asi no llamo a ensure en cada metodo del modelo.
+- ~~Los métodos de clase se llaman con . no con ::. Por ejemplo: Polycon::Store.ensure_root_exists sería la forma correcta de llamar ese método de clase.~~
+- opcion 1) El store se encarga de todo lo qrealcionado con PATH o 2) El método Professional#path podría ya encargarse de incluir Polycon::Store::PATH. En linea 40 insertar:  ``` @path = Polycon::Store::PATH+(@name + "_" + @surname + '/').upcase ``` (chequear incidencias.)
+- Refactorizar Appointment.all [(long method)](https://refactoring.guru/smells/long-method). Esto se resuelve dejando el filtrado por date en commands, teniendo un metodo appointments para profesional.
+
+#### __Entrega 2__
+- HAML or Slim - no hay mucha diferencia con ERB. 
+- Para PDF hasta ahora encontre Prawn y Origami
+- https://www.go4expert.com/articles/create-pdf-documents-ruby-t29920/
+- https://github.com/prawnpdf/prawnhttps://github.com/prawnpdf/prawn-table
+- Otras opciones de templating son Erector y Liquid. Tambien existe un wrapper de Handlebar.js para ruby. 
+- Object tTable puede ser una gema intermedia interesante https://github.com/lincheney/ruby-object-table

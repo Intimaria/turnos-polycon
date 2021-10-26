@@ -9,12 +9,12 @@ module Polycon
     class << self 
 
       def all()
-        Polycon::Store::ensure_root_exists
-        Polycon::Store::entries(directory: Polycon::Store::PATH).map! {|p| p.gsub(/_/, " ") }.sort
+        Polycon::Store.ensure_root_exists
+        Polycon::Store.entries(directory: Polycon::Store::PATH).map! {|p| p.gsub(/_/, " ") }.sort
       end 
 
       def create(name:, **)
-        Polycon::Store::ensure_root_exists
+        Polycon::Store.ensure_root_exists
         firstname, surname = name.split(" ")
         professional = new(name: firstname, surname: surname)
         raise InvalidProfessional unless valid?(professional)
@@ -22,10 +22,10 @@ module Polycon
       end
 
       def find(name:, **)
-        Polycon::Store::ensure_root_exists
+        Polycon::Store.ensure_root_exists
         firstname, surname = name.split(" ")
         professional = new(name: firstname, surname: surname)
-        raise NotFound unless Polycon::Store::exist?(professional.path)
+        raise NotFound unless Polycon::Store.exist?(professional.path)
         professional
       end
 
@@ -49,21 +49,21 @@ module Polycon
       end 
 
       def has_appointments?
-        Polycon::Store::ensure_root_exists
-        !Polycon::Store::empty?(directory: @path)
+        Polycon::Store.ensure_root_exists
+        !Polycon::Store.empty?(directory: @path)
       end 
 
       def rename(new_name:)
-        Polycon::Store::ensure_root_exists
+        Polycon::Store.ensure_root_exists
         new_professional = Professional.create(name:new_name)
         raise InvalidProfessional unless Professional.valid?(new_professional)
-        Polycon::Store::rename(old_name:@path, new_name: new_professional.path)
+        Polycon::Store.rename(old_name:@path, new_name: new_professional.path)
       end
 
       def delete()
-        Polycon::Store::ensure_root_exists
+        Polycon::Store.ensure_root_exists
         raise ProfessionalDeletionError if self.has_appointments? 
-        Polycon::Store::delete(@path)
+        Polycon::Store.delete(@path)
       end
 
       def to_s
@@ -71,9 +71,9 @@ module Polycon
       end 
 
       def save()
-        Polycon::Store::ensure_root_exists
-        raise AlreadyExists if Polycon::Store::exist?(@path)
-        Polycon::Store::save(professional:self)
+        Polycon::Store.ensure_root_exists
+        raise AlreadyExists if Polycon::Store.exist?(@path)
+        Polycon::Store.save(professional:self)
       end 
 
     end

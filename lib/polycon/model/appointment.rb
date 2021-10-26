@@ -12,10 +12,10 @@ module Polycon
 
 
         def all(professional:, date: nil)
-          Polycon::Store::ensure_root_exists
+          Polycon::Store.ensure_root_exists
           prof = Professional.create(name: professional)
           raise InvalidProfessional unless Professional.valid?(prof)
-          appointments  = Polycon::Store::entries(directory:Polycon::Store::PATH+prof.path)
+          appointments  = Polycon::Store.entries(directory:Polycon::Store::PATH+prof.path)
           if date then 
             begin 
               in_date = Date.parse(date)
@@ -38,7 +38,7 @@ module Polycon
 
         def create(date:, professional:, **options)
           begin 
-            Polycon::Store::ensure_root_exists
+            Polycon::Store.ensure_root_exists
             path = make_path(professional: professional, date: date)
             raise AppointmentCreationError unless appointment = new(date: date, professional: professional, **options)
             valid?(date: appointment.date, professional: appointment.professional)
@@ -47,18 +47,18 @@ module Polycon
         end 
 
         def from_file(date:, professional:)
-          Polycon::Store::ensure_root_exists
+          Polycon::Store.ensure_root_exists
           path = make_path(professional: professional, date: date)
-          raise NotFound unless Polycon::Store::exist?(path)
-          surname, name, phone, notes = Polycon::Store::read(path)
+          raise NotFound unless Polycon::Store.exist?(path)
+          surname, name, phone, notes = Polycon::Store.read(path)
           appointment = create(date:date, professional:professional, name:name, surname:surname, phone:phone, notes:notes)
           appointment
         end
 
         def cancel_all(professional:)
-          Polycon::Store::ensure_root_exists
+          Polycon::Store.ensure_root_exists
           prof = Professional.create(name: professional)
-          raise NotFound if Polycon::Store::empty?(directory:prof.path)
+          raise NotFound if Polycon::Store.empty?(directory:prof.path)
           all_appointments = all(professional: professional)
           all_appointments.each {|appt| appt.cancel}
         end
@@ -124,19 +124,19 @@ module Polycon
 
 
       def edit(**options)
-        Polycon::Store::ensure_root_exists
-        Polycon::Store::modify(file: self, **options)
+        Polycon::Store.ensure_root_exists
+        Polycon::Store.modify(file: self, **options)
       end 
       def cancel()
-        Polycon::Store::ensure_root_exists
-        Polycon::Store::delete(@path)
-        raise AppointmentDeletionError if Polycon::Store::exist?(@path)
+        Polycon::Store.ensure_root_exists
+        Polycon::Store.delete(@path)
+        raise AppointmentDeletionError if Polycon::Store.exist?(@path)
       end
       def reschedule(new_date:)
-        Polycon::Store::ensure_root_exists
+        Polycon::Store.ensure_root_exists
         new_path = Appointment.make_path(professional:self.to_h[:professional], date: new_date)
-        raise AlreadyExists if Polycon::Store::exist?(new_path)
-        Polycon::Store::rename(old_name: @path, new_name: new_path)
+        raise AlreadyExists if Polycon::Store.exist?(new_path)
+        Polycon::Store.rename(old_name: @path, new_name: new_path)
       end
 
       def to_s 
@@ -146,9 +146,9 @@ module Polycon
       end 
 
       def save()
-        Polycon::Store::ensure_root_exists
-        raise AlreadyExists if Polycon::Store::exist?(@path)
-        Polycon::Store::save(appointment: self)
+        Polycon::Store.ensure_root_exists
+        raise AlreadyExists if Polycon::Store.exist?(@path)
+        Polycon::Store.save(appointment: self)
       end 
     
       #Appointment Errors
