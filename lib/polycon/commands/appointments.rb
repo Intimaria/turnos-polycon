@@ -151,15 +151,15 @@ module Polycon
 
             appts = Polycon::Model::Appointment.all(professional:professional, **options)
 
-            if options[:date]
-              appts = appts.filter {|appt| appt.date == options[:date]} 
-              puts "Appointments for #{professional}: #{options[:date] if options[:date]}"
-              puts appts
-            end
             if appts.empty?
               warn "No appointments for #{professional}"
               exit 0
             end 
+            if options[:date]
+              appts = appts.filter {|appt|  Date.parse(appt.date.to_s) == Date.parse(options[:date])} 
+            end
+            puts "Appointments for #{professional}: #{options[:date] if options[:date]}"
+            puts appts
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1
