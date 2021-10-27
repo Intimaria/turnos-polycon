@@ -43,7 +43,7 @@ module Polycon
 
         self.name = name
         self.surname = surname
-        @path = Polycon::Store.make_path(professional: self)
+        @path = "#{@name}_#{@surname}/"
       end
 
       def to_h
@@ -78,10 +78,10 @@ module Polycon
       end
 
       def appointments
-        Polycon::Store.entries(directory: @path).map! do |appt|
-          appointments << Appointment.from_file(appt)
+        Polycon::Store.entries(directory: Polycon::Store::PATH + @path).map! do |appt|
+          puts appt
+          puts Appointment.from_path(path: @path + appt + '.paf')
         end
-        apppointments
       end
 
     end

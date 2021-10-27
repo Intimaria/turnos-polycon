@@ -3,75 +3,51 @@ require 'time'
 
 module Polycon
   module Model
-
+    # This class's responsability is to model Appointment objects
     class Appointment
-      attr_accessor :date, :professional, :name,  :surname, :phone, :notes
+      attr_accessor :date, :professional, :name, :surname, :phone, :notes
       attr_reader :path
-      FORMAT = '%Y-%m-%d_%H-%M' 
-      class << self 
+
+      FORMAT = '%Y-%m-%d_%H-%M'
+      class << self
 
 
         def all(professional:, date: nil)
-          Polycon::Store::ensure_root_exists
           prof = Professional.create(name: professional)
           raise InvalidProfessional unless Professional.valid?(prof)
-          appointments  = Polycon::Store::entries(directory:Polycon::Store::PATH+prof.path)
-          if date then 
-            begin 
-              in_date = Date.parse(date)
-            rescue 
-              raise ParameterError, "the date parameter is invalid"
-            end 
-            appointments.filter! do  |appt| 
-              Date.parse(appt) == in_date
-            end 
-          end 
-          appointments.map! do |appt| 
+          all_dates  = Polycon::Store::entries(directory:Polycon::Store::professional_path(professional))
+          all_dates.map! do |appt| 
             date_arr = appt.split(/_/)
             time = date_arr[1].gsub(/[-]/,":")
             date_arr[0]+"_"+time
           end 
-          all = []
-          appointments.each {|date| all << Appointment.from_file(date: date, professional: professional)}
-          all.sort_by { |a| a.date }
+          appointments = []
+          all_dates.each {|date| appointments << Appointment.from_file(date: date, professional: professional)}
+          appointments.sort_by { |a| a.date }
         end 
 
         def create(date:, professional:, **options)
-          begin 
-            Polycon::Store::ensure_root_exists
-            path = make_path(professional: professional, date: date)
-            raise AppointmentCreationError unless appointment = new(date: date, professional: professional, **options)
+            raise AppointmentCreationError unless (appointment = new(date: date, professional: professional, **options))
+
             valid?(date: appointment.date, professional: appointment.professional)
             appointment
           end
         end 
 
         def from_file(date:, professional:)
-          Polycon::Store::ensure_root_exists
-          path = make_path(professional: professional, date: date)
-          raise NotFound unless Polycon::Store::exist?(path)
-          surname, name, phone, notes = Polycon::Store::read(path)
-          appointment = create(date:date, professional:professional, name:name, surname:surname, phone:phone, notes:notes)
-          appointment
+          surname, name, phone, notes = Polycon::Store.read(professional: Professional.create(name: professional), date: Time.parse(date))
+          create(date:date, professional: professional, name: name, surname: surname, phone: phone, notes: notes)
         end
 
         def cancel_all(professional:)
-          Polycon::Store::ensure_root_exists
           prof = Professional.create(name: professional)
-          raise NotFound if Polycon::Store::empty?(directory:prof.path)
+          raise NotFound if Polycon::Store.empty?(directory:prof.path)
+
           all_appointments = all(professional: professional)
-          all_appointments.each {|appt| appt.cancel}
+          all_appointments.each {|appt| appt.cancel} # &:cancel
         end
 
         #utility
-
-        def make_path(professional:, date:)
-          name, surname = professional.split(" ")
-          directory = (name + "_" + surname + '/').upcase
-          file = Time.parse(date).strftime(FORMAT)+'.paf'
-          directory+file
-        end 
-  
 
         protected 
 
@@ -103,7 +79,7 @@ module Polycon
       end 
 
       def initialize(date:, professional:, **options)
-        @path = Appointment.make_path(professional: professional, date: date)
+        @path = Polycon::Store.appointment_path(professional: professional, date: date)
         self.date = Time.parse(date)
         self.professional = Professional.create(name: professional)
         options.each do |key, value|
@@ -113,7 +89,7 @@ module Polycon
       
       def to_h
         {
-        :professional=>professional.name+' '+professional.surname,
+        :professional=> "#{professional.name professional.surname}",
         :date=>date.to_s,
         :surname=>surname,
         :name=>name,
@@ -124,19 +100,16 @@ module Polycon
 
 
       def edit(**options)
-        Polycon::Store::ensure_root_exists
-        Polycon::Store::modify(file: self, **options)
+        Polycon::Store.modify(file: self, **options)
       end 
       def cancel()
-        Polycon::Store::ensure_root_exists
-        Polycon::Store::delete(@path)
+        Polycon::Store.delete(@path)
         raise AppointmentDeletionError if Polycon::Store::exist?(@path)
       end
       def reschedule(new_date:)
-        Polycon::Store::ensure_root_exists
-        new_path = Appointment.make_path(professional:self.to_h[:professional], date: new_date)
-        raise AlreadyExists if Polycon::Store::exist?(new_path)
-        Polycon::Store::rename(old_name: @path, new_name: new_path)
+        new_path =  Polycon::Store.appointment_path(professional:self.to_h[:professional], date: new_date)
+        raise AlreadyExists if Polycon::Store.exist?(new_path)
+        Polycon::Store.rename(old_name: @path, new_name: new_path)
       end
 
       def to_s 
@@ -146,35 +119,40 @@ module Polycon
       end 
 
       def save()
-        Polycon::Store::ensure_root_exists
-        raise AlreadyExists if Polycon::Store::exist?(self.path)
-        Polycon::Store::save(appointment: self)
+        path = Polycon::Store.appointment_path(professional:self.to_h[:professional], date: @date)
+        raise AlreadyExists if Polycon::Store::exist?(path)
+        Polycon::Store.save(appointment: self)
       end 
     
-      #Appointment Errors
+       # Appointment Errors: General
         class AppointmentError < Error 
           def message; end; end 
 
+       # Appointment Errors: Create
         class AppointmentCreationError < AppointmentError
           def message; end
         end 
 
+      # Appointment Errors: Delete
         class AppointmentDeletionError < AppointmentError
           def message; end
         end 
 
+       # Appointment Errors: Invalid
         class InvalidAppointment < AppointmentError 
           def message
             'the appointment is invalid'
           end 
         end
 
+      # Appointment Errors: Invalid Date
         class InvalidAppointmentDate < InvalidAppointment 
           def message
             'the date is invalid'
           end 
         end
 
+        # Appointment Errors: Invalid Professional
         class InvalidAppointmentProfessional < InvalidAppointment 
           def message
             'the profess is invalid'

@@ -7,25 +7,34 @@ module Polycon
 
     @files = Dry::Files.new
     
-    def self.root()
-        ensure_root_exists
-        PATH
-    end 
+    # PATHS
 
-   def self.make_path(appointment:nil,professional:nil)
-    begin
-      appointment ? appointment.date.strftime('%Y-%m-%d_%H-%I') +'.paf' : professional.name.upcase+'_'+professional.surname.upcase
-    rescue 
-      raise Dry::Files::Error, "problem with making file path"
-    end
-   end 
-
-    def self.ensure_root_exists()
-      begin
+    def self.ensure_root_exists
         path = Dir.home+'/.polycon/'
         @files.mkdir(path) unless @files.directory?(path)
       rescue 
         raise Dry::Files::Error, "problem with root directory"
+      end
+    end
+
+    def self.root
+      ensure_root_exists
+      PATH
+    end 
+
+    def self.appointment_path(date:)
+    begin
+        "#{date.strftime('%Y-%m-%d_%H-%I')}.paf"
+      rescue 
+        raise Dry::Files::Error, "problem with making file path"
+      end
+    end 
+
+    def self.professional_path(professional:)
+    begin
+      "#{professional.name.upcase}_#{professional.surname.upcase}/"
+      rescue 
+        raise Dry::Files::Error, "problem with making file path"
       end
     end
 
@@ -45,14 +54,16 @@ module Polycon
       end
     end
 
-    def self.read(path)
-      return nil if @files.directory?(PATH+path)
+    def self.read(date:, professional:)
+      path = "#{root}#{professional_path(professional: professional)}#{appointment_path(date: date)}"
+      return nil if @files.directory?(path)
+
       begin
-          @files.read(PATH+path).split(/\n/)
+        @files.read(path).split(/\n/)
       rescue 
         raise Dry::Files::Error, "problem reading from file"
       end
-    end 
+    end
 
     def self.rename(old_name:, new_name:)
       begin

@@ -148,15 +148,12 @@ module Polycon
         def call(professional:, **options)
           #warn "TODO: Implementar listado de turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-
             appts = Polycon::Model::Appointment.all(professional:professional, **options)
-            if appts.empty? then 
+            options[:date] && appts = appts.select { |appt| appt.date == options[:date] }
+            if appts.empty?
               warn "No appointments for #{professional}"
               exit 0
-            else 
-              (puts "Appointments for #{professional}: #{options[:date] if options[:date]}")
-              puts appts
-            end 
+            end
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1

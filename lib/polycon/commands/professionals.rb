@@ -118,6 +118,36 @@ module Polycon
           end
         end
       end
+
+      class Appointments < Dry::CLI::Command
+        desc 'get appointments for a professional'
+
+        argument :name, required: true, desc: 'name of the professional'
+
+        example [
+          '"Alna Esevez" # Shows appointments for professional "Alna Esevez"'
+        ]
+
+        def call(name:, **)
+          #warn "TODO: Implementar renombrado de profesionales con nombre '#{old_name}' para que pase a llamarse '#{new_name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          begin
+            #Polycon::Model::Professional.rename(old_name:old_name, new_name: new_name)
+            professional = Polycon::Model::Professional.find(name: name)
+            professional.appointments? && professional.appointments.each { |a| puts a.to_s }
+          rescue Polycon::Model::Error => e
+            warn "sorry, something went wrong with Professional: #{e.message}"
+            exit 1
+          rescue Dry::Files::Error => e 
+            warn "sorry, something went wrong with Store: #{e.message}"
+            exit 2
+          rescue ArgumentError, NoMethodError => e 
+            warn "Please check the parameters you have entered, it's possible there is a problem. #{e.message}"
+            exit 3
+          end
+        end
+      end
+
+
     end
   end
 end
