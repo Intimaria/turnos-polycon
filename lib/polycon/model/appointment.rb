@@ -16,16 +16,6 @@ module Polycon
           prof = Professional.create(name: professional)
           raise InvalidProfessional unless Professional.valid?(prof)
           appointments  = Polycon::Store.entries(directory:Polycon::Store::PATH+prof.path)
-          if date then 
-            begin 
-              in_date = Date.parse(date)
-            rescue 
-              raise ParameterError, "the date parameter is invalid"
-            end 
-            appointments.filter! do  |appt| 
-              Date.parse(appt) == in_date
-            end 
-          end 
           appointments.map! do |appt| 
             date_arr = appt.split(/_/)
             time = date_arr[1].gsub(/[-]/,":")
