@@ -26,7 +26,7 @@ module Polycon
       prefix.register 'cancel-all', Appointments::CancelAll
     end
 
-    register 'exports', aliases: ['p'] do |prefix|
+    register 'exports', aliases: ['e'] do |prefix|
       prefix.register 'day', Exports::Day
       prefix.register 'week', Exports::Week
     end

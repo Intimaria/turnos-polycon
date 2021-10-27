@@ -155,6 +155,7 @@ module Polycon
               appts = appts.filter {|appt| appt.date == options[:date]} 
               puts "Appointments for #{professional}: #{options[:date] if options[:date]}"
               puts appts
+            end
             if appts.empty?
               warn "No appointments for #{professional}"
               exit 0
