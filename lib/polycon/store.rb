@@ -9,7 +9,7 @@ module Polycon
     
     def self.root()
         ensure_root_exists
-        Dir.home+'/.polycon/'
+        PATH
     end 
 
    def self.make_path(appointment:nil,professional:nil)
