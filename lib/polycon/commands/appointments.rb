@@ -156,7 +156,7 @@ module Polycon
               exit 0
             end 
             if options[:date]
-              appts = appts.filter {|appt|  Date.parse(appt.date.to_s) == Date.parse(options[:date])} 
+              appts = appts.select {|appt|  Date.parse(appt.date.to_s) == Date.parse(options[:date])} 
             end
             puts "Appointments for #{professional}: #{options[:date] if options[:date]}"
             puts appts

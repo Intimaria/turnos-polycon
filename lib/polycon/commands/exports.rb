@@ -3,7 +3,7 @@ module Polycon
       module Exports
         
         class Day < Dry::CLI::Command
-            desc 'Expory appointments for a day'
+            desc 'Export appointments for a day, optionally filter by professional'
 
             argument :date, required: true, desc: 'Date for the exports'
             option :professional, required: true, desc: 'Full name of the professional'
@@ -13,10 +13,22 @@ module Polycon
             ]
     
             def call(date:, professional: nil,  **options)
-              warn "TODO: Implementar exportacion de turnos para el dia.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+              #warn "TODO: Implementar exportacion de turnos para el dia.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
               begin
-                puts professional.appointments() if professional
-              rescue Polycon::Exports::Error => e
+                if professional 
+                  appts = Polycon::Model::Appointment.all(professional:professional, **options)
+                else 
+                   all = Polycon::Model::Professional.all()
+                   all.each do | prof |
+                      appts = Polycon::Model::Appointment.all(professional:prof, **options)
+                   end 
+                end
+                  puts appts
+                  appts = appts.select do |appt| 
+                    Date.parse(appt.date.to_s) == Date.parse(date)
+                  end 
+                  Polycon::Export.export_day(appointments:appts)
+              rescue Exception => e
                 warn "sorry, something went wrong with Exports: #{e.message}"
                 exit 1
               rescue ArgumentError, NoMethodError => e 
@@ -27,17 +39,30 @@ module Polycon
           end
   
         class Week < Dry::CLI::Command
-            desc 'Exports all appointments for a week'
+            desc 'Exports all appointments for a week, optionally filter by professional'
 
             argument :date, required: true, desc: 'Date for the exports'
             option :professional, required: false, desc: 'Full name of the professional'
 
   
           def call(date:,professional: nil,  **options)
-            warn "TODO: Implementar exportaciones de turnos por semana.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+            #warn "TODO: Implementar exportaciones de turnos por semana.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
             begin
-              puts professional.appointments() if professional
-            rescue Polycon::Exports::Error => e
+              if professional 
+                appts = Polycon::Model::Appointment.all(professional:professional, **options)
+              else 
+                 all = Polycon::Model::Professional.all()
+                 all.each do | prof |
+                    appts = Polycon::Model::Appointment.all(professional:prof, **options)
+                 end 
+              end
+                puts appts
+                appts = appts.select do |appt| 
+                  # Here I need the logic to select those within that certain week 
+                  Date.parse(appt.date.to_s) == Date.parse(date)
+                end 
+                Polycon::Export.export_week(appointments:appts)
+            rescue Exception => e
               warn "sorry, something went wrong with Exports: #{e.message}"
               exit 1
             rescue ArgumentError, NoMethodError => e 
