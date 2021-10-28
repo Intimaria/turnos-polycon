@@ -12,8 +12,11 @@ module Polycon
 
 
         def all(professional:, date: nil)
+          # maybe have professional know their appointments, or store return
+          # maybe save hour separately from date 
           prof = Professional.create(name: professional)
           raise InvalidProfessional unless Professional.valid?(prof)
+          #TODO - should be able to delegate some of this to store
           all_dates  = Polycon::Store.entries(directory:Polycon::Store.professional_path(professional))
           all_dates.map! do |appt| 
             date_arr = appt.split(/_/)

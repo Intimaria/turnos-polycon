@@ -5,7 +5,6 @@ module Polycon
     # This class's responsability is to model Professional objects
     class Professional
       attr_accessor :name, :surname
-      attr_reader :path # FIXME: shouldn't have this
 
       class << self
 
@@ -25,7 +24,7 @@ module Polycon
         def find(name:, **)
           firstname, surname = name.split(' ')
           professional = new(name: firstname, surname: surname)
-          raise NotFound unless Polycon::Store.exist?(professional.path) # FIXME
+          raise NotFound unless Polycon::Store.exist_professional?(professional)
 
           professional
         end
@@ -43,7 +42,6 @@ module Polycon
 
         self.name = name
         self.surname = surname
-        @path = "#{@name}_#{@surname}/"
       end
 
       def to_h
@@ -58,29 +56,27 @@ module Polycon
         new_professional = Professional.create(name: new_name)
         raise InvalidProfessional unless Professional.valid?(new_professional)
 
-        Polycon::Store.rename(old_name: @path, new_name: new_professional.path)
+        Polycon::Store.rename_professional(old_name: self, new_name: new_professional)
       end
 
       def delete()
         raise ProfessionalDeletionError if self.appointments? 
 
-        Polycon::Store.delete(@path)
+        Polycon::Store.delete_professional(self)
       end
 
       def to_s
-        "name: #{@name}  #{@surname} \nfile path: #{Polycon::Store::PATH + @path}"
+        "name: #{@name}  #{@surname}"
       end
 
       def save()
-        raise AlreadyExists if Polycon::Store.exist?(@path)
+        raise AlreadyExists if Polycon::Store.exist_professional?(self)
 
         Polycon::Store.save(professional: self)
       end
 
       def appointments
-        Polycon::Store.entries(directory: Polycon::Store::PATH + @path).map! do |appt|
-          puts appt
-          puts Appointment.from_path(path: @path + appt + '.paf')
+        #TODO
         end
       end
 
