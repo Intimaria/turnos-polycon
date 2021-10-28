@@ -51,7 +51,7 @@ module Polycon
       end
 
       def appointments?
-        !Polycon::Store.empty?(directory: @path)
+        !Polycon::Store.has_appointments?(self)
       end
 
       def rename(new_name:)

@@ -6,7 +6,6 @@ module Polycon
     # This class's responsability is to model Appointment objects
     class Appointment
       attr_accessor :date, :professional, :name, :surname, :phone, :notes
-      attr_reader :path
 
       FORMAT = '%Y-%m-%d_%H-%M'
       class << self
@@ -15,7 +14,7 @@ module Polycon
         def all(professional:, date: nil)
           prof = Professional.create(name: professional)
           raise InvalidProfessional unless Professional.valid?(prof)
-          all_dates  = Polycon::Store::entries(directory:Polycon::Store::professional_path(professional))
+          all_dates  = Polycon::Store.entries(directory:Polycon::Store.professional_path(professional))
           all_dates.map! do |appt| 
             date_arr = appt.split(/_/)
             time = date_arr[1].gsub(/[-]/,":")
@@ -41,7 +40,7 @@ module Polycon
 
         def cancel_all(professional:)
           prof = Professional.create(name: professional)
-          raise NotFound if Polycon::Store.empty?(directory:prof.path)
+          raise NotFound if prof.appointments?
 
           all_appointments = all(professional: professional)
           all_appointments.each {|appt| appt.cancel} # &:cancel
@@ -79,7 +78,6 @@ module Polycon
       end 
 
       def initialize(date:, professional:, **options)
-        @path = Polycon::Store.appointment_path(professional: professional, date: date)
         self.date = Time.parse(date)
         self.professional = Professional.create(name: professional)
         options.each do |key, value|
@@ -100,16 +98,20 @@ module Polycon
 
 
       def edit(**options)
-        Polycon::Store.modify(file: self, **options)
+        Polycon::Store.modify(self, **options)
       end 
+
       def cancel()
-        Polycon::Store.delete(@path)
-        raise AppointmentDeletionError if Polycon::Store::exist?(@path)
+        Polycon::Store.delete_appointment(self)
+        raise AppointmentDeletionError if Polycon::Store.exist_appointment?(self)
       end
+
       def reschedule(new_date:)
-        new_path =  Polycon::Store.appointment_path(professional:self.to_h[:professional], date: new_date)
-        raise AlreadyExists if Polycon::Store.exist?(new_path)
-        Polycon::Store.rename(old_name: @path, new_name: new_path)
+        copy = self
+        copy.date = Time.parse(new_date)
+        raise AlreadyExists if Polycon::Store.exist_appointment?(copy)
+
+        Polycon::Store.rename_appointment(old_app: self, new_app: copy)
       end
 
       def to_s 
@@ -119,9 +121,8 @@ module Polycon
       end 
 
       def save()
-        path = Polycon::Store.appointment_path(professional:self.to_h[:professional], date: @date)
-        raise AlreadyExists if Polycon::Store::exist?(path)
-        Polycon::Store.save(appointment: self)
+        raise AlreadyExists if Polycon::Store::exist_appointment?(self)
+        Polycon::Store.save_appointment(self)
       end 
     
        # Appointment Errors: General
