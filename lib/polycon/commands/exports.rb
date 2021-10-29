@@ -61,7 +61,7 @@ module Polycon
               monday = now - (now.wday - 1) % 7
               puts appts
               appts.filter do |appt| 
-                Date.parse(appt.date.to_s).between?(monday, monday + 7)
+                Date.parse(appt.date.to_s).between?(monday, monday + 6)
               end 
               Polycon::Export.export_week(appointments:appts)
             rescue Exception => e
