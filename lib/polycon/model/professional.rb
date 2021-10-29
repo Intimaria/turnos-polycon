@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# required for testing 
+# required for testing
 require_relative 'error'
 require_relative '../store'
 
@@ -11,11 +11,10 @@ module Polycon
       attr_accessor :name, :surname
 
       class << self
-
         def all()
           # FIXME: delegate, create store method that returns professionals (no gsub here)
-          #Polycon::Store.entries(directory: Polycon::Store.root).map! { |p| p.gsub(/_/, ' ') }.sort
-          Polycon::Store.all_professionals().map! { |prof| create(name: prof)}
+          # Polycon::Store.entries(directory: Polycon::Store.root).map! { |p| p.gsub(/_/, ' ') }.sort
+          Polycon::Store.all_professionals().map! { |prof| create(name: prof) }
         end
 
         def create(name:, **)
@@ -39,7 +38,6 @@ module Polycon
         def valid?(professional)
           professional && !professional.name.nil? && !professional.surname.nil?
         end
-
       end
 
       def initialize(name:, surname:)
@@ -50,7 +48,7 @@ module Polycon
       end
 
       def to_h
-        {name: name, surname: surname}
+        { name: name, surname: surname }
       end
 
       def appointments?
@@ -65,7 +63,7 @@ module Polycon
       end
 
       def delete()
-        raise ProfessionalDeletionError if self.appointments? 
+        raise ProfessionalDeletionError if self.appointments?
 
         Polycon::Store.delete_professional(self)
       end
@@ -81,13 +79,12 @@ module Polycon
       end
 
       def appointments
-        #TODO
+        # TODO
       end
-
     end
 
     # Professional Errors: General
-    class ProfessionalError <Error
+    class ProfessionalError < Error
       def message; end; end
 
     # Professional Errors: Creation

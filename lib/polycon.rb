@@ -5,5 +5,4 @@ module Polycon
   autoload :Commands, 'polycon/commands'
   autoload :Model,    'polycon/model'
   autoload :Store,    'polycon/store'
-
 end
