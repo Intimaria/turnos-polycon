@@ -23,11 +23,12 @@ module Polycon
                       appts = Polycon::Model::Appointment.all(professional:prof, **options)
                    end 
                 end
-                  puts appts
-                  appts = appts.select do |appt| 
-                    Date.parse(appt.date.to_s) == Date.parse(date)
-                  end 
-                  Polycon::Export.export_day(appointments:appts)
+                date = Date.parse(date)
+                puts appts
+                appts.filter! do |appt| 
+                  Date.parse(appt.date.to_s) == date
+                end 
+                Polycon::Export.export_day(appointments:appts)
               rescue Exception => e
                 warn "sorry, something went wrong with Exports: #{e.message}"
                 exit 1
@@ -56,12 +57,13 @@ module Polycon
                     appts = Polycon::Model::Appointment.all(professional:prof, **options)
                  end 
               end
-                puts appts
-                appts = appts.select do |appt| 
-                  # Here I need the logic to select those within that certain week 
-                  Date.parse(appt.date.to_s) == Date.parse(date)
-                end 
-                Polycon::Export.export_week(appointments:appts)
+              date = Date.parse(date)
+              monday = now - (now.wday - 1) % 7
+              puts appts
+              appts.filter do |appt| 
+                Date.parse(appt.date.to_s).between?(monday, monday + 7)
+              end 
+              Polycon::Export.export_week(appointments:appts)
             rescue Exception => e
               warn "sorry, something went wrong with Exports: #{e.message}"
               exit 1
