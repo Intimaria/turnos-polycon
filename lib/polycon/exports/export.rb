@@ -1,11 +1,28 @@
 module Polycon
-  module Export
-    def self.export_day(appointments:, **options)
-      puts "here I export all the appointmets for a day"
-    end  
-    def self.export_week(appointments:, **options)
-      puts "here I export all the appointments for a week"
+  class Export < Prawn::Document
+    # include Prawn::View
+    
+    def initialize(appointments:, **options)
+      super(top_margin: 50)
+      @appointments = appointments
+      if options[:professional] 
+        @professional = options[:professional] 
+      end 
+      table export(appointments: appointments, **options)
     end 
+    def export(appointments:, **options)
+      puts "here I export all the appointments - options for day week & professional"
+
+    end 
+=begin 
+    def export_day(appointments:, **options)
+      puts "here I export all the appointmets for a day"
+
+    end  
+    def export_week(appointments:, **options)
+      puts "here I export all the appointments for a week"
+
+    end  =end
     #Export Errors
     class ExportError 
       def message
