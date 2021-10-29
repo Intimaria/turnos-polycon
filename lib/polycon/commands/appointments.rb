@@ -149,11 +149,12 @@ module Polycon
           #warn "TODO: Implementar listado de turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
             appts = Polycon::Model::Appointment.all(professional:professional, **options)
-            options[:date] && appts = appts.select { |appt| appt.date == options[:date] }
             if appts.empty?
               warn "No appointments for #{professional}"
               exit 0
             end
+            options[:date] && appts = appts.select { |appt| appt.date == options[:date] }
+            puts appts.sort_by { |a| a.date }
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1

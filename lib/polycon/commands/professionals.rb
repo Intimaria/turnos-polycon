@@ -75,7 +75,7 @@ module Polycon
         def call(*)
           #warn "TODO: Implementar listado de profesionales.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-            puts Polycon::Model::Professional.all()
+            puts Polycon::Model::Professional.all().sort
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Professional: #{e.message}"
             exit 1
