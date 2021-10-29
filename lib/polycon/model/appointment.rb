@@ -11,21 +11,14 @@ module Polycon
       class << self
 
 
-        def all(professional:, date: nil)
-          # maybe have professional know their appointments, or store return
-          # maybe save hour separately from date 
+        def all(professional:)
+          #TODO maybe have professional know their appointments, or store return
+          #TODO maybe save hour separately from date 
           prof = Professional.create(name: professional)
           raise InvalidProfessional unless Professional.valid?(prof)
-          #TODO - should be able to delegate some of this to store
-          all_dates  = Polycon::Store.entries(directory:Polycon::Store.professional_path(professional))
-          all_dates.map! do |appt| 
-            date_arr = appt.split(/_/)
-            time = date_arr[1].gsub(/[-]/,":")
-            date_arr[0]+"_"+time
-          end 
-          appointments = []
-          all_dates.each {|date| appointments << Appointment.from_file(date: date, professional: professional)}
-          appointments.sort_by { |a| a.date }
+
+          appointments  = Polycon::Store.all_appointment_dates(professional)
+          appointments.map! {|date|  Appointment.from_file(date: date, professional: professional)}
         end 
 
         def create(date:, professional:, **options)
@@ -43,7 +36,7 @@ module Polycon
 
         def cancel_all(professional:)
           prof = Professional.create(name: professional)
-          raise NotFound if prof.appointments?
+          raise AppointmentNotFoundError unless prof.appointments?
 
           all_appointments = all(professional: professional)
           all_appointments.each {|appt| appt.cancel} # &:cancel
@@ -90,12 +83,11 @@ module Polycon
       
       def to_h
         {
-        :professional=> "#{professional.name professional.surname}",
+        :professional=> professional,
         :date=>date.to_s,
         :surname=>surname,
         :name=>name,
         :phone=>phone,
-        #:path=>path,
         :notes=>notes}
       end 
 
@@ -124,7 +116,7 @@ module Polycon
       end 
 
       def save()
-        raise AlreadyExists if Polycon::Store::exist_appointment?(self)
+        raise AlreadyExists if Polycon::Store.exist_appointment?(self)
         Polycon::Store.save_appointment(self)
       end 
     
@@ -162,6 +154,12 @@ module Polycon
             'the profess is invalid'
           end 
         end
+
+        # Appointment Errors: Not found
+        class AppointmentNotFoundError < NotFound
+        def message
+          "the appointment(s) you are looking for are not to be found"
+        end; end 
         
     end 
   end

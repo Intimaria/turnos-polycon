@@ -146,14 +146,43 @@ module Polycon
           raise Dry::Files::Error, "The directory or file doesn't exist" 
       end 
     end 
+    
+    def all_professionals
+      begin
+          professionals = Dir.entries(root).reject {|f| f.start_with?(".") }
+          professionals.map! { |prof| prof.gsub(/_/, ' ')  } 
+      rescue  
+        raise Dry::Files::Error, "problem retrieving entries, are you sure that directory exists?"
+      end
+    end 
+    def all_appointment_dates(prof)
+      begin
+        appointment_dates = Dir.entries(root+professional_path(prof)).reject {|f| f.start_with?(".") }
+        appointment_dates.map! { |f| File.basename(f, File.extname(f)) } 
+        appointment_dates.map! do |appt| 
+          date_arr = appt.split(/_/)
+          time = date_arr[1].gsub(/[-]/,":")
+          date_arr[0]+"_"+time
+        end 
+    rescue  
+      raise Dry::Files::Error, "problem retrieving entries, are you sure that directory exists?"
+    end
+  end 
+    def has_appointments?(prof) 
+    begin
+      Dir.empty?(root+professional_path(prof))
+    rescue
+      raise Dry::Files::Error, "Nil value argument." 
+    end 
+  end 
 
-    def self.empty?(prof)
+=begin     def self.empty?(prof)
+        begin
           Dir.empty?(root+professional_path(prof))
         rescue
           raise Dry::Files::Error, "Nil value argument." 
         end 
-      end 
-    end 
+    end  =end
 
 
     def self.write_dir(obj)
