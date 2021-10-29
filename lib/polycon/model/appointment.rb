@@ -11,7 +11,6 @@ module Polycon
     class Appointment
       attr_accessor :date, :professional, :name, :surname, :phone, :notes
 
-      FORMAT = '%Y-%m-%d_%H-%M'
       class << self
 
 
@@ -66,7 +65,7 @@ module Polycon
 
         def valid_date?(date)
           begin 
-            Time.strptime(date.to_s, FORMAT)
+            Time.strptime(date.to_s, '%Y-%m-%d %H:%M')
             true  
           rescue
             false 
@@ -86,7 +85,8 @@ module Polycon
       def to_h
         {
         :professional=> professional,
-        :date=>date.to_s,
+        :date=>date.strftime('%Y-%m-%d'),
+        :hour=>date.strftime('%H:%M'),
         :surname=>surname,
         :name=>name,
         :phone=>phone,

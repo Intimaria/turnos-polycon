@@ -36,5 +36,17 @@ describe 'Store' do
   it 'returns array of appointment variables' do 
     Polycon::Store.read(professional:@appointment1.professional,date:@appointment1.date).must_equal ["J", "Jane", "111111111", "Something"]
   end
+  it 'returns all the appointment date & times as a string array for a professional' do 
+    Polycon::Store.all_appointment_dates(@professional).must_equal ["2021-01-01 11:30", "2021-01-01 12:30"]
+  end
+  it 'returns true if the professional has appointments' do 
+    Polycon::Store.has_appointments?(@professional).must_equal true
+  end
+  it 'returns true if the professional exists' do 
+    Polycon::Store.exist_professional?(@professional).must_equal true
+  end
+  it 'returns true if the appointment exists' do 
+    Polycon::Store.exist_appointment?(@appointment1).must_equal true
+  end
 end
 
