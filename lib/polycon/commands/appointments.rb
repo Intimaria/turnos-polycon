@@ -148,7 +148,8 @@ module Polycon
         def call(professional:, **options)
           #warn "TODO: Implementar listado de turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-            appts = Polycon::Model::Appointment.all(professional:professional, **options)
+            prof = Polycon::Model::Professional.create(name:professional)
+            appts = Polycon::Model::Appointment.all(prof)
             if appts.empty?
               warn "No appointments for #{professional}"
               exit 0

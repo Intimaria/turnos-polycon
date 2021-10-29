@@ -14,7 +14,7 @@ module Polycon
       end
     end
     
-    class AlreadyExists <Error
+    class AlreadyExists < Error
       def message
         "what you wish to create already exists"
       end

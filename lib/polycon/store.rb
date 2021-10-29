@@ -1,15 +1,19 @@
+require 'dry/files'
+
 module Polycon
   module Store 
-    #TODO -> define custom errors DONE-ISH
+    # TODO -> define custom errors DONE-ISH
     #     -> return true or false instead of exception (some methods) & validate at Model level
     #     -> import into Models?
-    PATH = Dir.home+'/.polycon/'
+    PATH = "#{Dir.home}/.polycon/".freeze
+    FORMAT = '%Y-%m-%d_%H-%M'.freeze
 
     @files = Dry::Files.new
-    
+
     # PATHS
 
     def self.ensure_root_exists
+      begin
         @files.mkdir(PATH) unless @files.directory?(PATH)
       rescue 
         raise Dry::Files::Error, "problem with root directory"
@@ -22,16 +26,16 @@ module Polycon
     end 
 
     def self.appointment_path(app)
-    begin
-        "#{professional_path(app.professional)}#{app.date.strftime('%Y-%m-%d_%H-%I')}.paf"
+      begin
+        "#{professional_path(app.professional)}#{app.date.strftime(FORMAT)}.paf"
       rescue 
         raise Dry::Files::Error, "problem with making file path"
       end
     end 
 
     def self.professional_path(professional)
-    begin
-      "#{professional.name.upcase}_#{professional.surname.upcase}/"
+      begin
+        "#{professional.name.upcase}_#{professional.surname.upcase}/"
       rescue 
         raise Dry::Files::Error, "problem with making file path"
       end
@@ -49,6 +53,7 @@ module Polycon
         raise Dry::Files::Error, "problem saving"
       end
     end
+
     def self.save_appointment(obj)
       begin
         #TODO - do I need this delegation?
@@ -63,7 +68,7 @@ module Polycon
     end
 
     def self.read(professional:,date:)
-      path = "#{root}#{professional_path(professional)}#{date.strftime('%Y-%m-%d_%H-%I')}.paf"
+      path = "#{root}#{professional_path(professional)}#{date.strftime(FORMAT)}.paf"
       return nil if @files.directory?(path)
 
       begin
@@ -95,8 +100,8 @@ module Polycon
     def self.modify(app, **options)
       begin 
         options.each do |key,value| 
-        @files.replace_first_line(root+appointment_path(app), app.to_h[key], value)
-      end
+          @files.replace_first_line(root+appointment_path(app), app.to_h[key], value)
+        end
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem modifying file"
       end
@@ -139,6 +144,7 @@ module Polycon
           raise Dry::Files::Error, "The directory or file doesn't exist" 
       end 
     end 
+
     def self.exist_appointment?(app)
       begin
           @files.exist?(root+appointment_path(app))
@@ -147,7 +153,7 @@ module Polycon
       end 
     end 
     
-    def all_professionals
+    def self.all_professionals
       begin
           professionals = Dir.entries(root).reject {|f| f.start_with?(".") }
           professionals.map! { |prof| prof.gsub(/_/, ' ')  } 
@@ -155,7 +161,8 @@ module Polycon
         raise Dry::Files::Error, "problem retrieving entries, are you sure that directory exists?"
       end
     end 
-    def all_appointment_dates(prof)
+
+    def self.all_appointment_dates(prof)
       begin
         appointment_dates = Dir.entries(root+professional_path(prof)).reject {|f| f.start_with?(".") }
         appointment_dates.map! { |f| File.basename(f, File.extname(f)) } 
@@ -164,11 +171,13 @@ module Polycon
           time = date_arr[1].gsub(/[-]/,":")
           date_arr[0]+"_"+time
         end 
+        return appointment_dates!
     rescue  
       raise Dry::Files::Error, "problem retrieving entries, are you sure that directory exists?"
     end
   end 
-    def has_appointments?(prof) 
+
+  def self.has_appointments?(prof) 
     begin
       Dir.empty?(root+professional_path(prof))
     rescue
@@ -176,13 +185,13 @@ module Polycon
     end 
   end 
 
-=begin     def self.empty?(prof)
+  def self.empty?(prof)
         begin
           Dir.empty?(root+professional_path(prof))
         rescue
           raise Dry::Files::Error, "Nil value argument." 
         end 
-    end  =end
+    end
 
 
     def self.write_dir(obj)

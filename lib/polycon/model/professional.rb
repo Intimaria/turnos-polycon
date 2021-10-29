@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# required for testing 
+require_relative 'error'
+require_relative '../store'
+
 module Polycon
   module Model
     # This class's responsability is to model Professional objects
@@ -78,7 +82,6 @@ module Polycon
 
       def appointments
         #TODO
-        end
       end
 
     end

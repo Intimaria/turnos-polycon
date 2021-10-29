@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 require 'time'
 
+# requires for testing 
+require_relative 'error'
+require_relative '../store'
+
 module Polycon
   module Model
     # This class's responsability is to model Appointment objects
@@ -11,14 +15,12 @@ module Polycon
       class << self
 
 
-        def all(professional:)
+        def all(prof)
           #TODO maybe have professional know their appointments, or store return
           #TODO maybe save hour separately from date 
-          prof = Professional.create(name: professional)
           raise InvalidProfessional unless Professional.valid?(prof)
-
-          appointments  = Polycon::Store.all_appointment_dates(professional)
-          appointments.map! {|date|  Appointment.from_file(date: date, professional: professional)}
+          appointments = Polycon::Store.all_appointment_dates(prof)
+          appointments.map! {|date| Appointment.from_file(date: date, professional: prof)}
         end 
 
         def create(date:, professional:, **options)
@@ -26,8 +28,8 @@ module Polycon
 
             valid?(date: appointment.date, professional: appointment.professional)
             appointment
-          end
-        end 
+        end
+        
 
         def from_file(date:, professional:)
           surname, name, phone, notes = Polycon::Store.read(professional: Professional.create(name: professional), date: Time.parse(date))
@@ -121,7 +123,7 @@ module Polycon
       end 
     
        # Appointment Errors: General
-        class AppointmentError < Error 
+        class AppointmentError < Error
           def message; end; end 
 
        # Appointment Errors: Create
@@ -159,7 +161,8 @@ module Polycon
         class AppointmentNotFoundError < NotFound
         def message
           "the appointment(s) you are looking for are not to be found"
-        end; end 
+        end 
+      end 
         
     end 
   end
