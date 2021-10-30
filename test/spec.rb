@@ -57,9 +57,9 @@ describe 'Polycon' do
   end
 
   # Appointment
-  #   it 'returns all the appointment for a professional as an array of appointments' do
-  #     expect(Polycon::Model::Appointment.all_for_professional(@professional)).must_be_instance_of Array
-  #   end
+#   it 'returns all the appointment for a professional as an array of appointments' do
+#     expect(Polycon::Model::Appointment.all_for_professional(@professional)).must_be_instance_of Array
+#   end
   it 'returns all the appointments' do
     expect(Polycon::Model::Appointment.all).must_be_instance_of Array
   end
