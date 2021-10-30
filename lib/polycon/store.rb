@@ -15,7 +15,7 @@ module Polycon
     def self.ensure_root_exists
       begin
         @files.mkdir(PATH) unless @files.directory?(PATH)
-      rescue
+      rescue Dry::Files::Error
         raise Dry::Files::Error, "problem with root directory"
       end
     end
@@ -25,18 +25,18 @@ module Polycon
       PATH
     end
 
-    def self.appointment_path(app)
+    def self.appointment_path(appt)
       begin
-        "#{professional_path(app.professional)}#{app.date.strftime(FORMAT)}.paf"
-      rescue
+        "#{professional_path(appt.professional)}#{appt.date.strftime(FORMAT)}.paf"
+      rescue Dry::Files::Error
         raise Dry::Files::Error, "problem with making appointment file path"
       end
     end
 
-    def self.professional_path(professional)
+    def self.professional_path(prof)
       begin
-        "#{professional.name.upcase}_#{professional.surname.upcase}/"
-      rescue
+        "#{prof.name.upcase}_#{prof.surname.upcase}/"
+      rescue Dry::Files::Error
         raise Dry::Files::Error, "problem with making professional file path"
       end
     end
@@ -47,7 +47,7 @@ module Polycon
 
       begin
         @files.read(path).split(/\n/)
-      rescue
+      rescue Dry::Files::Error
         raise Dry::Files::Error, "problem reading from file"
       end
     end
@@ -55,15 +55,15 @@ module Polycon
     def self.exist_professional?(prof)
       begin
         @files.exist?(root + professional_path(prof))
-      rescue
+      rescue Dry::Files::Error
         raise Dry::Files::Error, "The directory or file doesn't exist"
       end
     end
 
-    def self.exist_appointment?(app)
+    def self.exist_appointment?(appt)
       begin
-        @files.exist?(root + appointment_path(app))
-      rescue
+        @files.exist?(root + appointment_path(appt))
+      rescue Dry::Files::Error
         raise Dry::Files::Error, "The directory or file doesn't exist"
       end
     end
@@ -72,7 +72,7 @@ module Polycon
       begin
         professionals = Dir.entries(root).reject { |f| f.start_with?(".") }
         professionals.map! { |prof| prof.gsub(/_/, ' ') }
-      rescue
+      rescue Dry::Files::Error
         raise Dry::Files::Error, "problem retrieving entries, are you sure that directory exists?"
       end
     end
@@ -87,7 +87,7 @@ module Polycon
           date_arr[0] + " " + time
         end
         return appointment_dates
-      rescue
+      rescue Dry::Files::Error
         raise Dry::Files::Error, "problem retrieving entries, are you sure that directory exists?"
       end
     end
@@ -95,7 +95,7 @@ module Polycon
     def self.has_appointments?(prof)
       begin
         !Dir.empty?(root + professional_path(prof))
-      rescue
+      rescue Dry::Files::Error
         raise Dry::Files::Error, "problem checking if the professional has appointments"
       end
     end
@@ -126,7 +126,7 @@ module Polycon
         raise Dry::Files::Error, "couldn't write file"
       rescue NoMethodError
         raise Dry::Files::Error, "Nil value argument."
-      rescue
+      rescue Dry::Files::Error
         raise Dry::Files::Error, "problem saving"
       end
     end
@@ -134,62 +134,62 @@ module Polycon
     def self.save_appointment(appt)
       begin
         # TODO - do I need this delegation?
-        write(appt)
+        write_file(appt)
       rescue FileCreationError
         raise Dry::Files::Error, "couldn't write file"
       rescue NoMethodError
         raise Dry::Files::Error, "Nil value argument."
-      rescue
+      rescue Dry::Files::Error
         raise Dry::Files::Error, "problem saving"
       end
     end
 
-    def self.modify(app, **options)
+    def self.modify(appt, **options)
       begin
         options.each do |key, value|
-          @files.replace_first_line(root + appointment_path(app), app.to_h[key], value)
+          @files.replace_first_line("#{root}#{appointment_path(appt)}", appt.to_h[key], value)
         end
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem modifying file"
       end
     end
 
-    def self.delete_professional(professional)
+    def self.delete_professional(prof)
       begin
-        @files.delete_directory(root + professional_path(profesional))
-      rescue
+        @files.delete_directory(root + professional_path(prof))
+      rescue Dry::Files::Error
         raise Dry::Files::Error, "problem deleting"
       end
     end
 
-    def self.delete_appointment(app)
+    def self.delete_appointment(appt)
       begin
-        @files.delete(root + appointment_path(app))
-      rescue
+        @files.delete(root + appointment_path(appt))
+      rescue Dry::Files::Error
         raise Dry::Files::Error, "problem deleting"
       end
     end
 
     def self.write_dir(prof)
       begin
-        if @files.directory?(root + professional_path(prof)) then
+        if @files.directory?(root + professional_path(prof))
           raise Dry::Files::Error, "the directory already exists"
         end
 
         @files.mkdir(root + professional_path(prof))
-      rescue
+      rescue Dry::Files::Error
         raise DirectoryCreationError
       end
     end
 
-    def self.write(appt)
+    def self.write_file(appt)
       path = appointment_path(appt)
       begin
         @files.write(root + path, appt.surname)
         @files.append(root + path, appt.name)
         @files.append(root + path, appt.phone)
         @files.append(root + path, appt.notes) if appt.notes
-      rescue
+      rescue Dry::Files::Error
         return FileCreationError
       end
     end

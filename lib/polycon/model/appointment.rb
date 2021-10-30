@@ -77,7 +77,7 @@ module Polycon
         self.date = Time.parse(date)
         self.professional = Professional.create(name: professional)
         options.each do |key, value|
-          self.send(:"#{key}=", value)
+          send(:"#{key}=", value)
         end
       end
 
@@ -97,7 +97,7 @@ module Polycon
         Polycon::Store.modify(self, **options)
       end
 
-      def cancel()
+      def cancel
         Polycon::Store.delete_appointment(self)
         raise AppointmentDeletionError if Polycon::Store.exist_appointment?(self)
       end
@@ -116,7 +116,9 @@ module Polycon
         s
       end
 
-      def save()
+      def save
+        # TODO - should I have this in create, in initialize or in save?
+        # should I call save in create? Makes more sense
         raise AlreadyExists if Polycon::Store.exist_appointment?(self)
 
         Polycon::Store.save_appointment(self)
