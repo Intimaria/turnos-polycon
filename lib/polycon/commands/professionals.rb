@@ -72,7 +72,7 @@ module Polycon
 
         def call(*)
           begin
-            professionals =  Polycon::Model::Professional.all
+            professionals = Polycon::Model::Professional.all
             puts professionals
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Professional: #{e.message}"

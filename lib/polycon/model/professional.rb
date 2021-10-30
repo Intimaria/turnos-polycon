@@ -76,7 +76,7 @@ module Polycon
       def save
         raise AlreadyExists if Polycon::Store.exist_professional?(self)
 
-        Polycon::Store.save_professional( self)
+        Polycon::Store.save_professional(self)
       end
 
       def appointments_dates
@@ -84,13 +84,12 @@ module Polycon
       end
 
       def appointments
-        # TODO if I wanted to get all my appointments, I would need to be able to 
-        # call Appointment.from_file with dates and self 
+        # TODO if I wanted to get all my appointments, I would need to be able to
+        # call Appointment.from_file with dates and self
         appts = self.appointments_dates
-        appts.map! {|date| Appointment.from_file(date: date, professional:self.to_s)}
+        appts.map! { |date| Appointment.from_file(date: date, professional: self.to_s) }
       end
     end
-
 
     # Professional Errors: General
     class ProfessionalError < Error
