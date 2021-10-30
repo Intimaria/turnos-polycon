@@ -66,7 +66,7 @@ Se implementa una nueva clase heredando de [Dry::CLI::Commands](https://dry-rb.o
 
 Se crea un directorio exports en la raiz y se hacen los autoloads necesarios en Polycon.
 
-Se elige [Prawn Table](https://github.com/prawnpdf/prawnhttps://github.com/prawnpdf/prawn-table) para hacer las exportaciones de las grillas de los turnos. 
+Se elige [Prawn Table](https://github.com/prawnpdf/prawnhttps://github.com/prawnpdf/prawn-table) para hacer las exportaciones de las grillas de los turnos.
 
 
 # Notas
@@ -94,5 +94,6 @@ Se elige [Prawn Table](https://github.com/prawnpdf/prawnhttps://github.com/prawn
 - Chequear que la hora esta en un rango (guardar rango en clase no hardcoradearlo) para evitar bug de que se crea bien aunque no se pasen bien los horarios y quede 00-00
 - ~~Necesito preguntar en "create" si ya existe el profesional? solo estoy creando un objeto. Como mucho, en save() deberia haber ese chequeo~~
 - ~~Ordenar los appointment por fecha en el List sin fecha~~
-- A futuro: Agarrar todos los appointment del sistema?
+- ~~A futuro: Agarrar todos los appointment del sistema?~~
 - ~~Pasar cancel y reschedule a metodos de instancia~~
+- validar que el telefono es un numero

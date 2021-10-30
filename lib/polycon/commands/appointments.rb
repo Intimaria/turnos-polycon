@@ -11,13 +11,13 @@ module Polycon
         option :name, required: true, desc: "Patient's name"
         option :surname, required: true, desc: "Patient's surname"
         option :phone, required: true, desc: "Patient's phone number"
-        option :notes, required: false, desc: 'Additional notes for appointment'
+        option :notes, default: "none", required: false, desc: 'Additional notes for appointment'
 
         example [
           '"2021-09-16 13:00" --professional="Alma Estevez" --name=Carlos --surname=Carlosi --phone=2213334567'
         ]
 
-        def call(date:, professional:, name:, surname:, phone:, notes: nil)
+        def call(date:, professional:, name:, surname:, phone:, notes:)
           begin
             appointment = Polycon::Model::Appointment.create(date: date, professional: professional, name: name,
                                                              surname: surname, phone: phone, notes: notes)

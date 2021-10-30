@@ -45,10 +45,8 @@ module Polycon
 
         def cancel_all(professional:)
           prof = Professional.create(name: professional)
-          raise AppointmentNotFoundError unless prof.appointments?
-
-          all_appointments = all_for_professional(professional)
-          all_appointments.each { |appt| appt.cancel } # &:cancel
+          (all_appointments = prof.appointments) if prof.appointments?
+          all_appointments.each &:cancel
         end
 
         # utility
@@ -111,7 +109,7 @@ module Polycon
       end
 
       def reschedule(new_date:)
-        copy = self
+        copy = self.dup
         copy.date = Time.parse(new_date)
         raise AlreadyExists if Polycon::Store.exist_appointment?(copy)
 
@@ -119,7 +117,9 @@ module Polycon
       end
 
       def to_s
-        to_h.map { |key, value| "#{key}: #{value}" }
+        s = String.new
+        to_h.map { |key, value| s << "#{key}: #{value} " }
+        s
       end
 
       def save
