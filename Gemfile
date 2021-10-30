@@ -11,3 +11,5 @@ gem 'dry-files', '~> 0.1.0'
 gem 'prawn'
 
 gem 'prawn-table'
+
+gem 'minitest'
