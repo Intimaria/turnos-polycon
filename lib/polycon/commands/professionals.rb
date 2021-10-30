@@ -72,7 +72,8 @@ module Polycon
 
         def call(*)
           begin
-            puts Polycon::Model::Professional.all.sort
+            professionals =  Polycon::Model::Professional.all
+            puts professionals
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Professional: #{e.message}"
             exit 1

@@ -14,7 +14,8 @@ module Polycon
         def all
           # FIXME: delegate, create store method that returns professionals (no gsub here)
           # Polycon::Store.entries(directory: Polycon::Store.root).map! { |p| p.gsub(/_/, ' ') }.sort
-          Polycon::Store.all_professionals.map! { |prof| create(name: prof) }
+          professionals = Polycon::Store.all_professionals.sort
+          professionals.map! { |prof| create(name: prof) }
         end
 
         def create(name:, **)
@@ -75,7 +76,7 @@ module Polycon
       def save
         raise AlreadyExists if Polycon::Store.exist_professional?(self)
 
-        Polycon::Store.save(professional: self)
+        Polycon::Store.save_professional( self)
       end
 
       def appointments_dates

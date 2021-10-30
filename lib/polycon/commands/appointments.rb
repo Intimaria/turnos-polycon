@@ -151,7 +151,7 @@ module Polycon
               exit 0
             end
             options[:date] && appts = appts.select { |appt| appt.date == options[:date] }
-            puts appts.sort_by { |a| a.date }
+            puts appts
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1
