@@ -14,7 +14,6 @@ module Polycon
       puts "here I export all the appointments - options for day week & professional"
 
     end 
-=begin 
     def export_day(appointments:, **options)
       puts "here I export all the appointmets for a day"
 
