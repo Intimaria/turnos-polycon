@@ -14,11 +14,10 @@ module Polycon
 
       class << self
         def all
-          collection = Polycon::Store.all_professionals.map { |name| Professional.create(name: name) }
+          collection = Professional.all
           collection.map! do |prof|
-            prof.appointments
+            prof.appointments.sort_by {|a| a.date}
           end.flatten
-          collection.sort_by &:date
         end
 
         # def all_for_professional(prof)
