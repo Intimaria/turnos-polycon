@@ -54,7 +54,7 @@ module Polycon
 
     def self.exist_professional?(prof)
       begin
-        @files.exist?(root + professional_path(prof))
+        @files.exist?("#{root}#{professional_path(prof)}")
       rescue Dry::Files::Error
         raise Dry::Files::Error, "The directory or file doesn't exist"
       end
@@ -62,9 +62,22 @@ module Polycon
 
     def self.exist_appointment?(appt)
       begin
-        @files.exist?(root + appointment_path(appt))
+        @files.exist?("#{root}#{appointment_path(appt)}")
       rescue Dry::Files::Error
         raise Dry::Files::Error, "The directory or file doesn't exist"
+      end
+    end
+
+    def self.all_appointments
+      begin
+        response = {}
+        professionals = all_professionals
+        professionals.map! do |prof|
+          response[prof] = all_appointment_dates_for_prof(prof)
+        end
+        response
+      rescue Dry::Files::Error
+        raise Dry::Files::Error, "problem retrieving entries, are you sure that directory exists?"
       end
     end
 
@@ -77,7 +90,7 @@ module Polycon
       end
     end
 
-    def self.all_appointment_dates(prof)
+    def self.all_appointment_dates_for_prof(prof)
       begin
         appointment_dates = Dir.entries("#{root}#{professional_path(prof)}").reject { |f| f.start_with?(".") }
         appointment_dates.map! { |f| File.basename(f, File.extname(f)) }
@@ -94,7 +107,7 @@ module Polycon
 
     def self.has_appointments?(prof)
       begin
-        !Dir.empty?(root + professional_path(prof))
+        !Dir.empty?("#{root}#{professional_path(prof)}")
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem checking if the professional has appointments"
       end
@@ -102,7 +115,7 @@ module Polycon
 
     def self.rename_professional(old_name:, new_name:)
       begin
-        FileUtils.mv(root + professional_path(old_name), root + professional_path(new_name))
+        FileUtils.mv("#{root}#{professional_path(old_name)}", "#{root}#{professional_path(new_name)}")
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem renaming"
       end
@@ -110,7 +123,7 @@ module Polycon
 
     def self.rename_appointment(old_app:, new_app:)
       begin
-        FileUtils.mv(root + appointment_path(old_app), root + appointment_path(new_app))
+        FileUtils.mv("#{root}#{appointment_path(old_app)}", "#{root}#{appointment_path(new_app)}")
       rescue ArgumentError
         raise Dry::Files::Error, "it's possible there is a problem with the date."
       rescue Dry::Files::Error
@@ -156,7 +169,7 @@ module Polycon
 
     def self.delete_professional(prof)
       begin
-        @files.delete_directory(root + professional_path(prof))
+        @files.delete_directory("#{root}#{professional_path(prof)}")
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem deleting"
       end
@@ -164,7 +177,7 @@ module Polycon
 
     def self.delete_appointment(appt)
       begin
-        @files.delete(root + appointment_path(appt))
+        @files.delete("#{root}#{appointment_path(appt)}")
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem deleting"
       end
@@ -172,11 +185,11 @@ module Polycon
 
     def self.write_dir(prof)
       begin
-        if @files.directory?(root + professional_path(prof))
+        if @files.directory?("#{root}#{professional_path(prof)}")
           raise Dry::Files::Error, "the directory already exists"
         end
 
-        @files.mkdir(root + professional_path(prof))
+        @files.mkdir("#{root}#{professional_path(prof)}")
       rescue Dry::Files::Error
         raise DirectoryCreationError
       end

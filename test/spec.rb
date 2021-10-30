@@ -3,7 +3,7 @@ require_relative '../lib/polycon/model/appointment'
 require_relative '../lib/polycon/model/professional'
 require_relative '../lib/polycon/store'
 
-describe 'Store' do
+describe 'Polycon' do
   before do
     @professional = Polycon::Model::Professional.create(name: 'John Doe')
     @appointment1 = Polycon::Model::Appointment.create(
@@ -26,30 +26,53 @@ describe 'Store' do
     @appointment1.save unless Polycon::Store.exist_appointment?(@appointment1)
     @appointment2.save unless Polycon::Store.exist_appointment?(@appointment2)
   end
+
+  # Store
   it 'returns path for polycon' do
-    Polycon::Store.root.must_equal "#{Dir.home}/.polycon/"
+    expect(Polycon::Store.root).must_equal "#{Dir.home}/.polycon/"
   end
   it 'returns path for professional' do
-    Polycon::Store.professional_path(@professional).must_equal 'JOHN_DOE/'
+    expect(Polycon::Store.professional_path(@professional)).must_equal 'JOHN_DOE/'
   end
   it 'returns path for appointment' do
-    Polycon::Store.appointment_path(@appointment1).must_equal 'JOHN_DOE/2021-01-01_11-30.paf'
+    expect(Polycon::Store.appointment_path(@appointment1)).must_equal 'JOHN_DOE/2021-01-01_11-30.paf'
   end
-  it 'returns array of appointment variables' do
-    Polycon::Store.read(professional: @appointment1.professional,
-                        date: @appointment1.date).must_equal ["J", "Jane", "111111111",
-                                                              "Something"]
+  it 'returns the array of appointment variables' do
+    expect(Polycon::Store.read(professional: @appointment1.professional,
+                               date: @appointment1.date)).must_equal ["J", "Jane", "111111111",
+                                                                      "Something"]
   end
-  it 'returns all the appointment date & times as a string array for a professional' do
-    Polycon::Store.all_appointment_dates(@professional).must_equal ["2021-01-01 11:30", "2021-01-01 12:30"]
+  it 'returns all the appointment for a professional as a string array of dates' do
+    expect(Polycon::Store.all_appointment_dates_for_prof(@professional)).must_equal ["2021-01-01 11:30",
+                                                                                     "2021-01-01 12:30"]
   end
   it 'returns true if the professional has appointments' do
-    Polycon::Store.has_appointments?(@professional).must_equal true
+    expect(Polycon::Store.has_appointments?(@professional)).must_equal true
   end
   it 'returns true if the professional exists' do
-    Polycon::Store.exist_professional?(@professional).must_equal true
+    expect(Polycon::Store.exist_professional?(@professional)).must_equal true
   end
   it 'returns true if the appointment exists' do
-    Polycon::Store.exist_appointment?(@appointment1).must_equal true
+    expect(Polycon::Store.exist_appointment?(@appointment1)).must_equal true
+  end
+
+  # Appointment
+  it 'returns all the appointment for a professional as an array of appointments' do
+    expect(Polycon::Model::Appointment.all_for_professional(@professional)).must_be_instance_of Array
+  end
+  it 'returns all the appointments' do
+    expect(Polycon::Model::Appointment.all).must_be_instance_of Array
+  end
+
+  # Professional
+  it 'returns the name of the professional as string' do
+    expect(@professional.to_s).must_equal "John Doe"
+  end
+  it 'returns all the appointment for a professional as a string array of dates' do
+    expect(@professional.appointments).must_equal ["2021-01-01 11:30",
+                                                   "2021-01-01 12:30"]
+  end
+  it 'returns true if the professional has appointments' do
+    expect(@professional.appointments?).must_equal true
   end
 end

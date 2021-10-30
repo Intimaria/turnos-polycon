@@ -11,10 +11,10 @@ module Polycon
       attr_accessor :name, :surname
 
       class << self
-        def all()
+        def all
           # FIXME: delegate, create store method that returns professionals (no gsub here)
           # Polycon::Store.entries(directory: Polycon::Store.root).map! { |p| p.gsub(/_/, ' ') }.sort
-          Polycon::Store.all_professionals().map! { |prof| create(name: prof) }
+          Polycon::Store.all_professionals.map! { |prof| create(name: prof) }
         end
 
         def create(name:, **)
@@ -52,7 +52,7 @@ module Polycon
       end
 
       def appointments?
-        !Polycon::Store.has_appointments?(self)
+        Polycon::Store.has_appointments?(self)
       end
 
       def rename(new_name:)
@@ -62,17 +62,17 @@ module Polycon
         Polycon::Store.rename_professional(old_name: self, new_name: new_professional)
       end
 
-      def delete()
+      def delete
         raise ProfessionalDeletionError if self.appointments?
 
         Polycon::Store.delete_professional(self)
       end
 
       def to_s
-        "name: #{@name}  #{@surname}"
+        "#{@name} #{@surname}"
       end
 
-      def save()
+      def save
         raise AlreadyExists if Polycon::Store.exist_professional?(self)
 
         Polycon::Store.save(professional: self)
@@ -80,6 +80,7 @@ module Polycon
 
       def appointments
         # TODO
+        Polycon::Store.all_appointment_dates_for_prof(self)
       end
     end
 

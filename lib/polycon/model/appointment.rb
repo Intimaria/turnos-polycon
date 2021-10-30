@@ -13,19 +13,28 @@ module Polycon
       attr_accessor :date, :professional, :name, :surname, :phone, :notes
 
       class << self
-        def all(prof)
+        def all
+          professionals = Polycon::Store.all_professionals
+          professionals.map! do |prof|
+            prof = Professional.create(name: prof)
+            dates = Polycon::Store.all_appointment_dates_for_prof(prof)
+            dates.map! { |date| Appointment.from_file(date: date, professional: prof.to_s) }
+          end.flatten
+        end
+
+        def all_for_professional(prof)
           # TODO maybe have professional know their appointments, or store return
-          # TODO maybe save hour separately from date
           raise InvalidProfessional unless Professional.valid?(prof)
 
-          appointments = Polycon::Store.all_appointment_dates(prof)
-          appointments.map! { |date| Appointment.from_file(date: date, professional: prof) }
+          appointments = Polycon::Store.all_appointment_dates_for_prof(prof)
+          appointments.map! { |date| Appointment.from_file(date: date, professional: prof.to_s) }
         end
 
         def create(date:, professional:, **options)
           raise AppointmentCreationError unless (appointment = new(date: date, professional: professional, **options))
 
-          valid?(date: appointment.date, professional: appointment.professional)
+          raise InvalidAppointment unless valid?(date: appointment.date, professional: appointment.professional)
+
           appointment
         end
 
@@ -39,7 +48,7 @@ module Polycon
           prof = Professional.create(name: professional)
           raise AppointmentNotFoundError unless prof.appointments?
 
-          all_appointments = all(professional: professional)
+          all_appointments = all_for_professional(professional)
           all_appointments.each { |appt| appt.cancel } # &:cancel
         end
 
