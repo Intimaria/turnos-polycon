@@ -68,7 +68,6 @@ module Polycon
       end
     end
 
-
     def self.all_professionals
       begin
         professionals = Dir.entries(root).reject { |f| f.start_with?(".") }
