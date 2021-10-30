@@ -126,7 +126,6 @@ module Polycon
 
         def call(name:, **)
           begin
-            # Polycon::Model::Professional.rename(old_name:old_name, new_name: new_name)
             professional = Polycon::Model::Professional.find(name: name)
             professional.appointments? && professional.appointments.each { |a| puts a.to_s }
           rescue Polycon::Model::Error => e

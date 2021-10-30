@@ -48,7 +48,7 @@ module Polycon
       end
 
       def to_h
-        { name: name, surname: surname }
+        { name: @name, surname: @surname }
       end
 
       def appointments?
@@ -78,11 +78,18 @@ module Polycon
         Polycon::Store.save(professional: self)
       end
 
-      def appointments
-        # TODO
+      def appointments_dates
         Polycon::Store.all_appointment_dates_for_prof(self)
       end
+
+      def appointments
+        # TODO if I wanted to get all my appointments, I would need to be able to 
+        # call Appointment.from_file with dates and self 
+        appts = self.appointments_dates
+        appts.map! {|date| Appointment.from_file(date: date, professional:self.to_s)}
+      end
     end
+
 
     # Professional Errors: General
     class ProfessionalError < Error

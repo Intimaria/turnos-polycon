@@ -14,11 +14,9 @@ module Polycon
 
       class << self
         def all
-          professionals = Polycon::Store.all_professionals
+          professionals = Polycon::Store.all_professionals.map {|name| Professional.create(name:name)}
           professionals.map! do |prof|
-            prof = Professional.create(name: prof)
-            dates = Polycon::Store.all_appointment_dates_for_prof(prof)
-            dates.map! { |date| Appointment.from_file(date: date, professional: prof.to_s) }
+            prof.appointments
           end.flatten
         end
 
@@ -92,13 +90,13 @@ module Polycon
 
       def to_h
         {
-          :professional => professional,
-          :date => date.strftime('%Y-%m-%d'),
-          :hour => date.strftime('%H:%M'),
-          :surname => surname,
-          :name => name,
-          :phone => phone,
-          :notes => notes
+          professional: professional,
+          date: date.strftime('%Y-%m-%d'),
+          hour: date.strftime('%H:%M'),
+          surname: surname,
+          name: name,
+          phone: phone,
+          notes: notes
         }
       end
 
@@ -120,9 +118,7 @@ module Polycon
       end
 
       def to_s
-        s = String.new
-        self.to_h.each { |key, value| s << "#{key}: #{value}\n" }
-        s
+        to_h.map { |key, value| "#{key}: #{value}" }
       end
 
       def save
