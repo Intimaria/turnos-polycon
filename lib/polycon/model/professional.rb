@@ -1,110 +1,126 @@
 # frozen_string_literal: true
 
+# required for testing
+require_relative 'error'
+require_relative '../store'
+
 module Polycon
   module Model
+    # This class's responsability is to model Professional objects
     class Professional
       attr_accessor :name, :surname
-      attr_reader :path
 
-    class << self 
+      class << self
+        def all
+          # FIXME: delegate, create store method that returns professionals (no gsub here)
+          # Polycon::Store.entries(directory: Polycon::Store.root).map! { |p| p.gsub(/_/, ' ') }.sort
+          professionals = Polycon::Store.all_professionals.sort
+          professionals.map! { |prof| create(name: prof) }
+        end
 
-      def all()
-        Polycon::Store.ensure_root_exists
-        Polycon::Store.entries(directory: Polycon::Store::PATH).map! {|p| p.gsub(/_/, " ") }.sort
-      end 
+        def create(name:, **)
+          firstname, surname = name.split(' ')
+          professional = new(name: firstname, surname: surname)
+          raise InvalidProfessional unless valid?(professional)
 
-      def create(name:, **)
-        Polycon::Store.ensure_root_exists
-        firstname, surname = name.split(" ")
-        professional = new(name: firstname, surname: surname)
-        raise InvalidProfessional unless valid?(professional)
-        professional
+          professional
+        end
+
+        def find(name:, **)
+          firstname, surname = name.split(' ')
+          professional = new(name: firstname, surname: surname)
+          raise NotFound unless Polycon::Store.exist_professional?(professional)
+
+          professional
+        end
+
+        # utility
+
+        def valid?(professional)
+          professional && !professional.name.nil? && !professional.surname.nil?
+        end
       end
-
-      def find(name:, **)
-        Polycon::Store.ensure_root_exists
-        firstname, surname = name.split(" ")
-        professional = new(name: firstname, surname: surname)
-        raise NotFound unless Polycon::Store.exist?(professional.path)
-        professional
-      end
-
-      # utility 
-
-      def valid?(professional)
-        professional && !professional.name.nil? && !professional.surname.nil?
-      end  
-
-    end 
 
       def initialize(name:, surname:)
-        raise ParameterError if (name.nil? || surname.nil?)
+        raise ParameterError if name.nil? || surname.nil?
+
         self.name = name
         self.surname = surname
-        @path = (@name + "_" + @surname + '/').upcase
       end
 
-      def to_h 
-        {:name=>name, :surname=>surname}
-      end 
+      def to_h
+        { name: @name, surname: @surname }
+      end
 
-      def has_appointments?
-        Polycon::Store.ensure_root_exists
-        !Polycon::Store.empty?(directory: @path)
-      end 
+      def appointments?
+        Polycon::Store.has_appointments?(self)
+      end
 
       def rename(new_name:)
-        Polycon::Store.ensure_root_exists
-        new_professional = Professional.create(name:new_name)
+        new_professional = Professional.create(name: new_name)
         raise InvalidProfessional unless Professional.valid?(new_professional)
-        Polycon::Store.rename(old_name:@path, new_name: new_professional.path)
+
+        Polycon::Store.rename_professional(old_name: self, new_name: new_professional)
       end
 
-      def delete()
-        Polycon::Store.ensure_root_exists
-        raise ProfessionalDeletionError if self.has_appointments? 
-        Polycon::Store.delete(@path)
+      def delete
+        raise ProfessionalDeletionError if self.appointments?
+
+        Polycon::Store.delete_professional(self)
       end
 
       def to_s
-        "name: " + (@name + " " + @surname) + "\nfile path: " + Polycon::Store::PATH+@path
-      end 
+        "#{@name} #{@surname}"
+      end
 
-      def save()
-        Polycon::Store.ensure_root_exists
-        raise AlreadyExists if Polycon::Store.exist?(@path)
-        Polycon::Store.save(professional:self)
-      end 
+      def save
+        raise AlreadyExists if Polycon::Store.exist_professional?(self)
 
+        Polycon::Store.save_professional(self)
+      end
+
+      def appointments_dates
+        Polycon::Store.all_appointment_dates_for_prof(self)
+      end
+
+      def appointments
+        # TODO if I wanted to get all my appointments, I would need to be able to
+        # call Appointment.from_file with dates and self
+        appts = self.appointments_dates
+        appts.map! { |date| Appointment.from_file(date: date, professional: self.to_s) }
+      end
     end
 
-    #Professional Errors
-    class ProfessionalError <Error 
-      def message; end; end 
+    # Professional Errors: General
+    class ProfessionalError < Error
+      def message; end; end
 
+    # Professional Errors: Creation
     class ProfessionalCreationError < ProfessionalError
-      def message 
-        "Could not create professional."
-      end 
-    end 
+      def message
+        'Could not create professional.'
+      end
+    end
 
+    # Professional Errors: Delete
     class ProfessionalDeletionError < ProfessionalError
-      def message 
-        "Could not delete professional as they have appointments."
-      end 
-    end 
+      def message
+        'Could not delete professional as they have appointments.'
+      end
+    end
 
+    # Professional Errors: Rename
     class ProfessionalRenameError < ProfessionalError
-      def message 
-        "Could not rename professional."
-      end 
-    end 
+      def message
+        'Could not rename professional.'
+      end
+    end
 
-    class InvalidProfessional < ProfessionalError 
-      def message 
-        'the professional is invalid. Please revise'
-      end 
-    end 
-
+    # Professional Errors: Invalid
+    class InvalidProfessional < ProfessionalError
+      def message
+        'The professional is invalid. Please revise'
+      end
+    end
   end
 end

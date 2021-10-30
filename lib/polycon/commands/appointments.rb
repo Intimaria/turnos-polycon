@@ -11,28 +11,28 @@ module Polycon
         option :name, required: true, desc: "Patient's name"
         option :surname, required: true, desc: "Patient's surname"
         option :phone, required: true, desc: "Patient's phone number"
-        option :notes, required: false, desc: 'Additional notes for appointment'
+        option :notes, default: "none", required: false, desc: 'Additional notes for appointment'
 
         example [
           '"2021-09-16 13:00" --professional="Alma Estevez" --name=Carlos --surname=Carlosi --phone=2213334567'
         ]
 
-        def call(date:, professional:, name:, surname:, phone:, notes: nil)
-          #warn "TODO: Implementar creación de un turno con fecha '#{date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+        def call(date:, professional:, name:, surname:, phone:, notes:)
           begin
-            appointment = Polycon::Model::Appointment.create(date:date, professional:professional, name:name, surname:surname, phone:phone, notes:notes)
+            appointment = Polycon::Model::Appointment.create(date: date, professional: professional, name: name,
+                                                             surname: surname, phone: phone, notes: notes)
             appointment.save
             puts "Sucess: created appointment for #{appointment.date}"
           rescue Polycon::Model::AlreadyExists
             warn "That appointment already exists."
-            exit 0 
+            exit 0
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong: #{e.message}"
             exit 1
-          rescue Dry::Files::Error => e 
+          rescue Dry::Files::Error => e
             warn "sorry, something went wrong with Store: #{e.message}"
             exit 2
-          rescue ArgumentError, NoMethodError => e 
+          rescue ArgumentError, NoMethodError => e
             warn "You may have entered a non-existent time, please check your parameters and try again"
             exit 3
           end
@@ -50,21 +50,20 @@ module Polycon
         ]
 
         def call(date:, professional:)
-          #warn "TODO: Implementar detalles de un turno con fecha '#{date}' y profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
             appointment = Polycon::Model::Appointment.from_file(date: date, professional: professional)
             puts "Showing appointment - "
             puts "#{appointment}"
           rescue Polycon::Model::NotFound
             warn "That appointment doesn't exist."
-            exit 0 
+            exit 0
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong: #{e.message}"
             exit 1
-          rescue Dry::Files::Error => e 
+          rescue Dry::Files::Error => e
             warn "sorry, something went wrong with Store: #{e.message}"
-            exit 2 
-          rescue ArgumentError, NoMethodError => e 
+            exit 2
+          rescue ArgumentError, NoMethodError => e
             warn "Please check the parameters you have entered, it's possible there is a problem. #{e.message}"
             exit 3
           end
@@ -82,9 +81,8 @@ module Polycon
         ]
 
         def call(date:, professional:)
-          #warn "TODO: Implementar borrado de un turno con fecha '#{date}' y profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-            #Polycon::Model::Appointment.cancel(date:date , professional: professional)
+            # Polycon::Model::Appointment.cancel(date:date , professional: professional)
             appointment = Polycon::Model::Appointment.from_file(date: date, professional: professional)
             appointment.cancel
             puts "Cancellation successful"
@@ -94,10 +92,10 @@ module Polycon
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1
-          rescue Dry::Files::Error => e 
+          rescue Dry::Files::Error => e
             warn "sorry, something went wrong with Store: #{e.message}"
             exit 2
-          rescue ArgumentError, NoMethodError => e 
+          rescue ArgumentError, NoMethodError => e
             warn "Please check the parameters you have entered, it's possible there is a problem. #{e.message}"
             exit 3
           end
@@ -114,20 +112,19 @@ module Polycon
         ]
 
         def call(professional:)
-          warn# "TODO: Implementar borrado de todos los turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
             Polycon::Model::Appointment.cancel_all(professional: professional)
             puts "Success: you have cancelled all appointments for #{professional}"
           rescue Polycon::Model::NotFound
             warn "There are no appointments for that professional"
             exit 0
-          rescue Polycon::Model::Error  => e
+          rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1
-          rescue Dry::Files::Error => e 
+          rescue Dry::Files::Error => e
             warn "sorry, something went wrong with Store: #{e.message}"
             exit 2
-          rescue ArgumentError, NoMethodError => e 
+          rescue ArgumentError, NoMethodError => e
             warn "Please check the parameters you have entered, it's possible there is a problem. #{e.message}"
             exit 3
           end
@@ -146,27 +143,22 @@ module Polycon
         ]
 
         def call(professional:, **options)
-          #warn "TODO: Implementar listado de turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-
-            appts = Polycon::Model::Appointment.all(professional:professional, **options)
-
+            prof = Polycon::Model::Professional.create(name: professional)
+            appts = prof.appointments
             if appts.empty?
               warn "No appointments for #{professional}"
               exit 0
-            end 
-            if options[:date]
-              appts = appts.select {|appt|  Date.parse(appt.date.to_s) == Date.parse(options[:date])} 
             end
-            puts "Appointments for #{professional}: #{options[:date] if options[:date]}"
+            options[:date] && appts = appts.select { |appt| appt.date == options[:date] }
             puts appts
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1
-          rescue Dry::Files::Error => e 
+          rescue Dry::Files::Error => e
             warn "sorry, something went wrong with Store: #{e.message}"
             exit 2
-          rescue ArgumentError, NoMethodError => e 
+          rescue ArgumentError, NoMethodError => e
             warn "Please check the parameters you have entered, it's possible there is a problem. #{e.message}"
             exit 3
           end
@@ -185,9 +177,8 @@ module Polycon
         ]
 
         def call(old_date:, new_date:, professional:)
-          #warn "TODO: Implementar cambio de fecha de turno con fecha '#{old_date}' para que pase a ser '#{new_date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           begin
-            #Polycon::Model::Appointment.reschedule(old_date: old_date, new_date: new_date, professional: professional)
+            # Polycon::Model::Appointment.reschedule(old_date: old_date, new_date: new_date, professional: professional)
             appointment = Polycon::Model::Appointment.from_file(date: old_date, professional: professional)
             appointment.reschedule(new_date: new_date)
             puts "Success: you have rescheduled appointment with #{professional}  for #{new_date}"
@@ -197,10 +188,10 @@ module Polycon
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1
-          rescue Dry::Files::Error => e 
+          rescue Dry::Files::Error => e
             warn "sorry, something went wrong with Store: #{e.message}"
             exit 2
-          rescue ArgumentError, NoMethodError => e 
+          rescue ArgumentError, NoMethodError => e
             warn "Please check the parameters you have entered, it's possible there is a problem. #{e.message}"
             exit 3
           end
@@ -224,10 +215,8 @@ module Polycon
         ]
 
         def call(date:, professional:, **options)
-          #warn "TODO: Implementar modificación de un turno de la o el profesional '#{professional}' con fecha '#{date}', para cambiarle la siguiente información: #{options}.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
-
           begin
-            appointment = Polycon::Model::Appointment.from_file(professional: professional, date:date)
+            appointment = Polycon::Model::Appointment.from_file(professional: professional, date: date)
             appointment.edit(**options)
             puts "Success: you have edited appointment on date #{date}"
           rescue Polycon::Model::NotFound
@@ -236,10 +225,10 @@ module Polycon
           rescue Polycon::Model::Error => e
             warn "sorry, something went wrong with Appointment: #{e.message}"
             exit 1
-          rescue Dry::Files::Error => e 
+          rescue Dry::Files::Error => e
             warn "sorry, something went wrong with Store: #{e.message}"
             exit 2
-          rescue ArgumentError, NoMethodError => e 
+          rescue ArgumentError, NoMethodError => e
             warn "Please check the parameters you have entered, it's possible there is a problem. #{e.message}"
             exit 3
           end

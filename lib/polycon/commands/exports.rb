@@ -16,19 +16,19 @@ module Polycon
               #warn "TODO: Implementar exportacion de turnos para el dia.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
               begin
                 if professional 
-                  appts = Polycon::Model::Appointment.all(professional:professional, **options)
+                  appts = professional.appointments
                 else 
                    all = Polycon::Model::Professional.all()
-                   all.each do | prof |
-                      appts = Polycon::Model::Appointment.all(professional:prof, **options)
+                   all.map! do | prof |
+                     prof.appointments
                    end 
                 end
                 date = Date.parse(date)
-                puts appts
-                appts.filter! do |appt| 
+                puts all
+                all.filter! do |appt| 
                   Date.parse(appt.date.to_s) == date
                 end 
-                Polycon::Export.export_day(appointments:appts)
+                Polycon::Export.export_day(appointments:all)
               rescue Exception => e
                 warn "sorry, something went wrong with Exports: #{e.message}"
                 exit 1
@@ -50,20 +50,20 @@ module Polycon
             #warn "TODO: Implementar exportaciones de turnos por semana.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
             begin
               if professional 
-                appts = Polycon::Model::Appointment.all(professional:professional, **options)
+                appts = professional.appointments
               else 
                  all = Polycon::Model::Professional.all()
-                 all.each do | prof |
-                    appts = Polycon::Model::Appointment.all(professional:prof, **options)
+                 all.map! do | prof |
+                   prof.appointments
                  end 
               end
               date = Date.parse(date)
               monday = now - (now.wday - 1) % 7
               puts appts
-              appts.filter do |appt| 
+              all.filter! do |appt| 
                 Date.parse(appt.date.to_s).between?(monday, monday + 6)
               end 
-              Polycon::Export.export_week(appointments:appts)
+              Polycon::Export.export_week(appointments:all)
             rescue Exception => e
               warn "sorry, something went wrong with Exports: #{e.message}"
               exit 1
