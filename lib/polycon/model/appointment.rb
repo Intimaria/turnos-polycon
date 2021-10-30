@@ -21,13 +21,14 @@ module Polycon
           collection.sort_by &:date
         end
 
-        def all_for_professional(prof)
-          # TODO maybe have professional know their appointments, or store return
-          raise InvalidProfessional unless Professional.valid?(prof)
-
-          appointments = Polycon::Store.all_appointment_dates_for_prof(prof)
-          appointments.map! { |date| Appointment.from_file(date: date, professional: prof.to_s) }
-        end
+        # def all_for_professional(prof)
+        #   # TODO maybe have professional know their appointments, or store return
+         
+        #   raise InvalidProfessional unless Professional.valid?(prof)
+        #   prof.appointments
+        #   #appointments = Polycon::Store.all_appointment_dates_for_prof(prof)
+        #   #appointments.map! { |date| Appointment.from_file(date: date, professional: prof.to_s) }
+        # end
 
         def create(date:, professional:, **options)
           raise AppointmentCreationError unless (appointment = new(date: date, professional: professional, **options))

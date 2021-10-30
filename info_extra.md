@@ -54,11 +54,14 @@ Se agregan metodos to_h a professional y appointment para tener mayor facilidad 
 Se cambian `::` por `.` en los llamados a metodos de Store. Se pasan todos los strings concatenados a interpolacion. Se [freezea las constantes](https://hackernoon.com/freeze-your-constants-in-ruby-49e3238c19ef).
 
 Se refactoriza las clases del modelo para quitarle todas las referencias al filesystem (@path etc), aprovechando el modulo Store al 100%. 
-Se deshace con una idea de un Store como agnostico, se hace que store conozca appointments y professionals y tenga metodos especailizados para estos.
+Se deshace con una idea de un Store como agnostico, se hace que store conozca appointments y professionals y tenga metodos especailizados para estos. 
+Se agrega un metodo de appointments que devuelve todos los appointments para professionals, y appointments? que devuelve true si tiene appointments. 
 
 Se agrega tests usando ['minitest'](https://docs.ruby-lang.org/en/2.1.0/MiniTest.html) para testear la funcionalidad de Polycon.
 
 Se hacen refactorings estrcuturales en base a estos dos ultimos puntos, mejorando toda la funcionalidad.
+
+Se incluye un nuevo modulo utils para poner todas las validaciones del modelo.
 
 ## Module Exports
 
@@ -90,10 +93,11 @@ Se elige [Prawn Table](https://github.com/prawnpdf/prawnhttps://github.com/prawn
 ### __Errores / Bugs__
 - ~~Al renombrar la separacion de nombre y apellido no se hace correctamente~~
 - ~~Cuestiones de lanzamiento de excepciones~~ 
-- From file tiene bug - se guardan las variables "correctamente" pero reescribe el to_s de tal manera que queda "notas" como representacion. Esto solo se ve si hago "puts appointment". Si hago "puts appointment.variable, imprime correctamente las variables.
-- Chequear que la hora esta en un rango (guardar rango en clase no hardcoradearlo) para evitar bug de que se crea bien aunque no se pasen bien los horarios y quede 00-00
 - ~~Necesito preguntar en "create" si ya existe el profesional? solo estoy creando un objeto. Como mucho, en save() deberia haber ese chequeo~~
 - ~~Ordenar los appointment por fecha en el List sin fecha~~
 - ~~A futuro: Agarrar todos los appointment del sistema?~~
 - ~~Pasar cancel y reschedule a metodos de instancia~~
+- From file tiene bug - se guardan las variables "correctamente" pero reescribe el to_s de tal manera que queda "notas" como representacion. Esto solo se ve si hago "puts appointment". Si hago "puts appointment.variable, imprime correctamente las variables.
+- Chequear que la hora esta en un rango (guardar rango en clase no hardcoradearlo) para evitar bug de que se crea bien aunque no se pasen bien los horarios y quede 00-00
 - validar que el telefono es un numero
+- ver adonde hacer el save, esta bien tenerlo afuera o volver a ponerlo en en create?

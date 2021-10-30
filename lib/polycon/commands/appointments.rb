@@ -145,7 +145,7 @@ module Polycon
         def call(professional:, **options)
           begin
             prof = Polycon::Model::Professional.create(name: professional)
-            appts = Polycon::Model::Appointment.all_for_professional(prof)
+            appts = prof.appointments
             if appts.empty?
               warn "No appointments for #{professional}"
               exit 0
