@@ -16,13 +16,13 @@ module Polycon
         def all
           collection = Professional.all
           collection.map! do |prof|
-            prof.appointments.sort_by {|a| a.date}
+            prof.appointments.sort_by { |a| a.date }
           end.flatten
         end
 
         # def all_for_professional(prof)
         #   # TODO maybe have professional know their appointments, or store return
-         
+
         #   raise InvalidProfessional unless Professional.valid?(prof)
         #   prof.appointments
         #   #appointments = Polycon::Store.all_appointment_dates_for_prof(prof)
