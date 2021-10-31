@@ -3,7 +3,14 @@ require 'time'
 module Polycon
   module Export
     HEADER =  ["Turnos", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"].freeze
-    HORARIOS = []
+
+    def self.horarios(date)
+      d1 = DateTime.parse(date+" 8:00")
+      slots = []
+      d2 = d1 + 0.375 
+      d1.step(d2, 1/48r){|d| slots << d.strftime('%H:%M')}
+      slots
+    end 
     #   class Export 
     #   include Prawn::View
     #   def initialize(name)
@@ -62,14 +69,9 @@ module Polycon
       appts.filter! do |appt|
         Date.parse(appt.date.to_s) == this_date
       end
+      slots = self.horarios(date)
       Prawn::Document.generate('turnos.pdf') do
 
-          
-        d1 = DateTime.parse(date+" 8:00")
-        slots = []
-        d2 = d1 + 0.375
-        d1.step(d2, 1/48r){|d| slots << d.strftime('%H:%M')}
-        
         filas = Array.new(slots.size){Array.new(2)}
         filas[0][0] = 'turnos' 
         filas[0][1] = date.to_s
@@ -115,45 +117,40 @@ module Polycon
       appts.filter! do |appt|
         Date.parse(appt.date.to_s).between?(monday, monday + 6)
       end
-    Prawn::Document.generate('turnos.pdf') do
+      slots = self.horarios(date)
+      Prawn::Document.generate('turnos.pdf') do
 
         
-      d1 = DateTime.parse(date+" 8:00")
-      slots = []
-      d2 = d1 + 0.375
-      d1.step(d2, 1/48r){|d| slots << d.strftime('%H:%M')}
-      
-      filas = Array.new(slots.size){Array.new(2)}
-      header = ["turnos","Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
-      (0...7).each do |col|
-          filas[0][col] = header[col]
-      end
+        
+        filas = Array.new(slots.size){Array.new(2)}
+        (0...7).each do |col|
+            filas[0][col] = HEADER[col]
+        end
 
-      (1...slots.size).each do |row|
-        (0...7).each do |cell|
-          filas[row][0] = slots[row]
-          filas[row][cell] = " "
+        (1...slots.size).each do |row|
+          (0...7).each do |cell|
+            filas[row][0] = slots[row]
+            filas[row][cell] = " "
+          end
+        end
+        header = ["Turnos", date]
+        data =  filas 
+    
+        table(data) do
+          cells.padding = 12
+          cells.borders = []
+      
+          row(0).borders      = [:bottom]
+          row(0).border_width = 2
+          row(0).background_color = "FF9900"
+          row(0).font_style   = :bold
+      
+          columns(0..6).borders = [:top, :left]
+      
+          row(0..slots.size - 1 ).columns(0..6).borders = [:top, :bottom, :left, :right]
         end
       end
-      header = ["Turnos", date]
-      data =  filas 
-  
-      table(data) do
-      cells.padding = 12
-      cells.borders = []
-  
-      row(0).borders      = [:bottom]
-      row(0).border_width = 2
-      row(0).background_color = "FF9900"
-      row(0).font_style   = :bold
-  
-      columns(0..6).borders = [:top, :left]
-  
-      row(0..slots.size - 1 ).columns(0..6).borders = [:top, :bottom, :left, :right]
-  
-      end
-    end
-  end  
+    end  
 
     # Export Errors
     class ExportError 
