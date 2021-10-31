@@ -1,3 +1,4 @@
+require 'date'
 module Polycon
   module Commands
     module Exports
@@ -13,21 +14,14 @@ module Polycon
 
         def call(date:, professional: nil, **options)
           begin
-            if professional
-              appts = professional.appointments
-            else
-              all = Polycon::Model::Professional.all()
-              all.map! do |prof|
-                prof.appointments
-              end
-            end
-            date = Date.parse(date)
-            puts all
-            all.filter! do |appt|
-              Date.parse(appt.date.to_s) == date
-            end
-            Polycon::Export.export_day(appointments: all)
-          rescue Exception => e
+            # appts = Polycon::Model::Professional.all()
+            # appts.map! do |prof|
+            #   prof.appointments
+            # end
+            # appts.flatten!
+            # puts appts
+            Polycon::Export.export_day(professional: professional, date: date)
+          rescue Exception => e #change - update to ExportError later
             warn "sorry, something went wrong with Exports: #{e.message}"
             exit 1
           rescue ArgumentError, NoMethodError => e
@@ -43,24 +37,24 @@ module Polycon
         argument :date, required: true, desc: 'Date for the exports'
         option :professional, required: false, desc: 'Full name of the professional'
 
-        def call(date:, professional: nil, **options)
+        def call(date:, professional: nil)
           begin
-            if professional
-              appts = professional.appointments
-            else
-              all = Polycon::Model::Professional.all()
-              all.map! do |prof|
-                prof.appointments
-              end
-            end
-            date = Date.parse(date)
-            monday = now - (now.wday - 1) % 7
-            puts appts
-            all.filter! do |appt|
-              Date.parse(appt.date.to_s).between?(monday, monday + 6)
-            end
-            Polycon::Export.export_week(appointments: all)
-          rescue Exception => e
+          #   if professional
+          #     appts = professional.appointments
+          #   else
+          #     all = Polycon::Model::Professional.all()
+          #     all.map! do |prof|
+          #       prof.appointments
+          #     end
+          #   end
+          #   now = Date.parse(date)
+          #   monday = now - (now.wday - 1) % 7
+          #   puts appts
+          #   all.filter! do |appt|
+          #     Date.parse(appt.date.to_s).between?(monday, monday + 6)
+          #   end
+            Polycon::Export.export_week(date: date, professional:professional)
+          rescue ArgumentError => e
             warn "sorry, something went wrong with Exports: #{e.message}"
             exit 1
           rescue ArgumentError, NoMethodError => e
