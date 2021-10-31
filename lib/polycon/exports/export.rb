@@ -31,9 +31,7 @@ module Polycon
     # export = Export.new('Gregory')
     # export.say_hello
     # export.say_goodbye
-    # def render
-    #   @pdf.render
-    # end
+    # export.render
 
     # def initialize(appointments:, **options)
     #   super(top_margin: 50)
@@ -67,7 +65,9 @@ module Polycon
       appts.filter! do |appt|
         Date.parse(appt.date.to_s) == this_date
       end
-      slots = self.horarios(date)
+
+      slots = horarios(date)
+
       Prawn::Document.generate('turnos.pdf') do
         filas = Array.new(slots.size) { Array.new(2) }
         filas[0][0] = 'turnos'
@@ -76,21 +76,23 @@ module Polycon
         (1...slots.size).each do |row|
           (0...1).each do |cell|
             filas[row][0] = slots[row]
+            appts.each do |a| 
+              filas[row][1] = "#{a.name} #{a.surname} (#{a.professional})" if a.to_h[:hour] == filas[row][0] 
+            end 
           end
         end
-        header = ["Turnos", date]
-        data = filas
 
-        table(data) do
+
+        table(filas) do
           cells.padding = 12
           cells.borders = []
 
-          row(0).borders      = [:bottom]
-          row(0).border_width = 2
+          row(0).borders          = [:bottom]
+          row(0).border_width     = 2
           row(0).background_color = "FF9900"
-          row(0).font_style = :bold
+          row(0).font_style       = :bold
 
-          columns(0..slots.size).borders = [:right]
+          #columns(0..slots.size).borders = [:right]
 
           row(0..slots.size).columns(0..1).borders = [:top, :bottom, :left, :right]
         end
@@ -113,7 +115,7 @@ module Polycon
       appts.filter! do |appt|
         Date.parse(appt.date.to_s).between?(monday, monday + 6)
       end
-      slots = self.horarios(date)
+      slots = horarios(date)
       Prawn::Document.generate('turnos.pdf') do
         filas = Array.new(slots.size) { Array.new(2) }
         (0...HEADER.size).each do |col|
@@ -126,9 +128,8 @@ module Polycon
             filas[row][cell] = " "
           end
         end
-        data = filas
-
-        table(data) do
+      
+        table(filas) do
           cells.padding = 12
           cells.borders = []
 
@@ -137,7 +138,7 @@ module Polycon
           row(0).background_color = "FF9900"
           row(0).font_style = :bold
 
-          columns(0..6).borders = [:top, :left]
+          #columns(0..6).borders = [:top, :left]
 
           row(0..slots.size - 1).columns(0..6).borders = [:top, :bottom, :left, :right]
         end
