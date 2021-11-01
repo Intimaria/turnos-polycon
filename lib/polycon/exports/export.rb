@@ -77,17 +77,18 @@ module Polycon
         (1...slots.size).each do |row|
           (0...1).each do |cell|
             filas[row][0] = slots[row]
+            arr = Array.new
             appts.each do |a|
               if a.to_h[:hour] == filas[row][0]
-                app = make_cell(:content => "#{a.name} #{a.surname} #{"(" + a.professional.to_s + ")" unless professional}")
-                filas[row][1] = app
+                arr << ["#{a.name} #{a.surname} \n#{"(" + a.professional.to_s.downcase + ")" unless professional}"]
+                filas[row][1] = make_table(arr, :cell_style => { :overflow => :shrink_to_fit, :max_font_size => 8,
+                                                                 :height => 40, :borders => [:bottom] })
               end
             end
           end
         end
 
         table(filas) do
-          cells.padding = 12
           cells.borders = []
 
           row(0).borders          = [:bottom]
