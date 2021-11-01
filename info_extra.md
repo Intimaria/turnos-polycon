@@ -106,3 +106,4 @@ Se elige [Prawn Table](https://github.com/prawnpdf/prawnhttps://github.com/prawn
 - ~~Para insertar appointments en la grilla semanal, comparar el dia de la semana del date con el dia de semana, se usa metodo de instancia de Date .wday, lunes es 1, martes es 2 etc.~~
 - mejorar los estilos para las grillas 
 - mejorar la eficiencia para la generacion de las grillas 
+- en la semana, dos appointments que tienen el mismo dia y horario se pisan

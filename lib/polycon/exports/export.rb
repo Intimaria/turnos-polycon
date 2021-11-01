@@ -2,7 +2,7 @@ require 'date'
 require 'time'
 module Polycon
   module Export
-    HEADER = ["Turnos", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes"].freeze
+    HEADER = ["Hora", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes"].freeze
 
     def self.horarios(date)
       d1 = DateTime.parse(date + " 7:30")
@@ -133,17 +133,19 @@ module Polycon
           (0...HEADER.size).each do |cell|
             filas[row][0] = slots[row]
             filas[row][cell] = " "
+            arr = Array.new
             appts.each do |a| 
               if (a.to_h[:hour] == filas[row][0] && Date.parse(a.to_h[:date]).wday == cell)
-                app = make_cell(:content =>"#{a.name} #{a.surname} #{"("+a.professional.to_s+")" unless professional}")
-              filas[row][cell] = app
+                arr << ["#{a.name} #{a.surname} #{"("+a.professional.to_s.downcase+")" unless professional}"]
+                puts arr
+                filas[row][cell] = arr
               end
             end 
           end
         end
       
         table(filas) do
-          cells.padding = 12
+          
           cells.borders = []
 
           #row(0).borders      = [:bottom]
@@ -154,6 +156,7 @@ module Polycon
           #columns(0..6).borders = [:top, :left]
 
           row(0..slots.size - 1).columns(0..6).borders = [:top, :bottom, :left, :right]
+          
         end
       end
     end
