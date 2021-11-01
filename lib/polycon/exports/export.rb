@@ -78,7 +78,10 @@ module Polycon
           (0...1).each do |cell|
             filas[row][0] = slots[row]
             appts.each do |a| 
-              filas[row][1] = "#{a.name} #{a.surname}  #{"("+a.professional.to_s+")" unless professional}" if a.to_h[:hour] == filas[row][0] 
+              if a.to_h[:hour] == filas[row][0]
+                app = make_cell(:content =>"#{a.name} #{a.surname} #{"("+a.professional.to_s+")" unless professional}")
+              filas[row][1] = app
+              end
             end 
           end
         end
@@ -130,7 +133,10 @@ module Polycon
             filas[row][0] = slots[row]
             filas[row][cell] = " "
             appts.each do |a| 
-              filas[row][cell] = "#{a.name} #{a.surname} #{"("+a.professional.to_s+")" unless professional}" if (a.to_h[:hour] == filas[row][0] && Date.parse(a.to_h[:date]).wday == cell)
+              if (a.to_h[:hour] == filas[row][0] && Date.parse(a.to_h[:date]).wday == cell)
+                app = make_cell(:content =>"#{a.name} #{a.surname} #{"("+a.professional.to_s+")" unless professional}")
+              filas[row][cell] = app
+              end
             end 
           end
         end
@@ -139,7 +145,7 @@ module Polycon
           cells.padding = 12
           cells.borders = []
 
-          row(0).borders      = [:bottom]
+          #row(0).borders      = [:bottom]
           row(0).border_width = 2
           row(0).background_color = "FF9900"
           row(0).font_style = :bold
