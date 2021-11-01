@@ -68,6 +68,19 @@ module Polycon
       end
     end
 
+    def self.all_appointments
+      begin
+        response = {}
+        professionals = all_professionals
+        professionals.map! do |prof|
+          response[prof] = all_appointment_dates_for_prof(prof)
+        end
+        response
+      rescue Dry::Files::Error
+        raise Dry::Files::Error, "problem retrieving entries, are you sure that directory exists?"
+      end
+    end
+
     def self.all_professionals
       begin
         professionals = Dir.entries(root).reject { |f| f.start_with?(".") }
