@@ -81,8 +81,7 @@ Se elige [Prawn Table](https://github.com/prawnpdf/prawnhttps://github.com/prawn
 - como hacer monkey patching dentro de un programa asi? (agregar funcionalidad a Dry::Files)
 - Porque no se rescatan todos los argument errors para algunos metodos a pesar de estar en el rescue
 - ver adonde hacer el save de appointments / profesionals, esta bien tenerlo afuera o volver a ponerlo en en create?
-- hacer que el modulo de exports sea clase con includes del mixin Prawn::Views quizas sea mas elegante/eficiente?
-- como hacer que sea mas eficiente / elegante el agregar appointments a grillas? (linea muy larga, O(n^3))
+
 ### __Preguntas Entrega 2__
 - Que libreria me conviene usar para exports?
 
@@ -91,6 +90,8 @@ Se elige [Prawn Table](https://github.com/prawnpdf/prawnhttps://github.com/prawn
 
 - [Doumentacion PrawnTable](https://github.com/prawnpdf/prawnhttps://github.com/prawnpdf/prawn-table) 
 - Object Table puede ser una gema intermedia interesante https://github.com/lincheney/ruby-object-table
+- hacer que el modulo de exports sea clase con includes del mixin Prawn::Views quizas sea mas elegante/eficiente?
+- como hacer que sea mas eficiente / elegante el agregar appointments a grillas? (linea muy larga, O(n^3))
 
 ### __Errores / Bugs__
 - ~~Al renombrar la separacion de nombre y apellido no se hace correctamente~~
