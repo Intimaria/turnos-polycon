@@ -80,7 +80,9 @@ Se elige [Prawn Table](https://github.com/prawnpdf/prawnhttps://github.com/prawn
 - como usar options en dry::cli 
 - como hacer monkey patching dentro de un programa asi? (agregar funcionalidad a Dry::Files)
 - Porque no se rescatan todos los argument errors para algunos metodos a pesar de estar en el rescue
-
+- ver adonde hacer el save de appointments / profesionals, esta bien tenerlo afuera o volver a ponerlo en en create?
+- hacer que el modulo de exports sea clase con includes del mixin Prawn::Views quizas sea mas elegante/eficiente?
+- como hacer que sea mas eficiente / elegante el agregar appointments a grillas? (linea muy larga, O(n^3))
 ### __Preguntas Entrega 2__
 - Que libreria me conviene usar para exports?
 
@@ -98,10 +100,7 @@ Se elige [Prawn Table](https://github.com/prawnpdf/prawnhttps://github.com/prawn
 - ~~A futuro: Agarrar todos los appointment del sistema?~~
 - ~~Pasar cancel y reschedule a metodos de instancia~~
 - From file tiene bug - se guardan las variables "correctamente" pero reescribe el to_s de tal manera que queda "notas" como representacion. Esto solo se ve si hago "puts appointment". Si hago "puts appointment.variable, imprime correctamente las variables.
-- Chequear que la hora esta en un rango (guardar rango en clase no hardcoradearlo) para evitar bug de que se crea bien aunque no se pasen bien los horarios y quede 00-00
+- Chequear que la hora esta en un rango (guardar rango en clase no hardcoradearlo) para evitar bug de que se crea bien aunque no se pasen bien los horarios y quede 00-00. validar que los turnos sean entre el rango de las grillas (constante global?)
 - validar que el telefono es un numero
-- validar que los turnos sean entre el rango de las grillas (constante global?) 
-- ver adonde hacer el save de appointments / profesionals, esta bien tenerlo afuera o volver a ponerlo en en create?
-- falta poder comparar los horarios (no funciona con el to_h[:hora] aun) poner un appointment en la grilla
-- Para insertar appointments en la grilla semanal, comparar el dia de la semana del date con el dia de semana, se usa metodo de instancia de Date .wday, lunes es 1, martes es 2 etc.
-- hacer que el modulo de exports sea clase con includes del mixin Prawn::Views quizas sea mas elegante/eficiente
+- ~~falta poder comparar los horarios poner un appointment en la grilla~~
+- ~~Para insertar appointments en la grilla semanal, comparar el dia de la semana del date con el dia de semana, se usa metodo de instancia de Date .wday, lunes es 1, martes es 2 etc.~~
