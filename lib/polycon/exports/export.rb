@@ -123,6 +123,7 @@ module Polycon
       slots = horarios(date)
       Prawn::Document.generate('turnos.pdf') do
         text "Profesional: #{professional.to_s.upcase}" if professional
+        text "For week of #{monday}"
         filas = Array.new(slots.size) { Array.new(2) }
         (0...HEADER.size).each do |col|
           filas[0][col] = HEADER[col]
