@@ -7,7 +7,7 @@ module Polycon
     def self.horarios(date)
       d1 = DateTime.parse(date + " 7:30")
       slots = []
-      d2 = d1 + 0.37
+      d2 = d1 + 0.40
       d1.step(d2, 1/48r) { |d| slots << d.strftime('%H:%M') }
       slots
     end
@@ -77,15 +77,14 @@ module Polycon
         (1...slots.size).each do |row|
           (0...1).each do |cell|
             filas[row][0] = slots[row]
-            appts.each do |a| 
+            appts.each do |a|
               if a.to_h[:hour] == filas[row][0]
-                app = make_cell(:content =>"#{a.name} #{a.surname} #{"("+a.professional.to_s+")" unless professional}")
-              filas[row][1] = app
+                app = make_cell(:content => "#{a.name} #{a.surname} #{"(" + a.professional.to_s + ")" unless professional}")
+                filas[row][1] = app
               end
-            end 
+            end
           end
         end
-
 
         table(filas) do
           cells.padding = 12
@@ -96,7 +95,7 @@ module Polycon
           row(0).background_color = "FF9900"
           row(0).font_style       = :bold
 
-          #columns(0..slots.size).borders = [:right]
+          # columns(0..slots.size).borders = [:right]
 
           row(0..slots.size).columns(0..1).borders = [:top, :bottom, :left, :right]
         end
@@ -134,29 +133,28 @@ module Polycon
             filas[row][0] = slots[row]
             filas[row][cell] = " "
             arr = Array.new
-            appts.each do |a| 
+            appts.each do |a|
               if (a.to_h[:hour] == filas[row][0] && Date.parse(a.to_h[:date]).wday == cell)
-                arr << ["#{a.name} #{a.surname} #{"("+a.professional.to_s.downcase+")" unless professional}"]
-                puts arr
-                filas[row][cell] = arr
+                arr << ["#{a.name} #{a.surname} \n#{"(" + a.professional.to_s.downcase + ")" unless professional}"]
+                filas[row][cell] = make_table(arr, :cell_style => { :overflow => :shrink_to_fit, :max_font_size => 8,
+                                                                    :height => 40, :borders => [:bottom] })
               end
-            end 
+            end
           end
         end
-      
-        table(filas) do
-          
+
+        table(filas, :width => 720) do
           cells.borders = []
 
-          #row(0).borders      = [:bottom]
+          # row(0).borders      = [:bottom]
+          row(0).width = 72
           row(0).border_width = 2
           row(0).background_color = "FF9900"
           row(0).font_style = :bold
 
-          #columns(0..6).borders = [:top, :left]
+          # columns(0..6).borders = [:top, :left]
 
           row(0..slots.size - 1).columns(0..6).borders = [:top, :bottom, :left, :right]
-          
         end
       end
     end
