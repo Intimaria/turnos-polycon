@@ -69,7 +69,7 @@ module Polycon
       slots = horarios(date)
 
       Prawn::Document.generate('turnos.pdf') do
-        text "Profesional: #{professional.to_s}" if professional
+        text "Profesional: #{professional.to_s.upcase}" if professional
         filas = Array.new(slots.size) { Array.new(2) }
         filas[0][0] = "turnos"
         filas[0][1] = date.to_s
@@ -103,6 +103,7 @@ module Polycon
     def self.export_week(date:, professional:)
       puts "here I export all the appointments for a week"
       if professional
+        professional = Polycon::Model::Professional.create(name: professional)
         appts = professional.appointments
       else
         appts = Polycon::Model::Professional.all()
@@ -118,6 +119,7 @@ module Polycon
       end
       slots = horarios(date)
       Prawn::Document.generate('turnos.pdf') do
+        text "Profesional: #{professional.to_s.upcase}" if professional
         filas = Array.new(slots.size) { Array.new(2) }
         (0...HEADER.size).each do |col|
           filas[0][col] = HEADER[col]
