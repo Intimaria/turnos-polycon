@@ -17,7 +17,17 @@ Prawn::Document.generate('implicit.pdf') do
     columns(0..7).borders = [:right]
 
     row(0..array2.size).columns(0..7).borders = [:bottom, :right]
-    row(0) = "a"
 
     end
   end
+
+
+header =[["turnos","Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]]
+
+appointments += appointments.each_with_index.map do |app, i|
+  [
+    hour = date + i * "30 mins",
+    header.each do |day| 
+    "#{appt.name} #{appt.surname} (#{appt.professional})" if appointment.to_h[:hour] == hour,
+  ]
+end

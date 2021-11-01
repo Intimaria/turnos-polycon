@@ -127,6 +127,9 @@ module Polycon
           (0...HEADER.size).each do |cell|
             filas[row][0] = slots[row]
             filas[row][cell] = " "
+            appts.each do |a| 
+              filas[row][cell] = "#{a.name} #{a.surname} #{"("+a.professional.to_s+")" unless professional}" if (a.to_h[:hour] == filas[row][0] && Date.parse(a.to_h[:date]).wday == cell)
+            end 
           end
         end
       
