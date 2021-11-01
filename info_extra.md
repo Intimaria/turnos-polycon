@@ -104,3 +104,5 @@ Se elige [Prawn Table](https://github.com/prawnpdf/prawnhttps://github.com/prawn
 - validar que el telefono es un numero
 - ~~falta poder comparar los horarios poner un appointment en la grilla~~
 - ~~Para insertar appointments en la grilla semanal, comparar el dia de la semana del date con el dia de semana, se usa metodo de instancia de Date .wday, lunes es 1, martes es 2 etc.~~
+- mejorar los estilos para las grillas 
+- mejorar la eficiencia para la generacion de las grillas 
