@@ -20,7 +20,6 @@ module Polycon
           end.flatten
         end
 
-<<<<<<< HEAD
         # def all_for_professional(prof)
         #   # TODO maybe have professional know their appointments, or store return
          
@@ -35,39 +34,6 @@ module Polycon
 
           raise InvalidAppointment unless valid?(date: appointment.date, professional: appointment.professional)
 
-=======
-        def all(professional:, date: nil)
-          Polycon::Store.ensure_root_exists
-          prof = Professional.create(name: professional)
-          raise InvalidProfessional unless Professional.valid?(prof)
-          appointments  = Polycon::Store.entries(directory:Polycon::Store::PATH+prof.path)
-          appointments.map! do |appt| 
-            date_arr = appt.split(/_/)
-            time = date_arr[1].gsub(/[-]/,":")
-            date_arr[0]+"_"+time
-          end 
-          all = []
-          appointments.each {|date| all << Appointment.from_file(date: date, professional: professional)}
-          all.sort_by { |a| a.date }
-        end 
-
-        def create(date:, professional:, **options)
-          begin 
-            Polycon::Store.ensure_root_exists
-            path = make_path(professional: professional, date: date)
-            raise AppointmentCreationError unless appointment = new(date: date, professional: professional, **options)
-            valid?(date: appointment.date, professional: appointment.professional)
-            appointment
-          end
-        end 
-
-        def from_file(date:, professional:)
-          Polycon::Store.ensure_root_exists
-          path = make_path(professional: professional, date: date)
-          raise NotFound unless Polycon::Store.exist?(path)
-          surname, name, phone, notes = Polycon::Store.read(path)
-          appointment = create(date:date, professional:professional, name:name, surname:surname, phone:phone, notes:notes)
->>>>>>> development
           appointment
         end
 
@@ -78,17 +44,9 @@ module Polycon
         end
 
         def cancel_all(professional:)
-<<<<<<< HEAD
           prof = Professional.create(name: professional)
           (all_appointments = prof.appointments) if prof.appointments?
           all_appointments.each &:cancel
-=======
-          Polycon::Store.ensure_root_exists
-          prof = Professional.create(name: professional)
-          raise NotFound if Polycon::Store.empty?(directory:prof.path)
-          all_appointments = all(professional: professional)
-          all_appointments.each {|appt| appt.cancel}
->>>>>>> development
         end
 
         # utility
@@ -142,17 +100,7 @@ module Polycon
       end
 
       def edit(**options)
-<<<<<<< HEAD
         Polycon::Store.modify(self, **options)
-=======
-        Polycon::Store.ensure_root_exists
-        Polycon::Store.modify(file: self, **options)
-      end 
-      def cancel()
-        Polycon::Store.ensure_root_exists
-        Polycon::Store.delete(@path)
-        raise AppointmentDeletionError if Polycon::Store.exist?(@path)
->>>>>>> development
       end
 
       def cancel
@@ -161,25 +109,17 @@ module Polycon
       end
 
       def reschedule(new_date:)
-<<<<<<< HEAD
         copy = self.dup
         copy.date = Time.parse(new_date)
         raise AlreadyExists if Polycon::Store.exist_appointment?(copy)
 
         Polycon::Store.rename_appointment(old_app: self, new_app: copy)
-=======
-        Polycon::Store.ensure_root_exists
-        new_path = Appointment.make_path(professional:self.to_h[:professional], date: new_date)
-        raise AlreadyExists if Polycon::Store.exist?(new_path)
-        Polycon::Store.rename(old_name: @path, new_name: new_path)
->>>>>>> development
       end
 
       def to_s
         s = String.new
         to_h.map { |key, value| s << "#{key}: #{value} " }
         s
-<<<<<<< HEAD
       end
 
       def save
@@ -208,32 +148,6 @@ module Polycon
       class InvalidAppointment < AppointmentError
         def message
           'the appointment is invalid'
-=======
-      end 
-
-      def save()
-        Polycon::Store.ensure_root_exists
-        raise AlreadyExists if Polycon::Store.exist?(@path)
-        Polycon::Store.save(appointment: self)
-      end 
-    
-      #Appointment Errors
-        class AppointmentError < Error 
-          def message; end; end 
-
-        class AppointmentCreationError < AppointmentError
-          def message; end
-        end 
-
-        class AppointmentDeletionError < AppointmentError
-          def message; end
-        end 
-
-        class InvalidAppointment < AppointmentError 
-          def message
-            'the appointment is invalid'
-          end 
->>>>>>> development
         end
       end
 

@@ -57,15 +57,15 @@ describe 'Polycon' do
   end
 
   # Appointment
-#   it 'returns all the appointment for a professional as an array of appointments' do
-#     expect(Polycon::Model::Appointment.all_for_professional(@professional)).must_be_instance_of Array
-#   end
+  #   it 'returns all the appointment for a professional as an array of appointments' do
+  #     expect(Polycon::Model::Appointment.all_for_professional(@professional)).must_be_instance_of Array
+  #   end
   it 'returns all the appointments' do
     expect(Polycon::Model::Appointment.all).must_be_instance_of Array
   end
   #   it 'returns the name of the appointment as string' do
-  #     expect(@appointment1.to_s).must_equal ["professional: John Doe", "date: 2021-01-01", "hour: 11:30", "surname: J",
-  #                                            "name: Jane", "phone: 111111111", "notes: Something"]
+  #     expect(@appointment1.to_s).must_equal ["professional: John Doe", "date: 2021-01-01", "hour: 11:30",
+  #                                            "surname: J","name: Jane", "phone: 111111111", "notes: Something"]
   #   end
 
   # Professional
