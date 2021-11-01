@@ -5,9 +5,9 @@ module Polycon
     HEADER = ["Turnos", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes"].freeze
 
     def self.horarios(date)
-      d1 = DateTime.parse(date + " 8:00")
+      d1 = DateTime.parse(date + " 7:30")
       slots = []
-      d2 = d1 + 0.375
+      d2 = d1 + 0.37
       d1.step(d2, 1/48r) { |d| slots << d.strftime('%H:%M') }
       slots
     end
@@ -51,7 +51,7 @@ module Polycon
     def self.export_day(date:, professional: nil)
       puts "here I export all appointments for a day"
       if professional
-        professional = Professional.create(name: professional)
+        professional = Polycon::Model::Professional.create(name: professional)
         appts = professional.appointments
       else
         appts = Polycon::Model::Professional.all()
@@ -69,15 +69,16 @@ module Polycon
       slots = horarios(date)
 
       Prawn::Document.generate('turnos.pdf') do
+        text "Profesional: #{professional.to_s}" if professional
         filas = Array.new(slots.size) { Array.new(2) }
-        filas[0][0] = 'turnos'
+        filas[0][0] = "turnos"
         filas[0][1] = date.to_s
 
         (1...slots.size).each do |row|
           (0...1).each do |cell|
             filas[row][0] = slots[row]
             appts.each do |a| 
-              filas[row][1] = "#{a.name} #{a.surname} (#{a.professional})" if a.to_h[:hour] == filas[row][0] 
+              filas[row][1] = "#{a.name} #{a.surname}  #{"("+a.professional.to_s+")" unless professional}" if a.to_h[:hour] == filas[row][0] 
             end 
           end
         end
