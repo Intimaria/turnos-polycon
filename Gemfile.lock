@@ -3,6 +3,7 @@ GEM
   specs:
     dry-cli (0.7.0)
     dry-files (0.1.0)
+    minitest (5.14.4)
 
 PLATFORMS
   x86_64-darwin-16
@@ -12,6 +13,7 @@ PLATFORMS
 DEPENDENCIES
   dry-cli (~> 0.7)
   dry-files (~> 0.1.0)
+  minitest
 
 RUBY VERSION
    ruby 2.7.4p191

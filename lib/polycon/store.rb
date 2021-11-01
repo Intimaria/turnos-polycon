@@ -1,160 +1,228 @@
+require 'dry/files'
+
 module Polycon
-  module Store 
-    #TODO -> define custom errors DONE-ISH
+  module Store
+    # TODO -> define custom errors DONE-ISH
     #     -> return true or false instead of exception (some methods) & validate at Model level
     #     -> import into Models?
-    
-    PATH = Dir.home+'/.polycon/'
+    PATH = "#{Dir.home}/.polycon/".freeze
+    FORMAT = '%Y-%m-%d_%H-%M'.freeze
 
     @files = Dry::Files.new
-    
 
-    def self.ensure_root_exists()
+    # PATHS
+
+    def self.ensure_root_exists
       begin
         @files.mkdir(PATH) unless @files.directory?(PATH)
-      rescue 
+      rescue Dry::Files::Error
         raise Dry::Files::Error, "problem with root directory"
       end
     end
 
-    def self.save(professional:nil, appointment:nil)
+    def self.root
+      ensure_root_exists
+      PATH
+    end
+
+    def self.appointment_path(appt)
       begin
-        if professional then
-          write_dir(professional) 
-        else 
-          write(appointment)
-        end 
-      rescue FileCreationError
-        raise Dry::Files::Error, "couldn't write file"
-      rescue NoMethodError
-        raise Dry::Files::Error, "Nil value argument."
-      rescue 
-        raise Dry::Files::Error, "problem saving"
+        "#{professional_path(appt.professional)}#{appt.date.strftime(FORMAT)}.paf"
+      rescue Dry::Files::Error
+        raise Dry::Files::Error, "problem with making appointment file path"
       end
     end
 
-    def self.read(path)
-      return nil if @files.directory?(PATH+path)
+    def self.professional_path(prof)
       begin
-          @files.read(PATH+path).split(/\n/)
-      rescue 
+        "#{prof.name.upcase}_#{prof.surname.upcase}/"
+      rescue Dry::Files::Error
+        raise Dry::Files::Error, "problem with making professional file path"
+      end
+    end
+
+    def self.read(professional:, date:)
+      path = "#{root}#{professional_path(professional)}#{date.strftime(FORMAT)}.paf"
+      return nil if @files.directory?(path)
+
+      begin
+        @files.read(path).split(/\n/)
+      rescue Dry::Files::Error
         raise Dry::Files::Error, "problem reading from file"
       end
-    end 
+    end
 
-    def self.rename(old_name:, new_name:)
+    def self.exist_professional?(prof)
       begin
-         FileUtils.mv(PATH+old_name, PATH+new_name)
+        @files.exist?("#{root}#{professional_path(prof)}")
+      rescue Dry::Files::Error
+        raise Dry::Files::Error, "The directory or file doesn't exist"
+      end
+    end
+
+    def self.exist_appointment?(appt)
+      begin
+        @files.exist?("#{root}#{appointment_path(appt)}")
+      rescue Dry::Files::Error
+        raise Dry::Files::Error, "The directory or file doesn't exist"
+      end
+    end
+
+
+    def self.all_professionals
+      begin
+        professionals = Dir.entries(root).reject { |f| f.start_with?(".") }
+        professionals.map! { |prof| prof.gsub(/_/, ' ') }
+      rescue Dry::Files::Error
+        raise Dry::Files::Error, "problem retrieving entries, are you sure that directory exists?"
+      end
+    end
+
+    def self.all_appointment_dates_for_prof(prof)
+      begin
+        appointment_dates = Dir.entries("#{root}#{professional_path(prof)}").reject { |f| f.start_with?(".") }
+        appointment_dates.map! { |f| File.basename(f, File.extname(f)) }
+        appointment_dates.map! do |appt|
+          date_arr = appt.split(/_/)
+          time = date_arr[1].gsub(/[-]/, ":")
+          date_arr[0] + " " + time
+        end
+        return appointment_dates
+      rescue Dry::Files::Error
+        raise Dry::Files::Error, "problem retrieving entries, are you sure that directory exists?"
+      end
+    end
+
+    def self.has_appointments?(prof)
+      begin
+        !Dir.empty?("#{root}#{professional_path(prof)}")
+      rescue Dry::Files::Error
+        raise Dry::Files::Error, "problem checking if the professional has appointments"
+      end
+    end
+
+    def self.rename_professional(old_name:, new_name:)
+      begin
+        FileUtils.mv("#{root}#{professional_path(old_name)}", "#{root}#{professional_path(new_name)}")
+      rescue Dry::Files::Error
+        raise Dry::Files::Error, "problem renaming"
+      end
+    end
+
+    def self.rename_appointment(old_app:, new_app:)
+      begin
+        FileUtils.mv("#{root}#{appointment_path(old_app)}", "#{root}#{appointment_path(new_app)}")
       rescue ArgumentError
         raise Dry::Files::Error, "it's possible there is a problem with the date."
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem renaming"
       end
-    end 
+    end
 
-    def self.modify(file:, **options)
-      begin 
-        options.each do |key,value| 
-        @files.replace_first_line(PATH+file.path, file.to_h[key], value)
+    def self.save_professional(prof)
+      begin
+        # TODO - do I need this delegation?
+        write_dir(prof)
+      rescue FileCreationError
+        raise Dry::Files::Error, "couldn't write file"
+      rescue NoMethodError
+        raise Dry::Files::Error, "Nil value argument."
+      rescue Dry::Files::Error
+        raise Dry::Files::Error, "problem saving"
       end
+    end
+
+    def self.save_appointment(appt)
+      begin
+        # TODO - do I need this delegation?
+        write_file(appt)
+      rescue FileCreationError
+        raise Dry::Files::Error, "couldn't write file"
+      rescue NoMethodError
+        raise Dry::Files::Error, "Nil value argument."
+      rescue Dry::Files::Error
+        raise Dry::Files::Error, "problem saving"
+      end
+    end
+
+    def self.modify(appt, **options)
+      begin
+        options.each do |key, value|
+          @files.replace_first_line("#{root}#{appointment_path(appt)}", appt.to_h[key], value)
+        end
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem modifying file"
       end
-    end 
+    end
 
-    def self.delete(path)
+    def self.delete_professional(prof)
       begin
-        if path then
-          @files.directory?(PATH+path) ? @files.delete_directory(PATH+path) : @files.delete(PATH+path)
-        else 
-          raise Dry::Files::Error, "Nil value argument." 
-        end 
-      rescue 
+        @files.delete_directory("#{root}#{professional_path(prof)}")
+      rescue Dry::Files::Error
         raise Dry::Files::Error, "problem deleting"
       end
-    end 
+    end
 
-    def self.entries(directory:)
+    def self.delete_appointment(appt)
       begin
-        if directory then
-          files = Dir.entries(directory).reject {|f| f.start_with?(".") }
-          files.map! { |f| File.basename(f, File.extname(f)) }
-        else 
-          raise Dry::Files::Error, "Nil value argument." 
-        end 
-      rescue  
-        raise Dry::Files::Error, "problem retrieving entries, are you sure that directory exists?"
+        @files.delete("#{root}#{appointment_path(appt)}")
+      rescue Dry::Files::Error
+        raise Dry::Files::Error, "problem deleting"
       end
-    end 
+    end
 
-    def self.exist?(path)
+    def self.write_dir(prof)
       begin
-        if path then
-          @files.exist?(PATH+path)
-        else 
-          raise Dry::Files::Error, "The directory or file doesn't exist" 
-        end 
-      end 
-    end 
-
-    def self.empty?(directory:)
-      begin
-        if directory then
-          Dir.empty?(PATH+directory)
-        else 
-          raise Dry::Files::Error, "Nil value argument." 
-        end 
-      end 
-    end 
-
-
-    def self.write_dir(obj)
-      begin 
-         if @files.directory?(PATH+obj.path) then 
+        if @files.directory?("#{root}#{professional_path(prof)}")
           raise Dry::Files::Error, "the directory already exists"
-         end 
-        @files.mkdir(PATH+obj.path)
-      rescue 
-        raise DirectoryCreationError
-      end 
-    end 
+        end
 
-    def self.write(obj)
+        @files.mkdir("#{root}#{professional_path(prof)}")
+      rescue Dry::Files::Error
+        raise DirectoryCreationError
+      end
+    end
+
+    def self.write_file(appt)
+      path = appointment_path(appt)
       begin
-        @files.write(PATH+obj.path, obj.surname)
-        @files.append(PATH+obj.path, obj.name) 
-        @files.append(PATH+obj.path, obj.phone)
-        @files.append(PATH+obj.path, obj.notes) if obj.notes
-      rescue 
+        @files.write(root + path, appt.surname)
+        @files.append(root + path, appt.name)
+        @files.append(root + path, appt.phone)
+        @files.append(root + path, appt.notes) if appt.notes
+      rescue Dry::Files::Error
         return FileCreationError
       end
-    end 
+    end
 
-    class DirectoryNotFoundError < Dry::Files::Error 
+    class DirectoryNotFoundError < Dry::Files::Error
       def message
         "The directory was not found."
       end
     end
-    class NoPolyconRootError < Dry::Files::Error 
+
+    class NoPolyconRootError < Dry::Files::Error
       def message
         "The .polycon root folder was not found in the user's home directory."
       end
     end
-    class DirectoryCreationError < Dry::Files::Error 
-      def message 
-        "Could not create directory"
-      end 
-    end 
-    class FileCreationError < Dry::Files::Error 
-      def message 
-        "Could not create file"
-      end 
-    end 
-    class DirectoryRenameError < Dry::Files::Error
-      def message 
-        "Could not rename directory"
-      end 
-    end 
 
-  end 
-end 
+    class DirectoryCreationError < Dry::Files::Error
+      def message
+        "Could not create directory"
+      end
+    end
+
+    class FileCreationError < Dry::Files::Error
+      def message
+        "Could not create file"
+      end
+    end
+
+    class DirectoryRenameError < Dry::Files::Error
+      def message
+        "Could not rename directory"
+      end
+    end
+  end
+end

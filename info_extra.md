@@ -1,3 +1,4 @@
+# Entrega 1
 ## Planificacion 
 
 Se desarrolla un esqumea para los datos. Se considera los objetos y las clases. Se hace un dibujo o esquema para poder visualizar las relaciones. Las relaciones son acotadas. Se considera la necesidad de una entidad que trabaje con archivos para separar el comportamiento de la logica del modelo. Funciona como un adaptador.
@@ -45,23 +46,58 @@ Originalmente la mayoria de los metodos eran de clase, se refactoriza para usar 
 
 Se agregan metodos to_h a professional y appointment para tener mayor facilidad de refactorizar algunas funcionalidades en un futuro.  
 
+# Entrega 2
 
-### Preguntas 
-- herencia de errores en la jerarquia de namespaces 
+
+## Mejoras en el codigo
+
+Se cambian `::` por `.` en los llamados a metodos de Store. Se pasan todos los strings concatenados a interpolacion. Se [freezea las constantes](https://hackernoon.com/freeze-your-constants-in-ruby-49e3238c19ef).
+
+Se refactoriza las clases del modelo para quitarle todas las referencias al filesystem (@path etc), aprovechando el modulo Store al 100%. 
+Se deshace con una idea de un Store como agnostico, se hace que store conozca appointments y professionals y tenga metodos especailizados para estos. 
+Se agrega un metodo de appointments que devuelve todos los appointments para professionals, y appointments? que devuelve true si tiene appointments. 
+
+Se agrega tests usando ['minitest'](https://docs.ruby-lang.org/en/2.1.0/MiniTest.html) para testear la funcionalidad de Polycon.
+
+Se hacen refactorings estrcuturales en base a estos dos ultimos puntos, mejorando toda la funcionalidad.
+
+Se incluye un nuevo modulo utils para poner todas las validaciones del modelo.
+
+## Module Exports
+
+Se implementa una nueva clase heredando de [Dry::CLI::Commands](https://dry-rb.org/gems/dry-cli/0.6/) para los comandos del modulo exports. Se implementa usando un argumento para la fecha y una opcion para profesional.
+
+Se crea un directorio exports en la raiz y se hacen los autoloads necesarios en Polycon.
+
+Se elige [Prawn Table](https://github.com/prawnpdf/prawnhttps://github.com/prawnpdf/prawn-table) para hacer las exportaciones de las grillas de los turnos.
+
+
+# Notas
+
+### __Preguntas Entrega 1__
+- ~~herencia de errores en la jerarquia de namespaces~~
 - separacion utils de storage para el futuro
 - como usar options en dry::cli 
 - como hacer monkey patching dentro de un programa asi? (agregar funcionalidad a Dry::Files)
 - Porque no se rescatan todos los argument errors para algunos metodos a pesar de estar en el rescue
 
+### __Preguntas Entrega 2__
+- Que libreria me conviene usar para exports?
 
-### Errores / Bugs
+        HAML or Slim - no hay mucha diferencia con ERB. Para PDF hasta ahora encontre Prawn y Origami Otras opciones de templating son Erector y Liquid. Tambien existe un wrapper de Handlebar.js para ruby.
+- [Crear PDFs en Ruby (prawn)](https://www.go4expert.com/articles/create-pdf-documents-ruby-t29920/)
+
+- [Doumentacion PrawnTable](https://github.com/prawnpdf/prawnhttps://github.com/prawnpdf/prawn-table) 
+- Object Table puede ser una gema intermedia interesante https://github.com/lincheney/ruby-object-table
+
+### __Errores / Bugs__
 - ~~Al renombrar la separacion de nombre y apellido no se hace correctamente~~
 - ~~Cuestiones de lanzamiento de excepciones~~ 
-- From file tiene bug - se guardan las variables "correctamente" pero reescribe el to_s de tal manera que queda "notas" como representacion. Esto solo se ve si hago "puts appointment". Si hago "puts appointment.variable, imprime correctamente las variables.
-- Chequear que la hora esta en un rango (guardar rango en clase no hardcoradearlo) para evitar bug de que se crea bien aunque no se pasen bien los horarios y quede 00-00
 - ~~Necesito preguntar en "create" si ya existe el profesional? solo estoy creando un objeto. Como mucho, en save() deberia haber ese chequeo~~
 - ~~Ordenar los appointment por fecha en el List sin fecha~~
-- A futuro: Agarrar todos los appointment del sistema?
+- ~~A futuro: Agarrar todos los appointment del sistema?~~
 - ~~Pasar cancel y reschedule a metodos de instancia~~
-
-
+- From file tiene bug - se guardan las variables "correctamente" pero reescribe el to_s de tal manera que queda "notas" como representacion. Esto solo se ve si hago "puts appointment". Si hago "puts appointment.variable, imprime correctamente las variables.
+- Chequear que la hora esta en un rango (guardar rango en clase no hardcoradearlo) para evitar bug de que se crea bien aunque no se pasen bien los horarios y quede 00-00
+- validar que el telefono es un numero
+- ver adonde hacer el save, esta bien tenerlo afuera o volver a ponerlo en en create?
