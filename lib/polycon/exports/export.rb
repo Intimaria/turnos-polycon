@@ -121,7 +121,7 @@ module Polycon
         Date.parse(appt.date.to_s).between?(monday, monday + 6)
       end
       slots = horarios(date)
-      Prawn::Document.generate('turnos.pdf') do
+      Prawn::Document.generate('turnos.pdf', :page_layout => :landscape) do
         text "Profesional: #{professional.to_s.upcase}" if professional
         text "For week of #{monday}"
         filas = Array.new(slots.size) { Array.new(2) }
