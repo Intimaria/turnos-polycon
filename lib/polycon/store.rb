@@ -28,7 +28,7 @@ module Polycon
 
     def self.appointment_path(appt)
       begin
-        "##{professional_path(appt.professional)}#{appt.date.strftime(FORMAT)}.paf"
+        "#{professional_path(appt.professional)}#{appt.date.strftime(FORMAT)}.paf"
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem with making appointment file path"
       end
@@ -149,7 +149,6 @@ module Polycon
 
     def self.save_appointment(appt)
       begin
-        # TODO - do I need this delegation?
         write_file(appt)
       rescue FileCreationError
         raise Dry::Files::Error, "couldn't write file"
