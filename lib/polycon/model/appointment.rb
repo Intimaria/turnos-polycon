@@ -20,15 +20,6 @@ module Polycon
           end.flatten
         end
 
-        # def all_for_professional(prof)
-        #   # TODO maybe have professional know their appointments, or store return
-
-        #   raise InvalidProfessional unless Professional.valid?(prof)
-        #   prof.appointments
-        #   #appointments = Polycon::Store.all_appointment_dates_for_prof(prof)
-        #   #appointments.map! { |date| Appointment.from_file(date: date, professional: prof.to_s) }
-        # end
-
         def create(date:, professional:, **options)
           raise AppointmentCreationError unless (appointment = new(date: date, professional: professional, **options))
 
@@ -38,8 +29,8 @@ module Polycon
         end
 
         def from_file(date:, professional:)
-          surname, name, phone, notes = Polycon::Store.read(professional: Professional.create(name: professional),
-                                                            date: Time.parse(date))
+          appointment = new(professional: professional, date: date)
+          surname, name, phone, notes = Polycon::Store.read(appointment)
           create(date: date, professional: professional, name: name, surname: surname, phone: phone, notes: notes)
         end
 

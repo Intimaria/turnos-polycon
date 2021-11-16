@@ -42,8 +42,8 @@ module Polycon
       end
     end
 
-    def self.read(professional:, date:)
-      path = "#{professional_path(professional)}#{date.strftime(FORMAT)}.paf"
+    def self.read(appointment)
+      path = "#{appointment_path(appointment)}"
       return nil if @files.directory?(path)
 
       begin
