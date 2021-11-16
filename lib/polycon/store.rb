@@ -28,7 +28,7 @@ module Polycon
 
     def self.appointment_path(appt)
       begin
-        "#{root}#{professional_path(appt.professional)}#{appt.date.strftime(FORMAT)}.paf"
+        "##{professional_path(appt.professional)}#{appt.date.strftime(FORMAT)}.paf"
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem with making appointment file path"
       end
