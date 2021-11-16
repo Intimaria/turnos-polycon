@@ -32,17 +32,19 @@ describe 'Polycon' do
   it 'returns path for polycon' do
     expect(Polycon::Store.root).must_equal "#{Dir.home}/.polycon/"
   end
-  it 'returns path for professional' do
-    expect(Polycon::Store.professional_path(@professional)).must_equal 'JOHN_DOE/'
+  it 'r
+eturns path for professional' do
+    expect(Polycon::Store.professional_path(@professional)).must_equal "#{Dir.home}/.polycon/JOHN_DOE/"
   end
+
   it 'returns path for appointment' do
-    expect(Polycon::Store.appointment_path(@appointment1)).must_equal 'JOHN_DOE/2021-01-01_11-30.paf'
+    expect(Polycon::Store.appointment_path(@appointment1)).must_equal "#{Dir.home}/.polycon/JOHN_DOE/2021-01-01_11-30.paf"
   end
+
   it 'returns the array of appointment variables' do
-    expect(Polycon::Store.read(professional: @appointment1.professional,
-                               date: @appointment1.date)).must_equal ["J", "Jane", "111111111",
-                                                                      "Something"]
+    expect(Polycon::Store.read(@appointment1)).must_equal ["J", "Jane", "111111111", "Something"]
   end
+
   it 'returns all the appointment for a professional as a string array of dates' do
     expect(Polycon::Store.all_appointment_dates_for_prof(@professional)).must_equal ["2021-01-01 11:30",
                                                                                      "2021-01-01 12:30"]

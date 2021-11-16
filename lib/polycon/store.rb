@@ -138,8 +138,8 @@ module Polycon
       begin
         # TODO - do I need this delegation?
         write_dir(prof)
-      rescue FileCreationError
-        raise Dry::Files::Error, "couldn't write file"
+      rescue DirectoryCreationError
+        raise Dry::Files::Error, "couldn't write directory"
       rescue NoMethodError
         raise Dry::Files::Error, "Nil value argument."
       rescue Dry::Files::Error
