@@ -5,6 +5,7 @@ module Polycon
     # TODO -> define custom errors DONE-ISH
     #     -> return true or false instead of exception (some methods) & validate at Model level
     #     -> import into Models?
+
     PATH = "#{Dir.home}/.polycon/".freeze
     FORMAT = '%Y-%m-%d_%H-%M'.freeze
 
@@ -27,7 +28,7 @@ module Polycon
 
     def self.appointment_path(appt)
       begin
-        "#{professional_path(appt.professional)}#{appt.date.strftime(FORMAT)}.paf"
+        "#{root}#{professional_path(appt.professional)}#{appt.date.strftime(FORMAT)}.paf"
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem with making appointment file path"
       end
@@ -35,14 +36,14 @@ module Polycon
 
     def self.professional_path(prof)
       begin
-        "#{prof.name.upcase}_#{prof.surname.upcase}/"
+        "#{root}#{prof.name.upcase}_#{prof.surname.upcase}/"
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem with making professional file path"
       end
     end
 
     def self.read(professional:, date:)
-      path = "#{root}#{professional_path(professional)}#{date.strftime(FORMAT)}.paf"
+      path = "#{professional_path(professional)}#{date.strftime(FORMAT)}.paf"
       return nil if @files.directory?(path)
 
       begin
@@ -54,7 +55,7 @@ module Polycon
 
     def self.exist_professional?(prof)
       begin
-        @files.exist?("#{root}#{professional_path(prof)}")
+        @files.exist?("#{professional_path(prof)}")
       rescue Dry::Files::Error
         raise Dry::Files::Error, "The directory or file doesn't exist"
       end
@@ -62,7 +63,7 @@ module Polycon
 
     def self.exist_appointment?(appt)
       begin
-        @files.exist?("#{root}#{appointment_path(appt)}")
+        @files.exist?("#{appointment_path(appt)}")
       rescue Dry::Files::Error
         raise Dry::Files::Error, "The directory or file doesn't exist"
       end
@@ -83,8 +84,10 @@ module Polycon
 
     def self.all_professionals
       begin
-        professionals = Dir.entries(root).reject { |f| f.start_with?(".") }
-        professionals.map! { |prof| prof.gsub(/_/, ' ') }
+        if !Dir.empty?(root)
+          professionals = Dir.entries(root).reject { |f| f.start_with?(".") }
+          professionals.map! { |prof| prof.gsub(/_/, ' ') }
+        end
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem retrieving entries, are you sure that directory exists?"
       end
@@ -92,7 +95,7 @@ module Polycon
 
     def self.all_appointment_dates_for_prof(prof)
       begin
-        appointment_dates = Dir.entries("#{root}#{professional_path(prof)}").reject { |f| f.start_with?(".") }
+        appointment_dates = Dir.entries("#{professional_path(prof)}").reject { |f| f.start_with?(".") }
         appointment_dates.map! { |f| File.basename(f, File.extname(f)) }
         appointment_dates.map! do |appt|
           date_arr = appt.split(/_/)
@@ -107,7 +110,7 @@ module Polycon
 
     def self.has_appointments?(prof)
       begin
-        !Dir.empty?("#{root}#{professional_path(prof)}")
+        !Dir.empty?("#{professional_path(prof)}")
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem checking if the professional has appointments"
       end
@@ -115,7 +118,7 @@ module Polycon
 
     def self.rename_professional(old_name:, new_name:)
       begin
-        FileUtils.mv("#{root}#{professional_path(old_name)}", "#{root}#{professional_path(new_name)}")
+        FileUtils.mv("#{professional_path(old_name)}", "#{professional_path(new_name)}")
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem renaming"
       end
@@ -123,7 +126,7 @@ module Polycon
 
     def self.rename_appointment(old_app:, new_app:)
       begin
-        FileUtils.mv("#{root}#{appointment_path(old_app)}", "#{root}#{appointment_path(new_app)}")
+        FileUtils.mv("#{appointment_path(old_app)}", "#{appointment_path(new_app)}")
       rescue ArgumentError
         raise Dry::Files::Error, "it's possible there is a problem with the date."
       rescue Dry::Files::Error
@@ -160,7 +163,7 @@ module Polycon
     def self.modify(appt, **options)
       begin
         options.each do |key, value|
-          @files.replace_first_line("#{root}#{appointment_path(appt)}", appt.to_h[key], value)
+          @files.replace_first_line("#{appointment_path(appt)}", appt.to_h[key], value)
         end
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem modifying file"
@@ -169,7 +172,7 @@ module Polycon
 
     def self.delete_professional(prof)
       begin
-        @files.delete_directory("#{root}#{professional_path(prof)}")
+        @files.delete_directory("#{professional_path(prof)}")
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem deleting"
       end
@@ -177,7 +180,7 @@ module Polycon
 
     def self.delete_appointment(appt)
       begin
-        @files.delete("#{root}#{appointment_path(appt)}")
+        @files.delete("#{appointment_path(appt)}")
       rescue Dry::Files::Error
         raise Dry::Files::Error, "problem deleting"
       end
@@ -185,11 +188,11 @@ module Polycon
 
     def self.write_dir(prof)
       begin
-        if @files.directory?("#{root}#{professional_path(prof)}")
+        if @files.directory?("#{professional_path(prof)}")
           raise Dry::Files::Error, "the directory already exists"
         end
 
-        @files.mkdir("#{root}#{professional_path(prof)}")
+        @files.mkdir("#{professional_path(prof)}")
       rescue Dry::Files::Error
         raise DirectoryCreationError
       end
@@ -198,10 +201,10 @@ module Polycon
     def self.write_file(appt)
       path = appointment_path(appt)
       begin
-        @files.write(root + path, appt.surname)
-        @files.append(root + path, appt.name)
-        @files.append(root + path, appt.phone)
-        @files.append(root + path, appt.notes) if appt.notes
+        @files.write(path, appt.surname)
+        @files.append(path, appt.name)
+        @files.append(path, appt.phone)
+        @files.append(path, appt.notes) if appt.notes
       rescue Dry::Files::Error
         return FileCreationError
       end

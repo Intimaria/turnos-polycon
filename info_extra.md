@@ -71,6 +71,10 @@ Se crea un directorio exports en la raiz y se hacen los autoloads necesarios en 
 
 Se elige [Prawn Table](https://github.com/prawnpdf/prawnhttps://github.com/prawnpdf/prawn-table) para hacer las exportaciones de las grillas de los turnos.
 
+## Tests
+
+
+Para correr los tests, ejecutar ``` ruby test/spec.rb ``` en el root del proyecto.
 
 # Notas
 

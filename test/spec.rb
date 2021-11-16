@@ -2,6 +2,7 @@ require 'minitest/autorun'
 require_relative '../lib/polycon/model/appointment'
 require_relative '../lib/polycon/model/professional'
 require_relative '../lib/polycon/store'
+require_relative '../lib/polycon/exports/export'
 
 describe 'Polycon' do
   before do
