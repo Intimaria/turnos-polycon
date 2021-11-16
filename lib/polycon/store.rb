@@ -2,10 +2,6 @@ require 'dry/files'
 
 module Polycon
   module Store
-    # TODO -> define custom errors DONE-ISH
-    #     -> return true or false instead of exception (some methods) & validate at Model level
-    #     -> import into Models?
-
     PATH = "#{Dir.home}/.polycon/".freeze
     FORMAT = '%Y-%m-%d_%H-%M'.freeze
 
@@ -136,7 +132,6 @@ module Polycon
 
     def self.save_professional(prof)
       begin
-        # TODO - do I need this delegation?
         write_dir(prof)
       rescue DirectoryCreationError
         raise Dry::Files::Error, "couldn't write directory"

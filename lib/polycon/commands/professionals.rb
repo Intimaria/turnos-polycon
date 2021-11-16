@@ -46,7 +46,6 @@ module Polycon
 
         def call(name:)
           begin
-            # Polycon::Model::Professional.delete(name: name)
             professional = Polycon::Model::Professional.find(name: name)
             professional.delete
             puts "Success: deleted professional #{name}"
@@ -99,7 +98,6 @@ module Polycon
 
         def call(old_name:, new_name:, **)
           begin
-            # Polycon::Model::Professional.rename(old_name:old_name, new_name: new_name)
             professional = Polycon::Model::Professional.find(name: old_name)
             professional.rename(new_name: new_name)
             puts "Success: professional #{old_name} renamed to #{new_name}"

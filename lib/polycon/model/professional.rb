@@ -6,7 +6,8 @@ require_relative '../store'
 
 module Polycon
   module Model
-    # This class's responsability is to model Professional objects
+    # This class's responsibility is to model Professional objects
+
     class Professional
       attr_accessor :name, :surname
 

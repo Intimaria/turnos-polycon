@@ -8,7 +8,8 @@ require_relative '../store'
 
 module Polycon
   module Model
-    # This class's responsability is to model Appointment objects
+    # This class's responsibility is to model Appointment objects
+
     class Appointment
       attr_accessor :date, :professional, :name, :surname, :phone, :notes
 

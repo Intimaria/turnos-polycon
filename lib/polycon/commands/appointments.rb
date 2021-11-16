@@ -82,7 +82,6 @@ module Polycon
 
         def call(date:, professional:)
           begin
-            # Polycon::Model::Appointment.cancel(date:date , professional: professional)
             appointment = Polycon::Model::Appointment.from_file(date: date, professional: professional)
             appointment.cancel
             puts "Cancellation successful"
@@ -136,7 +135,6 @@ module Polycon
 
         argument :professional, required: true, desc: 'Full name of the professional'
         option :date, required: false, desc: 'Date to filter appointments by (should be the day)'
-        # def call(professional:, date: nil)
         example [
           '"Alma Estevez" # Lists all appointments for Alma Estevez',
           '"Alma Estevez" --date="2021-09-16" # Lists appointments for Alma Estevez on the specified date'
@@ -178,7 +176,6 @@ module Polycon
 
         def call(old_date:, new_date:, professional:)
           begin
-            # Polycon::Model::Appointment.reschedule(old_date: old_date, new_date: new_date, professional: professional)
             appointment = Polycon::Model::Appointment.from_file(date: old_date, professional: professional)
             appointment.reschedule(new_date: new_date)
             puts "Success: you have rescheduled appointment with #{professional}  for #{new_date}"
