@@ -1,5 +1,4 @@
-module Polycon
-  module Model
+
     class Error < StandardError; def message; end; end
 
     class ParameterError < Error
@@ -19,5 +18,3 @@ module Polycon
         "what you wish to create already exists"
       end
     end
-  end
-end
