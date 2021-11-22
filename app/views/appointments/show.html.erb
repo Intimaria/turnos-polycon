@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Professional:</strong>
+  <%= @appointment.professional %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @appointment.name %>
+</p>
+
+<p>
+  <strong>Surname:</strong>
+  <%= @appointment.surname %>
+</p>
+
+<p>
+  <strong>Phone:</strong>
+  <%= @appointment.phone %>
+</p>
+
+<p>
+  <strong>Notes:</strong>
+  <%= @appointment.notes %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @appointment.active %>
+</p>
+
+<%= link_to 'Edit', edit_appointment_path(@appointment) %> |
+<%= link_to 'Back', appointments_path %>

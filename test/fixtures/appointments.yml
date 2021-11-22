@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  professional: 
+  name: MyString
+  surname: MyString
+  phone: MyString
+  notes: MyText
+  active: false
+
+two:
+  professional: 
+  name: MyString
+  surname: MyString
+  phone: MyString
+  notes: MyText
+  active: false
