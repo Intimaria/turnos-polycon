@@ -5,6 +5,7 @@
 <table>
   <thead>
     <tr>
+      <th>Title</th>
       <th>Name</th>
       <th>Surname</th>
       <th>Active</th>
@@ -15,6 +16,7 @@
   <tbody>
     <% @professionals.each do |professional| %>
       <tr>
+        <td><%= professional.title%></td>
         <td><%= professional.name %></td>
         <td><%= professional.surname %></td>
         <td><%= professional.active %></td>

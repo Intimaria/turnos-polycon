@@ -12,6 +12,11 @@
   <% end %>
 
   <div class="field">
+    <%= form.label :title %>
+    <%= form.select :title, @titles.each {|x| [x]}, {}, class: "multiple" %>
+  </div>
+
+  <div class="field">
     <%= form.label :name %>
     <%= form.text_field :name %>
   </div>

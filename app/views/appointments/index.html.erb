@@ -19,7 +19,7 @@
   <tbody>
     <% @appointments.each do |appointment| %>
       <tr>
-        <td>Dr. <%= appointment.professional.surname %></td>
+        <td><%= appointment.professional.title %> <%= appointment.professional.surname %></td>
         <td><%= appointment.name %></td>
         <td><%= appointment.surname %></td>
         <td><%= appointment.phone %></td>

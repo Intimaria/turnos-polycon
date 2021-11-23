@@ -1,6 +1,7 @@
 class ProfessionalsController < ApplicationController
   before_action :set_professional, only: [:show, :edit, :update, :destroy]
 
+
   # GET /professionals
   def index
     @professionals = Professional.all
@@ -12,11 +13,13 @@ class ProfessionalsController < ApplicationController
 
   # GET /professionals/new
   def new
+    @titles = %w[Dr. Lic. Ing.]
     @professional = Professional.new
   end
 
   # GET /professionals/1/edit
   def edit
+    @titles = %w[Dr. Lic. Ing.]
   end
 
   # POST /professionals
@@ -53,6 +56,6 @@ class ProfessionalsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def professional_params
-      params.require(:professional).permit(:name, :surname, :active)
+      params.require(:professional).permit(:title, :name, :surname, :active)
     end
 end

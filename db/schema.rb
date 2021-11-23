@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2021_11_22_220717) do
   end
 
   create_table "professionals", force: :cascade do |t|
+    t.string "title"
     t.string "name"
     t.string "surname"
     t.boolean "active", default: true, null: false
