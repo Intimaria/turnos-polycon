@@ -12,8 +12,8 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :professional %>
-    <%= form.text_field :professional %>
+    <%= form.label :professional_id %>
+    <%= form.select :professional_id, Professional.all.collect {|x| [x.surname, x.id]}, {}, class: "multiple" %>
   </div>
 
   <div class="field">

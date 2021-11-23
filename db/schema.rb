@@ -32,5 +32,5 @@ ActiveRecord::Schema.define(version: 2021_11_22_220717) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  add_foreign_key "appointments", "professionals", on_delete: :cascade
+  add_foreign_key "appointments", "professionals"
 end
