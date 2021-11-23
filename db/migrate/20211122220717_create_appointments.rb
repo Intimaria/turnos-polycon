@@ -6,6 +6,7 @@ class CreateAppointments < ActiveRecord::Migration[6.1]
       t.string :surname
       t.string :phone
       t.text :notes
+      t.datetime :date
       t.boolean :active, null: false, default: true
 
       t.timestamps

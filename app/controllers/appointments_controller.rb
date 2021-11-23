@@ -13,10 +13,12 @@ class AppointmentsController < ApplicationController
   # GET /appointments/new
   def new
     @appointment = Appointment.new
+    @professionals = Professional.all.collect
   end
 
   # GET /appointments/1/edit
   def edit
+    @professionals = Professional.all.collect
   end
 
   # POST /appointments
@@ -53,6 +55,6 @@ class AppointmentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def appointment_params
-      params.require(:appointment).permit(:professional_id, :name, :surname, :phone, :notes, :active)
+      params.require(:appointment).permit(:professional_id, :name, :surname, :phone, :notes, :date, :active)
     end
 end

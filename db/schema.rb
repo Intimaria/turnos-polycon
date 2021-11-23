@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 2021_11_22_220717) do
     t.string "surname"
     t.string "phone"
     t.text "notes"
+    t.datetime "date"
     t.boolean "active", default: true, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

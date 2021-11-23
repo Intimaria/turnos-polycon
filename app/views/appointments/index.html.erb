@@ -10,6 +10,7 @@
       <th>Surname</th>
       <th>Phone</th>
       <th>Notes</th>
+      <th>Date</th>
       <th>Active</th>
       <th colspan="3"></th>
     </tr>
@@ -23,6 +24,7 @@
         <td><%= appointment.surname %></td>
         <td><%= appointment.phone %></td>
         <td><%= appointment.notes %></td>
+        <td><%= appointment.date %></td>
         <td><%= appointment.active %></td>
         <td><%= link_to 'Show', appointment %></td>
         <td><%= link_to 'Edit', edit_appointment_path(appointment) %></td>

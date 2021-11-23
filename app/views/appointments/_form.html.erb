@@ -13,7 +13,7 @@
 
   <div class="field">
     <%= form.label :professional_id %>
-    <%= form.select :professional_id, Professional.all.collect {|x| [x.surname, x.id]}, {}, class: "multiple" %>
+    <%= form.select :professional_id, @professionals.each {|x| [x.surname, x.id]}, {}, class: "multiple" %>
   </div>
 
   <div class="field">
@@ -39,6 +39,11 @@
   <div class="field">
     <%= form.label :active %>
     <%= form.check_box :active %>
+  </div>
+
+  <div class="field">
+    <%= form.label :date %>
+    <%= form.datetime_select :date %>
   </div>
 
   <div class="actions">
