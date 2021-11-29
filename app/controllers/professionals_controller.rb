@@ -1,5 +1,6 @@
 class ProfessionalsController < ApplicationController
-  before_action :set_professional, only: [:show, :edit, :update, :destroy]
+  load_and_authorize_resource
+  # before_action :set_professional, only: [:show, :edit, :update, :destroy]
 
 
   # GET /professionals
@@ -50,9 +51,9 @@ class ProfessionalsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_professional
-      @professional = Professional.find(params[:id])
-    end
+    # def set_professional
+    #   @professional = Professional.find(params[:id])
+    # end
 
     # Only allow a list of trusted parameters through.
     def professional_params

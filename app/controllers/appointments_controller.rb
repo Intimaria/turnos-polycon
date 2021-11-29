@@ -1,5 +1,6 @@
 class AppointmentsController < ApplicationController
-  before_action :set_appointment, only: [:show, :edit, :update, :destroy]
+  load_and_authorize_resource
+  # before_action :set_appointment, only: [:show, :edit, :update, :destroy]
 
   # GET /appointments
   def index
@@ -49,12 +50,13 @@ class AppointmentsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_appointment
-      @appointment = Appointment.find(params[:id])
-    end
+    # def set_appointment
+    #   @appointment = Appointment.find(params[:id])
+    # end
 
     # Only allow a list of trusted parameters through.
     def appointment_params
       params.require(:appointment).permit(:professional_id, :name, :surname, :phone, :notes, :date, :active)
     end
+
 end

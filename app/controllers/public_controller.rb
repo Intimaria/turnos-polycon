@@ -1,5 +1,5 @@
 class PublicController < ApplicationController
     def home 
-        @name = "Inti"
+        @name = current_user.username
     end
 end

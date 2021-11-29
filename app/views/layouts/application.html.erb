@@ -13,16 +13,18 @@
   <body>
       <% if user_signed_in? %>
         <p>
-        Hola, <%= current_user.email %>
+        <%= link_to 'Cerrar Sesión', destroy_user_session_path, method: :delete %>
         </p>
-        <p><%= link_to 'Cerrar Sesión', destroy_user_session_path, method: :delete %></p>
         
       <% end %>
       <p class="notice"><%= notice %></p>
       <p class="alert"><%= alert %></p>
     <nav>
-    <%= link_to "Home", root_path %>
-    <%= link_to "Appointments", appointments_path %>
+    <%= link_to "Home", root_path %> | 
+    <% if can? :read, Appointment %>
+    <%= link_to "Appointments", appointments_path %> |     
+    <% end %>
+
     <%= link_to "Professionals", professionals_path %>
     </nav>
     <%= yield %>
