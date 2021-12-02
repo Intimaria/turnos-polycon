@@ -1,0 +1,10 @@
+<h1 class="float-start">Polycon</h1>
+
+<ul class="float-end list-unstyled" id="topnav">
+    <% if user_signed_in? %>
+    <li> <%= link_to "Home", root_path %> | </li>
+    <li><%= link_to "Appointments", appointments_path %> |  </li>   
+    <li><%= link_to "Professionals", professionals_path %> |  </li>
+    <li><%= link_to 'Cerrar Sesión', destroy_user_session_path, method: :delete %></li>
+    <% end %>
+</ul>

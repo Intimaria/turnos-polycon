@@ -1,5 +1,11 @@
+<% content_for :page_title, "Home" %>
 
-<h1>Home</h1>
-<p>Hello, <%= @name %>.</p>
+<h2>Home</h2>
+
+    <% if current_user.present? %>
+        <p>Hello, <%= @name %>.</p>
+    <% else %>
+        <p>Welcome.</p>
+    <% end %>
 <p>Today is <%= Time.now.strftime('%A') %>.</p>
 
