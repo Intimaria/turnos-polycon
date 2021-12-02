@@ -24,6 +24,8 @@ gem 'turbolinks', '~> 5'
 gem 'devise', '~> 4.0'
 gem 'cancancan'
 
+gem 'rest-client'
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
 
