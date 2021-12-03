@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%=  yield(:page_title) if content_for?(:page_title)%> | Polycon</title>
+    <title><%= "#{yield(:page_title)} |" if content_for?(:page_title) %> Polycon</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -27,7 +27,7 @@
 
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
-    
+
       <div class="row">
         <div class="col">
           <%= yield %>
