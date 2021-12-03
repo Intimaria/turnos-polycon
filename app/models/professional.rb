@@ -1,8 +1,6 @@
 class Professional < ApplicationRecord
-    has_many :appointments
-    validates :name, presence: true, length: {maximum: 255}
-    validates :surname, presence: true, length: {maximum: 255}
-    validates :title, presence: true, length: {maximum: 255}
+    has_many :appointments, dependent: :destroy
+    validates :name, :title, :surname, presence: true, length: {maximum: 255}
     validates :active, inclusion: { in: [true, false] }
 
     scope :active, -> {where(active: true)}

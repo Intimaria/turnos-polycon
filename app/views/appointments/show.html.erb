@@ -2,7 +2,7 @@
 
 <p>
   <strong>Professional:</strong>
-  <%=@appointment.professional.title%> <%=@appointment.professional.surname %>
+  <%=@professional.to_s %>
 </p>
 
 <p>
@@ -35,5 +35,5 @@
   <%= @appointment.active %>
 </p>
 
-<%= link_to 'Edit', edit_appointment_path(@appointment) %> |
-<%= link_to 'Back', appointments_path %>
+<%= link_to 'Edit', edit_professional_appointment_path(@professional, @appointment) %> |
+<%= link_to 'Back', professional_appointments_path(@professional) %>

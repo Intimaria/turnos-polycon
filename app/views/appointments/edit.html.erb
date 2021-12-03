@@ -1,6 +1,6 @@
 <h1>Editing Appointment</h1>
 
-<%= render 'form', appointment: @appointment %>
+<%= render 'form', professional: @professional, appointment: @appointment %>
 
-<%= link_to 'Show', @appointment %> |
-<%= link_to 'Back', appointments_path %>
+<%= link_to 'Show', [@professional, @appointment] %> |
+<%= link_to 'Back', professional_appointments_path(@professional) %>

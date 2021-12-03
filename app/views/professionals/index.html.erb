@@ -8,8 +8,8 @@
   <thead>
     <tr>
       <th scope="col">Name</th>
-      <th scope="col">Total</th>
-      <th colspan="3">Actions</th>
+      <th scope="col">Pending</th>
+      <th colspan="4">Actions</th>
     </tr>
   </thead>
 
@@ -21,6 +21,7 @@
         <td><%= link_to 'Show', professional %></td>
         <td><%= link_to 'Edit', edit_professional_path(professional) %></td>
         <td><%= link_to 'Destroy', professional, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'View Appointments', professional_appointments_path(professional) %></td>
       </tr>
     <% end %>
   </tbody>

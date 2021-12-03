@@ -1,4 +1,4 @@
-<%= form_with(model: appointment) do |form| %>
+<%= form_with(model: [@professional, appointment]) do |form| %>
   <% if appointment.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(appointment.errors.count, "error") %> prohibited this appointment from being saved:</h2>
@@ -11,10 +11,7 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :professional_id %>
-    <%= form.select :professional_id, @professionals.each {|x| ["#{x.title} #{x.surname}", x.id]}, {}, class: "multiple" %>
-  </div>
+
 
   <div class="field">
     <%= form.label :name %>

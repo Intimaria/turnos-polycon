@@ -16,9 +16,17 @@
 </p>
 
 <p>
+  <strong>Appointments:</strong>
+  <%= link_to 'Appointments', professional_appointments_path(@professional) %>
+</p>
+
+<p>
   <strong>Active:</strong>
   <%= @professional.active %>
 </p>
+
+
+
 
 <%= link_to 'Edit', edit_professional_path(@professional) %> |
 <%= link_to 'Back', professionals_path %>
