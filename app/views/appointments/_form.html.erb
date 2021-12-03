@@ -13,7 +13,7 @@
 
   <div class="field">
     <%= form.label :professional_id %>
-    <%= form.select :professional_id, @professionals.each {|x| [x.surname, x.id]}, {}, class: "multiple" %>
+    <%= form.select :professional_id, @professionals.each {|x| ["#{x.title} #{x.surname}", x.id]}, {}, class: "multiple" %>
   </div>
 
   <div class="field">

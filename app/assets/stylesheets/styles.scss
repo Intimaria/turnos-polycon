@@ -1,5 +1,30 @@
+.page-nav {
+    background:  #dedede;
+    margin-bottom: 20px;
+}
 #topnav {
+    margin-top: 20px;
+
     li {
         display: inline;
+        padding: 5px 7px;
     }
+    a, a:hover,a:visited, a:focus {
+        text-decoration:none;
+    }
+    a:hover {
+    color: rgb(86, 188, 251);
+    background-color: inherit; }
+
+}
+
+#site-name {
+    font-size: 22px;
+    margin-top: 20px;
+}
+
+#footer {
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+    margin-top: 20px;
 }

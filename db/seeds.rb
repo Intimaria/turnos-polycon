@@ -10,7 +10,7 @@ Appointment.destroy_all
 Professional.destroy_all
 
 
-u = User.create(email: 'admin@admin.com', password: '123456')
+u = User.create(email: 'admin@admin.com', username: "Inti", password: '123456')
 u.admin!
 
 # Professionals 

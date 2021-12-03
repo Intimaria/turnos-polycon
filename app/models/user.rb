@@ -5,6 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
   
   validates :role, presence: true
+  validates :username, presence: true
 
   enum role: [:user, :admin]
 end
