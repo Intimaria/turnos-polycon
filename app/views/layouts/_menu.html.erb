@@ -4,6 +4,7 @@
     <% if user_signed_in? %>
     <li> <%= link_to "Home", root_path %> </li>
     <%# <%= link_to "Appointments", appointments_path %>
+    <li><%= link_to "Exports", '/' %></li>
     <% if can? :manage, User %>
     <li><%= link_to "Users", users_path %> </li>
     <% end %>
