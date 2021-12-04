@@ -10,6 +10,15 @@ class ProfessionalsController < ApplicationController
 
   # GET /professionals/1
   def show
+    respond_to do |format|
+      format.html
+      format.pdf do
+        pdf = ExportPdf.new(@professional, view_context, Date.new(2022, 3, 8), :day)
+        send_data pdf.render, filename: 
+        "professional_#{@professional.created_at.strftime("%d/%m/%Y")}.pdf",
+        type: "application/pdf"
+      end
+    end
   end
 
   # GET /professionals/new

@@ -50,7 +50,7 @@ class AppointmentsController < ApplicationController
   private
     # Only allow a list of trusted parameters through.
     def appointment_params
-      params.require(:appointment).permit(:name, :surname, :phone, :notes, :date, :active)
+      params.require(:appointment).permit(:name, :surname, :phone, :notes, :date, :time, :active)
     end
 
       # Use callbacks to share common setup or constraints between actions.

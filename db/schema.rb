@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_03_162316) do
+ActiveRecord::Schema.define(version: 2021_12_04_214609) do
 
   create_table "appointments", force: :cascade do |t|
     t.integer "professional_id", null: false
@@ -18,10 +18,11 @@ ActiveRecord::Schema.define(version: 2021_12_03_162316) do
     t.string "surname"
     t.string "phone"
     t.text "notes"
-    t.datetime "date"
+    t.date "date"
     t.boolean "active", default: true, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.time "time"
     t.index ["professional_id"], name: "index_appointments_on_professional_id"
   end
 

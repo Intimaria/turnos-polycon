@@ -48,7 +48,7 @@ a_notes = response.body.split("\n")
 a_notes.reject! { |item| item.blank? }
 
 a_professionals = Professional.pluck(:id)
-def make_appointments(professional, names, surnames, phones, notes, date)
+def make_appointments(professional, names, surnames, phones, notes, date, time)
     Appointment.create(
         {
             professional_id: professional,
@@ -56,14 +56,16 @@ def make_appointments(professional, names, surnames, phones, notes, date)
             surname: surnames.sample,
             phone: phones.sample,
             notes: notes.sample,
-            date: date
+            date: date,
+            time: time
         }
         )
 end 
 
 a_professionals.each do | prof |
     rand(RANGE_APPOINTMENTS).times do | i |
-        date = rand(1.months.from_now..4.months.from_now).change(hour: 8 + i)
-        make_appointments(prof, a_names, a_surnames, a_phones, a_notes, date)
+        date = rand(1.months.from_now..4.months.from_now)
+        time = Time.new(date.year,date.month,date.day).change(hour: 8 + i)
+        make_appointments(prof, a_names, a_surnames, a_phones, a_notes, date, time)
     end 
 end 

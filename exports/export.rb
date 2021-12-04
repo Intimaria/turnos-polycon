@@ -1,6 +1,6 @@
 require 'date'
 require 'time'
-  module Export
+  module ExportPdf
     HEADER = ["Hora", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes"].freeze
 
     def self.horarios(date)
@@ -47,8 +47,8 @@ require 'time'
     # end
 
     # def self.export_day(appointments:, **options)
-    def self.export_day(date:, professional: nil)
 
+    def self.get_appointments(professional: nil)
       if professional
         appts = professional.active_appointments
       else
@@ -56,8 +56,14 @@ require 'time'
         appts.map! do |prof|
           prof.active_appointments
         end
-        appts.flatten!
       end
+      appts
+    end 
+
+    def self.export_day(date:, professional: nil)
+
+      appts = get_appointments(professional: professional)
+      appts.flatten! 
       this_date = Date.parse(date)
 
       appts.filter! do |appt|
@@ -103,18 +109,11 @@ require 'time'
 
     def self.export_week(date:, professional:)
 
-      if professional
-        appts = professional.active_appointments
-      else
-        appts = Professional.all()
-        appts.map! do |prof|
-          prof.active_appointments
-        end
-        appts.flatten!
-      end
+      appts = get_appointments(professional:professional)
       
       now = Date.parse(date)
       monday = now - (now.wday - 1) % 7
+
       appts.flatten!
       appts.filter! do |appt|
         Date.parse(appt.date.to_s).between?(monday, monday + 6)

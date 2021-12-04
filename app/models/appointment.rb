@@ -11,6 +11,10 @@ class Appointment < ApplicationRecord
     after_create :increment_total_count
     after_destroy :decrement_total_count
 
+    def self.all_valid_appointments
+        all.where(active: true).where("date > ?", Date.yesterday)
+    end 
+
     def appointee
         "#{name} #{surname}"
     end 
