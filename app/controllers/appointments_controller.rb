@@ -5,7 +5,7 @@ class AppointmentsController < ApplicationController
 
   # GET /appointments
   def index
-    @appointments = @professional.appointments.order_by_latest_first.order(:date)
+    @appointments = @professional.valid_appointments.order_by_latest_first.order(:date)
   end
 
   # GET /appointments/1

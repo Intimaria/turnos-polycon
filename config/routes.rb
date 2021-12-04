@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  scope "/control" do
+    resources :users
+  end
   devise_for :users
 
   resources :professionals do 
