@@ -11,39 +11,46 @@
     </div>
   <% end %>
 
+<%#   <div class="field">
+    <%= form.label :professional_id %>
+    <%# <%= form.select :professional_id, Professional.all {|x| ["#{x.title} #{x.surname}", x.id]}, {}, class: "multiple" %>
+  <%# </div> 
+  %>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="field">
+      <%= form.label :name %><br />
+      <%= form.text_field :name, class: "form-control" %>
+    </div>
 
+    <div class="field">
+      <%= form.label :surname %><br />
+      <%= form.text_field :surname, class: "form-control" %>
+    </div>
 
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
+    <div class="field">
+      <%= form.label :phone %><br />
+      <%= form.text_field :phone, class: "form-control" %>
+    </div>
+
+    <div class="field">
+      <%= form.label :notes %><br />
+      <%= form.text_area :notes, class: "form-control" %>
+    </div>
+
+    <div class="field">
+      <%= form.label :active %>
+      <%= form.check_box :active %>
+    </div>
+
+    <div class="field">
+      <%= form.label :date %><br />
+      <%= form.datetime_select :date, class: "form-control" %>
+    </div>
+
+    <div class="actions form-group">
+      <%= form.submit class: "form-control btn btn-primary btn-sm" %>
+    </div>
   </div>
-
-  <div class="field">
-    <%= form.label :surname %>
-    <%= form.text_field :surname %>
-  </div>
-
-  <div class="field">
-    <%= form.label :phone %>
-    <%= form.text_field :phone %>
-  </div>
-
-  <div class="field">
-    <%= form.label :notes %>
-    <%= form.text_area :notes %>
-  </div>
-
-  <div class="field">
-    <%= form.label :active %>
-    <%= form.check_box :active %>
-  </div>
-
-  <div class="field">
-    <%= form.label :date %>
-    <%= form.datetime_select :date %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
+</div>
 <% end %>

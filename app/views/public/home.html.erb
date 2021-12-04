@@ -1,11 +1,32 @@
 <% content_for :page_title, "Home" %>
 
-<h2>Home</h2>
+<div class="row">
+    <div class="col-8">
+        <h2>Home</h2>
+        <section>
+        <p>
+            <% if current_user.present? %>
+                Hello, <%= @name %>.
+            <% else %>
+                Welcome
+            <% end %>
+            Today is <%= Time.now.strftime('%A') %>.
+            </p>
+            <bloquote>Quas alias iusto quos reprehenderit itaque et recusandae officiis. 
+            Recusandae sed nemo voluptatem voluptas sequi. 
+            Quis quisquam neque reiciendis eveniet</bloquote>
+        </section>
+    </div>
+    <div class="col-4"> 
+        <h2>About</h2>
+        <p>
+        Quas alias iusto quos reprehenderit itaque et recusandae officiis. 
+        Recusandae sed nemo voluptatem voluptas sequi. 
+        Quis quisquam neque reiciendis eveniet
+        </p>
+        <%= image_tag @cat, alt: "cat", class: "img-fluid mt-2 mb-2", style: "border-radius: 6px; height: 200px" %>
+    </div>
+</div>
 
-    <% if current_user.present? %>
-        <p>Hello, <%= @name %>.</p>
-    <% else %>
-        <p>Welcome.</p>
-    <% end %>
-<p>Today is <%= Time.now.strftime('%A') %>.</p>
+
 

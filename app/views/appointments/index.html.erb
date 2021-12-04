@@ -2,12 +2,11 @@
 
 <p id="notice"><%= notice %></p>
 
-<h2>Appointments</h2>
+<h2>Appointments for <%= @professional.to_s %></h2>
 
 <table class="table table-hover">
   <thead>
     <tr>
-      <th scope="col">Professional</th>
       <th scope="col">Name</th>
       <th scope="col">Phone</th>
       <th scope="col">Notes</th>
@@ -19,19 +18,24 @@
   <tbody>
     <% @appointments.order_by_latest_first.each do |appointment| %>
       <tr>
-        <td><%= @professional.to_s %></td>
         <td><%= appointment.appointee %></td>
         <td><%= appointment.phone %></td>
         <td><%= appointment.notes %></td>
         <td><%= display_date(appointment) %></td>
         <td><%= link_to 'Show', [@professional, appointment] %></td>
+        <% if can? :update, Appointment %>
         <td><%= link_to 'Edit',  edit_professional_appointment_path(@professional, appointment) %></td>
+        <% end %>
+        <% if can? :destroy, Appointment %>
         <td><%= link_to 'Destroy', [@professional, appointment], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>
 </table>
 
 <br>
-<%= link_to 'Back', professionals_path %>
-<%= link_to 'New Appointment', new_professional_appointment_path(@professional) %>
+<%= link_to 'Back', professionals_path, class: "btn btn-secondary btn-sm" %>
+<% if can? :create, Appointment %>
+<%= link_to 'New Appointment', new_professional_appointment_path(@professional), class: "btn btn-primary btn-sm" %>
+<% end %>

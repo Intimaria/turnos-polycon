@@ -1,36 +1,34 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+NUM_PROFESSIONALS = 10 
+RANGE_APPOINTMENTS = (2..7)
+
 User.destroy_all 
 Appointment.destroy_all
 Professional.destroy_all
 
 
-u = User.create(email: 'admin@admin.com', username: "Inti", password: '123456')
-u.admin!
+admin = User.create(email: 'admin@admin.com', username: "Admin", password: '123456')
+admin.admin!
+manager = User.create(email: 'manager@manager.com', username: "Manager", password: '123456')
+manager.manager!
+user = User.create(email: 'user@user.com', username: "User", password: '123456')
+user.user!
 
 # Professionals 
 p_names = ["Lisandro", "Armando", "Denise", "Anna", "Paula"]
 p_surnames = ["Rodriguez", "Randall", "Lopez", "Medellin", "Cortazar"]
 p_titles = ["Lic.", "Dr.", "Ing."]
 
-def make_professional(names, surnames, titles)
+def make_professional(name, surname, title)
     Professional.create(
         {
-            title: titles.sample,
-            name: names.sample,
-            surname: surnames.sample,
+            title: title.sample,
+            name: name.sample,
+            surname: surname.sample,
         }
     )
 end
 
-num_professionals = 10 
-
-num_professionals.times do 
+NUM_PROFESSIONALS.times do 
     make_professional(p_names, p_surnames, p_titles)
 end 
 
@@ -64,7 +62,7 @@ def make_appointments(professional, names, surnames, phones, notes, date)
 end 
 
 a_professionals.each do | prof |
-    rand(2..7).times do | i |
+    rand(RANGE_APPOINTMENTS).times do | i |
         date = rand(1.months.from_now..4.months.from_now).change(hour: 8 + i)
         make_appointments(prof, a_names, a_surnames, a_phones, a_notes, date)
     end 

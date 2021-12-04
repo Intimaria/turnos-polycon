@@ -8,8 +8,8 @@
   <thead>
     <tr>
       <th scope="col">Name</th>
-      <th scope="col">Pending</th>
-      <th colspan="4">Actions</th>
+      <th colspan="3">Appointments</th>
+      <th colspan="3">Actions</th>
     </tr>
   </thead>
 
@@ -18,10 +18,19 @@
       <tr>
         <td><%= professional.to_s%></td>
         <td><%= professional.total%></td>
+        <td>
+         <% if can? :create, Appointment %>
+        <%= link_to 'New', new_professional_appointment_path(professional) %>
+        <% end %>
+        </td>
+        <td><%= link_to 'See All', professional_appointments_path(professional) %></td>
         <td><%= link_to 'Show', professional %></td>
+        <% if can? :update, Professional %>
         <td><%= link_to 'Edit', edit_professional_path(professional) %></td>
+        <% end %>
+        <% if can? :destroy, Professional %>
         <td><%= link_to 'Destroy', professional, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <td><%= link_to 'View Appointments', professional_appointments_path(professional) %></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>
@@ -29,4 +38,6 @@
 
 <br>
 
-<%= link_to 'New Professional', new_professional_path %>
+ <% if can? :create, Professional %>
+<%= link_to 'New Professional', new_professional_path, class: "btn btn-primary btn-sm" %>
+<% end %>

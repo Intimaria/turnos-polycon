@@ -1,6 +1,6 @@
 class ProfessionalsController < ApplicationController
   load_and_authorize_resource
-  # before_action :set_professional, only: [:show, :edit, :update, :destroy]
+  before_action :set_titles, only: [:new, :edit]
 
 
   # GET /professionals
@@ -14,13 +14,11 @@ class ProfessionalsController < ApplicationController
 
   # GET /professionals/new
   def new
-    @titles = %w[Dr. Lic. Ing.]
     @professional = Professional.new
   end
 
   # GET /professionals/1/edit
   def edit
-    @titles = %w[Dr. Lic. Ing.]
   end
 
   # POST /professionals
@@ -54,7 +52,9 @@ class ProfessionalsController < ApplicationController
     # def set_professional
     #   @professional = Professional.find(params[:id])
     # end
-
+   def set_titles
+     @titles = %w[Dr. Lic. Ing.]
+   end 
     # Only allow a list of trusted parameters through.
     def professional_params
       params.require(:professional).permit(:title, :name, :surname, :active)

@@ -1,6 +1,6 @@
-<h1>Editing Appointment</h1>
+<h2>Editing Appointment</h2>
 
 <%= render 'form', professional: @professional, appointment: @appointment %>
 
-<%= link_to 'Show', [@professional, @appointment] %> |
-<%= link_to 'Back', professional_appointments_path(@professional) %>
+<%= link_to 'Show', [@professional, @appointment], class: "btn btn-primary btn-sm" %> |
+<%= link_to 'Back', professional_appointments_path(@professional), class: "btn btn-secondary btn-sm" %>

@@ -1,6 +1,5 @@
 require 'date'
 require 'time'
-module Polycon
   module Export
     HEADER = ["Hora", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes"].freeze
 
@@ -49,14 +48,13 @@ module Polycon
 
     # def self.export_day(appointments:, **options)
     def self.export_day(date:, professional: nil)
-      puts "here I export all appointments for a day"
+
       if professional
-        professional = Polycon::Model::Professional.create(name: professional)
-        appts = professional.appointments
+        appts = professional.active_appointments
       else
-        appts = Polycon::Model::Professional.all()
+        appts = Professional.all()
         appts.map! do |prof|
-          prof.appointments
+          prof.active_appointments
         end
         appts.flatten!
       end
@@ -104,16 +102,17 @@ module Polycon
     end
 
     def self.export_week(date:, professional:)
-      puts "here I export all the appointments for a week"
+
       if professional
-        professional = Polycon::Model::Professional.create(name: professional)
-        appts = professional.appointments
+        appts = professional.active_appointments
       else
-        appts = Polycon::Model::Professional.all()
+        appts = Professional.all()
         appts.map! do |prof|
-          prof.appointments
+          prof.active_appointments
         end
+        appts.flatten!
       end
+      
       now = Date.parse(date)
       monday = now - (now.wday - 1) % 7
       appts.flatten!
@@ -167,4 +166,4 @@ module Polycon
       end;
     end
   end
-end
+

@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  scope "/control" do
+  scope "/accounts" do
     resources :users
   end
   devise_for :users
