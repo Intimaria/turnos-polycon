@@ -6,24 +6,27 @@ class ExportPdf < Prawn::Document
 
     def initialize(date:, type:, professional: nil)
         puts type
-        if type == "week"
+        if type == :week
             puts "entered in week"
             super(:page_layout => :landscape)
         else 
             puts "entered in day"
             super(:page_layout => :portrait)
         end 
+
         if professional
             @professional = professional
         end 
         @appts = Utils.get_appointments(professional: @professional)
         @date = date
 
-        if type == "day"
+        if type == :week
+            puts "exportin week"
+            export_week
+        else 
+            puts "exporting day"
             text "#{@professional.to_s if @professional} #{type}, #{date}"
             export_day
-        else 
-            export_week
         end 
     end
 

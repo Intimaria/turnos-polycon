@@ -10,13 +10,9 @@ class ExportsController < ApplicationController
   def create
     @export = Export.new(export_params)
     if @export.valid?
-        if !@export.professional.blank?
-            @professional = Professional.find(@export.professional)
-        end 
-        @date = Date.parse(@export.date)
-        pdf = ExportPdf.new(date: @date, professional: @professional, type: @export.type )
+        pdf = ExportPdf.new(date: @export.date, professional: @export.professional, type: @export.type )
         send_data pdf.render, filename: 
-            "export_appointments_for_#{@date.strftime("%d/%m/%Y")}.pdf",
+            "Appointments_for_#{@export.type}_#{@export.date.strftime("%d/%m/%Y")}.pdf",
             type: "application/pdf"
     else
         render :new, alert: @export.errors.messages, status: :unprocessable_entity

@@ -4,8 +4,17 @@ class Export
     validates :date, :type, presence: true
     validates :date, timeliness: { type: :datetime }
     attr_accessor :professional, :date, :type
+
     def initialize(attributes={})
         super
-        puts "export initialized with #{attributes}"
+        if !attributes.empty?
+            @date = Date.parse(attributes["date"])
+            @type = attributes["type"].to_sym
+            if attributes["professional"].blank?
+                @professional = nil 
+            else 
+                @professional = Professional.find(attributes["professional"])
+            end 
+        end
       end
   end
