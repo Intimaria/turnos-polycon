@@ -5,10 +5,11 @@ class ExportPdf < Prawn::Document
     @@slots = Utils.hours(START)
 
     def initialize(date:, type:, professional: nil)
+        puts type
         if type == :week
             super(:page_layout => :landscape)
         else 
-            super()
+            super(:page_layout => :portrait)
         end 
         if professional
             @professional = professional

@@ -21,10 +21,16 @@ gem 'turbolinks', '~> 5'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
+
+# Authentication
 gem 'devise', '~> 4.0'
+# Authorization
 gem 'cancancan'
 
+# Fetch input for notes & cats 
 gem 'rest-client'
+
+# Helper for validations 
 gem 'validates_timeliness', '~> 6.0.0.alpha1'
 
 # Reduces boot times through caching; required in config/boot.rb
@@ -56,9 +62,6 @@ group :test do
   gem 'webdrivers'
 end
 
-group :production do 
-  gem 'mysql2'
-end 
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

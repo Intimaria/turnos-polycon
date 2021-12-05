@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  
+ resources :exports
+
   scope "/accounts" do
     resources :users
   end

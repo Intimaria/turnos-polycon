@@ -13,9 +13,14 @@ class ProfessionalsController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf do
-        pdf = ExportPdf.new(date: Date.new(2022, 3, 8), type: :week, professional: @professional)
+        @time_slots = Utils.hours.map do | t | 
+          Time.parse(t)
+        end
+        # get Exports attributes (form) from Exports Model
+        @date = Date.new(2022, 3, 8)
+        pdf = ExportPdf.new(date: @date, type: :week, professional: @professional)
         send_data pdf.render, filename: 
-        "professional_#{@professional.created_at.strftime("%d/%m/%Y")}.pdf",
+        "professional_#{@professional.surname}_#{@date.strftime("%d/%m/%Y")}.pdf",
         type: "application/pdf"
       end
     end

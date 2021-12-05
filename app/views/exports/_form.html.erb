@@ -1,0 +1,35 @@
+<%= form_with(model: export) do |form| %>
+  <% if export.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(export.errors.count, "error") %> prohibited this export from being saved:</h2>
+
+      <ul>
+        <% export.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :professional %>
+    <%= form.collection_select :professional, @professionals, :id, :to_s, {
+        :prompt => "Leave blank to see schedule for all professionals...", :include_blank =>true}, 
+        class: "multiple form-control"
+    %>
+  </div>
+
+  <div class="field">
+  <%= form.label :date %>
+  <%= form.date_field :date, required: true, class: "form-control"%>
+  </div>
+
+  <div class="field">
+  <%= form.label :type %>
+  <%= form.select :type, [:day, :week], class: "form-control"%>
+  </div>
+
+  <div class="actions">
+    <%= form.submit class: "form-control btn btn-primary btn-sm"%>
+  </div>
+<% end %>
