@@ -10,26 +10,29 @@
       </ul>
     </div>
   <% end %>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="field">
+      <%= form.label :professional %>
+      <%= form.collection_select :professional, @professionals, :id, :to_s, {
+          :prompt => "Leave blank for all professionals...", :include_blank =>true}, 
+          class: "multiple form-control"
+      %>
+    </div>
 
-  <div class="field">
-    <%= form.label :professional %>
-    <%= form.collection_select :professional, @professionals, :id, :to_s, {
-        :prompt => "Leave blank to see schedule for all professionals...", :include_blank =>true}, 
-        class: "multiple form-control"
-    %>
-  </div>
+    <div class="field">
+    <%= form.label :date %>
+    <%= form.date_field :date, required: true, class: "form-control"%>
+    </div>
 
-  <div class="field">
-  <%= form.label :date %>
-  <%= form.date_field :date, required: true, class: "form-control"%>
-  </div>
+    <div class="field">
+    <%= form.label :type %>
+    <%= form.select :type, [:day, :week], class: "form-control"%>
+    </div>
 
-  <div class="field">
-  <%= form.label :type %>
-  <%= form.select :type, [:day, :week], class: "form-control"%>
+    <div class="actions">
+      <%= form.submit class: "form-control btn btn-primary btn-sm"%>
+    </div>
   </div>
-
-  <div class="actions">
-    <%= form.submit class: "form-control btn btn-primary btn-sm"%>
-  </div>
+</div>
 <% end %>

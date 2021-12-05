@@ -75,36 +75,40 @@ Se elige [Prawn Table](https://github.com/prawnpdf/prawnhttps://github.com/prawn
 
 Para correr los tests, ejecutar ``` ruby test/spec.rb ``` en el root del proyecto.
 
-## Entrega 3 
+## Entrega 3 
 
-### Rails
+###  Rails
 
 Se borra la app CLI, mantendiendo lo minimo. Se crea una nueva aplicacion rails en la raiz "Polycon". 
 
-### Gemas 
+###  Gemas 
 
-#### BD
+####  BD
 
 Se utiliza sqlite3 para todos los ambientes por facilidad, con posibilidad de utilizar mysql2 mas adelante dado el tiempo.
 
-#### Autenticacion y Autorizacion 
+####  Autenticacion y Autorizacion 
 
 Se utilizan las gemas devise para autenticacion y cancancan para autorizacion 
 
-#### Validacion de fechas 
+####  Validacion de fechas 
 
 Se utiliza la gema validates timeliness para validacion de fechas 
 
-#### Rest-Client
+####  Rest-Client
 
 Se utiliza la gema rest-client como ayuda para popular la base de datos con un API.
-#### Whenever (no implmentada)
+####  Whenever (no implementada)
 
 Se considera utilizaren algun momento la gema Whenever para elminar turnos antiguos, aunque no se considera prioritario, ya que quizas se quiere mantener esa informacion en el sistema.
 
-### Exports 
+### Exports
 
 Se agregan rutas, modelo, controlador y vistas para facilitar la exportacion de las grillas. Se refactoriza la logica de exportacion y se saca afuera algunos metodos en Utils. Se crea un formulario y se hacecn las validaciones en el modelo usando ActiveModel. Al inicializar el modelo Export se crean los objetos de fecha y de profesional correspondientes.
+
+### Estilos 
+
+Se agrega bootstrap y se modifican algunos estilos usando sass (styles.scss en assets).
 
 # Notas
 
