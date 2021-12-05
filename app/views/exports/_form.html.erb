@@ -26,8 +26,12 @@
     </div>
 
     <div class="field">
-    <%= form.label :type %>
-    <%= form.select :type, [:day, :week], class: "form-control"%>
+    <%= form.label :day %>
+    <%= form.radio_button :type, :day%>
+    </div>
+        <div class="field">
+    <%= form.label :week %>
+    <%= form.radio_button :type, :week%>
     </div>
 
     <div class="actions">
