@@ -10,20 +10,6 @@ class ProfessionalsController < ApplicationController
 
   # GET /professionals/1
   def show
-    respond_to do |format|
-      format.html
-      format.pdf do
-        @time_slots = Utils.hours.map do | t | 
-          Time.parse(t)
-        end
-        # get Exports attributes (form) from Exports Model
-        @date = Date.new(2022, 3, 8)
-        pdf = ExportPdf.new(date: @date, type: :week, professional: @professional)
-        send_data pdf.render, filename: 
-        "professional_#{@professional.surname}_#{@date.strftime("%d/%m/%Y")}.pdf",
-        type: "application/pdf"
-      end
-    end
   end
 
   # GET /professionals/new

@@ -54,6 +54,7 @@ class AppointmentsController < ApplicationController
     end
 
       # Use callbacks to share common setup or constraints between actions.
+
     def set_professional
       @professional = Professional.find(params[:professional_id])
     end
