@@ -1,6 +1,7 @@
 require 'date'
+
 module Utils 
-    def self.horarios(start_of_day)
+    def self.hours(start_of_day)
         d1 = DateTime.parse("#{Date.today.to_s}  #{start_of_day}")
         slots = []
         d2 = d1 + 0.40

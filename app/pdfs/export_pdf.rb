@@ -1,22 +1,26 @@
 class ExportPdf < Prawn::Document
-    include Utils
 
     HEADER = ["Hora", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes"].freeze
     START = "07:30"
+    @@slots = Utils.hours(START)
 
-    def initialize(professional, view, date, type)
-        super()
-        @professional = professional
-        @view = view
-        @date = date
+    def initialize(date:, type:, professional: nil)
+        if type == :week
+            super(:page_layout => :landscape)
+        else 
+            super()
+        end 
+        if professional
+            @professional = professional
+        end 
         @appts = Utils.get_appointments(professional: @professional)
-        @slots = Utils.horarios(START)
+        @date = date
 
         if type == :day 
-            text "Professional #{@professional.to_s}, #{type}, #{date}"
+            text "#{@professional.to_s if @professional} #{type}, #{date}"
             export_day
         else 
-            text "Professional #{@professional.to_s}, #{type}, #{date}"
+            export_week
         end 
     end
 
@@ -26,22 +30,22 @@ class ExportPdf < Prawn::Document
           appt.date == @date
         end
 
-        filas = Array.new(@slots.size) { Array.new(2) }
+        filas = Array.new(@@slots.size) { Array.new(2) }
         filas[0][0] = "Appointments"
         filas[0][1] = "#{I18n.l(@date, format: '%A, %B %d, %Y')}"
 
-        (1...@slots.size).each do |row|
-        (0...1).each do |cell|
-            filas[row][0] = slots[row]
-            arr = Array.new
-            appts.each do |a|
-            if a.time.strftime('%H:%M') == @slots[row]
-                arr << ["#{a.name} #{a.surname} \n#{"(" + a.professional.to_s + ")" unless @professional}"]
-                filas[row][1] = make_table(arr, :cell_style => { :overflow => :shrink_to_fit, :max_font_size => 8,
-                                                                :height => 40, :borders => [:bottom] })
+        (1...@@slots.size).each do |row|
+            (0...1).each do |cell|
+                filas[row][0] = @@slots[row]
+                arr = Array.new
+                appts.each do |a|
+                    if a.time.strftime('%H:%M') == @@slots[row]
+                        arr << ["#{a.name} #{a.surname} \n#{"(" + a.professional.to_s + ")" unless @professional}"]
+                        filas[row][1] = make_table(arr, :cell_style => { :overflow => :shrink_to_fit, :max_font_size => 8,
+                                                                        :height => 40, :borders => [:bottom] })
+                    end
+                end
             end
-            end
-        end
         end
 
         table(filas) do
@@ -52,9 +56,9 @@ class ExportPdf < Prawn::Document
             row(0).background_color = "FF9900"
             row(0).font_style       = :bold
 
-            # columns(0..slots.size).borders = [:right]
+            # columns(0.@.slots.size).borders = [:right]
 
-            row(0..@slots.size).columns(0..1).borders = [:top, :bottom, :left, :right]
+            row(0..@@slots.size).columns(0..1).borders = [:top, :bottom, :left, :right]
         end 
     
     end
@@ -62,42 +66,38 @@ class ExportPdf < Prawn::Document
 
 
     def export_week
-
-        appts = get_appointments(professional:professional)
         
-        now = Date.parse(date)
-        monday = now - (now.wday - 1) % 7
+        monday = @date - (@date.wday - 1) % 7
   
-        appts.flatten!
-  
-        appts.filter! do |appt|
-          Date.parse(appt.date.to_s).between?(monday, monday + 6)
+        appts = @appts.filter do |appt|
+          appt.date.between?(monday, monday + 6)
         end
-  
-        slots = horarios(date)
-  
-        Prawn::Document.generate('turnos.pdf', :page_layout => :landscape) do
-          text "Profesional: #{professional.to_s.upcase}" if professional
-          text "For week of #{monday}"
-          filas = Array.new(slots.size) { Array.new(2) }
-          (0...HEADER.size).each do |col|
+
+        text "For week of #{monday} #{@professional.to_s if @professional}"
+        filas = Array.new(@@slots.size) { Array.new(2) }
+
+        p filas
+
+        (0...HEADER.size).each do |col|
             filas[0][col] = HEADER[col]
-          end
-  
-          (1...slots.size).each do |row|
+        end
+
+        (1...@@slots.size).each do |row|
             (0...HEADER.size).each do |cell|
-              filas[row][0] = slots[row]
-              filas[row][cell] = " "
-              arr = Array.new
-              appts.each do |a|
-                if (a.to_h[:hour] == filas[row][0] && Date.parse(a.to_h[:date]).wday == cell)
-                  arr << ["#{a.name} #{a.surname} \n#{"(" + a.professional.to_s.downcase + ")" unless professional}"]
-                  filas[row][cell] = make_table(arr, :cell_style => { :overflow => :shrink_to_fit, :max_font_size => 8,
-                                                                      :height => 40, :borders => [:bottom] })
+                filas[row][0] = @@slots[row]
+                filas[row][cell] = " "
+                arr = Array.new
+                appts.each do |a|
+                    if ((a.time.strftime('%H:%M') == @@slots[row]) && (a.date.wday == cell)) then
+                        arr << ["#{a.name} #{a.surname}\n#{"(" + a.professional.to_s + ")" unless @professional}"]
+                        filas[row][cell] = make_table(arr, :cell_style => { :overflow => :shrink_to_fit, :max_font_size => 8,
+                                                                            :height => 40, :borders => [:bottom] })
+                    end
                 end
-              end
-            end
-          end
+            end 
+        end
+
+
   
           table(filas, :width => 720) do
             cells.borders = []
@@ -110,9 +110,9 @@ class ExportPdf < Prawn::Document
   
             # columns(0..6).borders = [:top, :left]
   
-            row(0..slots.size - 1).columns(0..6).borders = [:top, :bottom, :left, :right]
+            row(0..@@slots.size - 1).columns(0..6).borders = [:top, :bottom, :left, :right]
           end
-        end
+
       end
 
 

@@ -13,7 +13,7 @@ class ProfessionalsController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf do
-        pdf = ExportPdf.new(@professional, view_context, Date.new(2022, 3, 8), :day)
+        pdf = ExportPdf.new(date: Date.new(2022, 3, 8), type: :week, professional: @professional)
         send_data pdf.render, filename: 
         "professional_#{@professional.created_at.strftime("%d/%m/%Y")}.pdf",
         type: "application/pdf"
