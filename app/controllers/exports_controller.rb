@@ -10,13 +10,20 @@ class ExportsController < ApplicationController
   def create
     @export = Export.new(export_params)
     if @export.valid?
-        pdf = ExportPdf.new(date: @export.date, professional: @export.professional, type: @export.type )
-        send_data pdf.render, filename: 
-            "Appointments_for_#{@export.type}_#{@export.date.strftime("%d/%m/%Y")}.pdf",
-            type: "application/pdf"
+        respond_to do |format|
+            format.html { render :action => 'new' }
+            format.pdf do 
+                pdf = ExportPdf.new(date: @export.date, professional: @export.professional, type: @export.type )
+                send_data( pdf.render, filename: 
+                    "Appointments_for_#{@export.type}_#{@export.date.strftime("%d/%m/%Y")}.pdf",
+                    type: "application/pdf"  )   and return
+                  
+            end 
+        end 
     else
-        render :new, alert: @export.errors.messages, status: :unprocessable_entity
+        render :new, alert: 'Could not export file.'            
     end
+
   end
 
 

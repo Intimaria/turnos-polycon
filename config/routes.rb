@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   
- resources :exports
+  get 'exports', to: 'exports#new', as: 'exports'
+  post 'exports', to: 'exports#create', as: 'export_pdf' 
 
   scope "/accounts" do
     resources :users
