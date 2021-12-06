@@ -15,7 +15,7 @@
     <div class="field">
       <%= form.label :professional %>
       <%= form.collection_select :professional, @professionals, :id, :to_s, {
-          :prompt => "Leave blank for all professionals...", :include_blank =>true}, 
+          :prompt => "Leave blank for all professionals...", :include_blank => true}, 
           class: "multiple form-control"
       %>
     </div>

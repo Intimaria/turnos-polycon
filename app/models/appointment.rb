@@ -4,6 +4,8 @@ class Appointment < ApplicationRecord
     validates :date, timeliness: { on_or_after: lambda { Date.current }, type: :datetime }, 
                 uniqueness: {scope: :professional_id}
     validates :active, inclusion: { in: [true, false] }
+    validate :date, :not_weekend, on: :create
+    validate :time, :within_working_hours, on: :create
 
     scope :active, -> {where(active: true)}
     scope :order_by_latest_first, -> { order(date: :asc)}
@@ -19,6 +21,7 @@ class Appointment < ApplicationRecord
         "#{name} #{surname}"
     end 
 
+    # use cron jobs to clear old appointments 
     def logical_past_date
         if date > Date.yesterday
             active = false 
@@ -32,8 +35,19 @@ class Appointment < ApplicationRecord
         end
     end 
     
-    private 
+    def not_weekend 
+        if date.saturday? ||date.sunday?
+            errors.add(:date, 'No appointments on weekends.') 
+        end
+    end 
 
+    def within_working_hours
+        if !(time.between? Time.new.change(hour: 8), Time.new.change(hour: 17))
+            errors.add(:time, 'Appointments only during working hours (08:00-17:00hs).') 
+        end
+    end 
+
+    private 
 
     def increment_total_count 
         professional.increment(:total, 1).save
