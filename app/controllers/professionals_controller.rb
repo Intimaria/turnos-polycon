@@ -2,7 +2,6 @@ class ProfessionalsController < ApplicationController
   load_and_authorize_resource
   before_action :set_titles, only: [:new, :edit]
 
-
   # GET /professionals
   def index
     @professionals = Professional.all
@@ -51,15 +50,17 @@ class ProfessionalsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    # def set_professional
-    #   @professional = Professional.find(params[:id])
-    # end
-   def set_titles
-     @titles = %w[Dr. Lic. Ing.]
-   end 
-    # Only allow a list of trusted parameters through.
-    def professional_params
-      params.require(:professional).permit(:title, :name, :surname, :active)
-    end
+
+  # Use callbacks to share common setup or constraints between actions.
+  # def set_professional
+  #   @professional = Professional.find(params[:id])
+  # end
+  def set_titles
+    @titles = %w[Dr. Lic. Ing.]
+  end
+
+  # Only allow a list of trusted parameters through.
+  def professional_params
+    params.require(:professional).permit(:title, :name, :surname, :active)
+  end
 end

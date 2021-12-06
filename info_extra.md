@@ -99,9 +99,6 @@ Se utiliza la gema validates timeliness para validacion de fechas en los modelos
 ####  Rest-Client
 
 Se utiliza la gema rest-client como ayuda para popular la base de datos con un API.
-####  Whenever (no implementada)
-
-Se considera utilizaren algun momento la gema Whenever para elminar turnos antiguos, aunque no se considera prioritario, ya que quizas se quiere mantener esa informacion en el sistema.
 
 ### Exports
 
@@ -152,4 +149,3 @@ Se agrega bootstrap y se modifican algunos estilos usando sass (styles.scss en a
 mostrar flash messages al usuario tampoco, y se traba el formulario. 
 En un momento funciono (usando rutas resources, lo cual admitia una funcionalidad "oculta" de rails, por lo 
 cual se puede hacer, pero sobraban rutas para el uso que yo le quiero dar al controlador). 
-- Falta implementar el cancel all appointments. 

@@ -48,20 +48,20 @@ class AppointmentsController < ApplicationController
   end
 
   def cancel
-    @professional.cancel_appointments_physical 
+    @professional.cancel_appointments_physical
     redirect_to professional_appointments_url, notice: 'All appointments were successfully destroyed.'
   end
 
   private
-    # Only allow a list of trusted parameters through.
-    def appointment_params
-      params.require(:appointment).permit(:name, :surname, :phone, :notes, :date, :time, :active)
-    end
 
-      # Use callbacks to share common setup or constraints between actions.
+  # Only allow a list of trusted parameters through.
+  def appointment_params
+    params.require(:appointment).permit(:name, :surname, :phone, :notes, :date, :time, :active)
+  end
 
-    def set_professional
-      @professional = Professional.find(params[:professional_id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
 
+  def set_professional
+    @professional = Professional.find(params[:professional_id])
+  end
 end
