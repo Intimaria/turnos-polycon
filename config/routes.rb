@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'appointments', to: 'public#all_appointments', as: 'appointments'
   get 'exports', to: 'exports#new', as: 'exports'
   post 'exports', to: 'exports#create', as: 'export_pdf'
 

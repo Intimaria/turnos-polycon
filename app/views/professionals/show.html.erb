@@ -27,6 +27,7 @@
 
 
 
-
+<% if can? :update, Professional %>
 <%= link_to 'Edit', edit_professional_path(@professional), class: "btn btn-primary btn-sm" %> |
+<% end %>
 <%= link_to 'Back', professionals_path, class: "btn btn-secondary btn-sm" %>

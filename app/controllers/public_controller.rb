@@ -4,4 +4,9 @@ class PublicController < ApplicationController
     # @cat = eval(cat_response)[:file]
     @name ||= current_user.username
   end
+
+  def all_appointments
+    @appointments = Appointment.search(params[:search])
+  end 
+
 end

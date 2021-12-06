@@ -34,6 +34,7 @@
   <strong>Active:</strong>
   <%= @appointment.active %>
 </p>
-
+<% if can? :update, Appointment %>
 <%= link_to 'Edit', edit_professional_appointment_path(@professional, @appointment), class: "btn btn-primary btn-sm" %> |
+<% end %>
 <%= link_to 'Back', professional_appointments_path(@professional), class: "btn btn-secondary btn-sm" %>

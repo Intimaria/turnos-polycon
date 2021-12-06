@@ -30,6 +30,20 @@ class Appointment < ApplicationRecord
     decrement_total_count
   end
 
+
+  def self.search(search)
+    if search 
+        app = Appointment.find_by(date: search)
+        if app 
+            self.where(id: app)
+        else 
+            Appointment.all
+        end 
+    else 
+        Appointment.all
+    end 
+  end 
+
   #  use cron jobs to clear old appointments
   def logical_past_date
     if date > Date.yesterday
