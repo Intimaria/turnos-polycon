@@ -22,6 +22,10 @@ class Appointment < ApplicationRecord
         "#{name} #{surname}"
     end 
 
+    def soft_delete 
+        active= false 
+        decrement_total_count
+    end 
     # use cron jobs to clear old appointments 
     def logical_past_date
         if date > Date.yesterday

@@ -1,4 +1,4 @@
-<%= form_with(model: export, format: "pdf", html: {target: "_blank"}) do |form| %>
+<%= form_with(model: export) do |form| %>
   <% if export.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(export.errors.count, "error") %> prohibited this export from being saved:</h2>
@@ -14,7 +14,7 @@
   <div class="col-sm-6">
     <div class="field">
       <%= form.label :professional %>
-      <%= form.collection_select :professional, @professionals, :id, :to_s, {
+      <%= form.collection_select :professional, Professional.order(:surname), :id, :to_s, {
           :prompt => "Leave blank for all professionals...", :include_blank => true}, 
           class: "multiple form-control"
       %>

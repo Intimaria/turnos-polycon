@@ -19,6 +19,15 @@ class Professional < ApplicationRecord
       total > 0
     end 
 
+    def cancel_appointments_logical 
+        appointments.where("date > ?", Date.today.beginning_of_day).each do |a|
+            a.soft_delete
+        end 
+    end 
+    def cancel_appointments_physical 
+        appointments.destroy_all
+    end 
+
     protected 
 
     def can_destroy?

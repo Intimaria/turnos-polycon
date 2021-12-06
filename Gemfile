@@ -33,9 +33,6 @@ gem 'rest-client'
 # Helper for validations 
 gem 'validates_timeliness', '~> 6.0.0.alpha1'
 
-# redirect after post
-gem 'repost'
-
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false

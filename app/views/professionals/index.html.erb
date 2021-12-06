@@ -6,7 +6,7 @@
   <thead>
     <tr>
       <th scope="col">Name</th>
-      <th colspan="3">Appointments</th>
+      <th colspan="4">Appointments</th>
       <th colspan="3">Actions</th>
     </tr>
   </thead>
@@ -22,6 +22,7 @@
         <% end %>
         </td>
         <td><%= link_to 'See All', professional_appointments_path(professional) %></td>
+        <td><%= link_to 'Cancel All', cancel_professional_appointments_path(professional), method: :delete %></td>
         <td><%= link_to 'Show', professional %></td>
         <% if can? :update, Professional %>
         <td><%= link_to 'Edit', edit_professional_path(professional) %></td>

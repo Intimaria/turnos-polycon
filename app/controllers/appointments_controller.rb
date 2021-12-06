@@ -47,6 +47,11 @@ class AppointmentsController < ApplicationController
     redirect_to professional_appointments_url, notice: 'Appointment was successfully destroyed.'
   end
 
+  def cancel
+    @professional.cancel_appointments_physical 
+    redirect_to professional_appointments_url, notice: 'All appointments were successfully destroyed.'
+  end
+
   private
     # Only allow a list of trusted parameters through.
     def appointment_params

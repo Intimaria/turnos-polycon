@@ -83,21 +83,19 @@ Se borra la app CLI, mantendiendo lo minimo. Se crea una nueva aplicacion rails 
 
 ### Usuarios 
 
-Se implementa un modelo de Usuarios. 
+Se implementa un modelo de Usuarios. Se deja en views passwords y sign_up por las dudas de implementar mas funcionalidad. 
+Por la misma razon se elige la opcion :trackable, ya que podria ser util a futuro.
 ###  Gemas 
 
-####  BD
+####  Base de Datos
 
 Se utiliza sqlite3 para todos los ambientes por facilidad, con posibilidad de utilizar mysql2 mas adelante dado el tiempo.
-
 ####  Autenticacion y Autorizacion 
 
-Se utilizan las gemas devise para autenticacion y cancancan para autorizacion 
-
+Se utilizan las gemas devise para autenticacion y cancancan para autorizacion. Se permite solo al usuario Admin acceder al CRUD de usuarios. Se crea una contraseña pero luego al editar no se edita (hay restricciones). A futuro se puede permitir cambiar el perfil de cada usuario por ese mismo usuario y permitir cambio de contraseña.
 ####  Validacion de fechas 
 
-Se utiliza la gema validates timeliness para validacion de fechas 
-
+Se utiliza la gema validates timeliness para validacion de fechas en los modelos.
 ####  Rest-Client
 
 Se utiliza la gema rest-client como ayuda para popular la base de datos con un API.
@@ -149,3 +147,9 @@ Se agrega bootstrap y se modifican algunos estilos usando sass (styles.scss en a
 - mejorar los estilos para las grillas 
 - mejorar la eficiencia para la generacion de las grillas 
 - ~~en la semana, dos appointments que tienen el mismo dia y horario se pisan~~
+
+- No se puede redireccionar luego send_data en la accion de exportar (exports#create). Esto no permite
+mostrar flash messages al usuario tampoco, y se traba el formulario. 
+En un momento funciono (usando rutas resources, lo cual admitia una funcionalidad "oculta" de rails, por lo 
+cual se puede hacer, pero sobraban rutas para el uso que yo le quiero dar al controlador). 
+- Falta implementar el cancel all appointments. 

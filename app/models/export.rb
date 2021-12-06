@@ -1,21 +1,9 @@
 class Export
     include ActiveModel::Model
     include ActiveModel::Validations
-    validate :date, :not_blank_date
-    validate :type, :not_blank_type
+    validates :date, :type, presence: true
     validates :date, timeliness: { type: :datetime }
     attr_accessor :professional, :date, :type
-
-    def no_blank_date
-        if date.blank?
-            errors.add(:date, 'Date cannot be left blank.') 
-        end
-    end 
-    def no_blank_type
-        if type.blank?
-            errors.add(:type, 'Type cannot be left blank.') 
-        end
-    end 
 
     def initialize(attributes={})
         super
