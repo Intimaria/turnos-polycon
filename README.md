@@ -5,15 +5,47 @@ application up and running.
 
 Things you may want to cover:
 
-* Ruby version
+## Ruby version
+  
+ruby 2.7.4p191
 
-* System dependencies
+## System dependencies
 
-* Configuration
+yarn 
+npm 
+rbenv
+ruby 
+bundler
 
-* Database creation
+## Configuration
+```
+git clone https://github.com/Intimaria/turnos-polycon.git polycon
+cd polycon
+bundle intall
+yarn install
+```
 
-* Database initialization
+## Database creation
+```
+rake db:migrate
+```
+## Database initialization
+```
+rake db:seed
+```
+## Run
+```
+rails s
+```
+and visit 
+localhost:3000
+
+login with 
+```
+user: admin@admin.com 
+password: 123456
+```
+TODO:
 
 * How to run the test suite
 
@@ -21,4 +53,3 @@ Things you may want to cover:
 
 * Deployment instructions
 
-* ...
