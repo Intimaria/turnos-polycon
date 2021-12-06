@@ -47,8 +47,9 @@ a_notes = response.body.split("\n")
 a_notes.reject! { |item| item.blank? }
 
 a_professionals = Professional.pluck(:id)
+
 def make_appointments(professional, names, surnames, phones, notes, date, time)
-  Appointment.create(
+  a = Appointment.create(
     {
       professional_id: professional,
       name: names.sample,
@@ -59,7 +60,9 @@ def make_appointments(professional, names, surnames, phones, notes, date, time)
       time: time
     }
   )
+  puts a.errors.full_messages
 end
+
 
 a_professionals.each do |prof|
   rand(RANGE_APPOINTMENTS).times do |i|
