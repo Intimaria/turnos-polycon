@@ -49,7 +49,7 @@ class AppointmentsController < ApplicationController
 
   def cancel
     @professional.cancel_appointments_physical
-    redirect_to professional_appointments_url, notice: 'All appointments were successfully destroyed.'
+    redirect_to professionals_url, notice: 'All appointments were successfully destroyed.'
   end
 
   private
