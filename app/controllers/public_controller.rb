@@ -6,7 +6,7 @@ class PublicController < ApplicationController
   end
 
   def all_appointments
-    @appointments = Appointment.eager_load(:professional)
+    @appointments = Appointment.eager_load(:professional).paginate(:page => params[:page], per_page:5)
   end 
 
 end

@@ -75,36 +75,46 @@ Se elige [Prawn Table](https://github.com/prawnpdf/prawnhttps://github.com/prawn
 
 Para correr los tests, ejecutar ``` ruby test/spec.rb ``` en el root del proyecto.
 
-## Entrega 3 
+# Entrega 3 
 
-###  Rails
+##  Rails
 
 Se borra la app CLI, mantendiendo lo minimo. Se crea una nueva aplicacion rails en la raiz "Polycon". 
 
-### Usuarios 
+## Usuarios 
 
 Se implementa un modelo de Usuarios. Se deja en views passwords y sign_up por las dudas de implementar mas funcionalidad. 
 Por la misma razon se elige la opcion :trackable, ya que podria ser util a futuro.
-###  Gemas 
+##  Gemas 
 
-####  Base de Datos
+###  Base de Datos
 
 Se utiliza sqlite3 para todos los ambientes por facilidad, con posibilidad de utilizar mysql2 mas adelante dado el tiempo.
-####  Autenticacion y Autorizacion 
+###  Autenticacion y Autorizacion 
 
 Se utilizan las gemas devise para autenticacion y cancancan para autorizacion. Se permite solo al usuario Admin acceder al CRUD de usuarios. Se crea una contraseña pero luego al editar no se edita (hay restricciones). A futuro se puede permitir cambiar el perfil de cada usuario por ese mismo usuario y permitir cambio de contraseña.
-####  Validacion de fechas 
+###  Validacion de fechas 
 
 Se utiliza la gema validates timeliness para validacion de fechas en los modelos.
-####  Rest-Client
+Se valida que los turnos se hagan adentro de un rango de horarios y tambien que no sean durante los fines de semana.
+###  Rest-Client
 
 Se utiliza la gema rest-client como ayuda para popular la base de datos con un API.
 
-### Exports
+### Will Paginate
+
+Se utiliza una gema para paginacion del listado de todos los turnos, para poder navegarlos mas facilmente. 
+
+Queda pendiente algun tipo de filtrado sobre el mismo listado. Posiblemente un filtrado por fecha, ya que por profesionales se puede ir directamente al profesional y ver sus turnos.
+####  Whenever (no implementada)
+
+Se considera utilizaren algun momento la gema Whenever para elminar turnos antiguos, aunque no se considera prioritario, ya que quizas se quiere mantener esa informacion en el sistema.
+
+## Exports
 
 Se agregan rutas, modelo, controlador y vistas para facilitar la exportacion de las grillas. Se refactoriza la logica de exportacion y se saca afuera algunos metodos en Utils. Se crea un formulario y se hacecn las validaciones en el modelo usando ActiveModel. Al inicializar el modelo Export se crean los objetos de fecha y de profesional correspondientes.
 
-### Estilos
+## Estilos
 
 Se agrega bootstrap y se modifican algunos estilos usando sass (styles.scss en assets).
 
@@ -126,7 +136,8 @@ Se agrega bootstrap y se modifican algunos estilos usando sass (styles.scss en a
 
 - [Doumentacion PrawnTable](https://github.com/prawnpdf/prawnhttps://github.com/prawnpdf/prawn-table) 
 - Object Table puede ser una gema intermedia interesante https://github.com/lincheney/ruby-object-table
-- hacer que el modulo de exports sea clase con includes del mixin Prawn::Views quizas sea mas elegante/eficiente?
+- ~~hacer que el modulo de exports sea clase~~ 
+- includes del mixin Prawn::Views quizas sea mas elegante/eficiente?
 - como hacer que sea mas eficiente / elegante el agregar appointments a grillas? (linea muy larga, O(n^3))
 
 ### __Errores / Bugs__
@@ -137,7 +148,8 @@ Se agrega bootstrap y se modifican algunos estilos usando sass (styles.scss en a
 - ~~A futuro: Agarrar todos los appointment del sistema?~~
 - ~~Pasar cancel y reschedule a metodos de instancia~~
 - From file tiene bug - se guardan las variables "correctamente" pero reescribe el to_s de tal manera que queda "notas" como representacion. Esto solo se ve si hago "puts appointment". Si hago "puts appointment.variable, imprime correctamente las variables.
-- Chequear que la hora esta en un rango (guardar rango en clase no hardcoradearlo) para evitar bug de que se crea bien aunque no se pasen bien los horarios y quede 00-00. validar que los turnos sean entre el rango de las grillas (constante global?)
+- ~~Chequear que la hora esta en un rango~~
+- (guardar rango en clase no hardcoradearlo) para evitar bug de que se crea bien aunque no se pasen bien los horarios y quede 00-00. validar que los turnos sean entre el rango de las grillas (constante global?)
 - validar que el telefono es un numero
 - ~~falta poder comparar los horarios poner un appointment en la grilla~~
 - ~~Para insertar appointments en la grilla semanal, comparar el dia de la semana del date con el dia de semana, se usa metodo de instancia de Date .wday, lunes es 1, martes es 2 etc.~~

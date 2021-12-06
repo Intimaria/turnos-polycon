@@ -14,6 +14,10 @@
   </thead>
 
   <tbody>
+
+    <div role="navigation" aria-label="Pagination" class="pagination">
+        <%= will_paginate @appointments, list_classes: ["pagination justify-content-end"]%>
+    </div>
     <% @appointments.order_by_latest_first.each do |appointment| %>
       <tr>
         <td><%= appointment.appointee %></td>
@@ -31,6 +35,10 @@
     <% end %>
   </tbody>
 </table>
+
+<div role="navigation" aria-label="Pagination" class="pagination">
+    <%= will_paginate @appointments, list_classes: ["pagination justify-content-end"]%>
+</div>
 
 <br>
 <%= link_to 'Back', root_path, class: "btn btn-secondary btn-sm" %>
