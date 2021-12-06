@@ -33,7 +33,7 @@ class Appointment < ApplicationRecord
 
   def self.search(search)
     if search 
-        app = Appointment.find_by(date: search)
+        app = self.find_by(date: search)
         if app 
             self.where(id: app)
         else 

@@ -6,7 +6,7 @@ class PublicController < ApplicationController
   end
 
   def all_appointments
-    @appointments = Appointment.search(params[:search])
+    @appointments = Appointment.eager_load(:professional)
   end 
 
 end
