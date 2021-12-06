@@ -43,8 +43,10 @@ class ExportPdf < Prawn::Document
                 appts.each do |a|
                     if a.time.strftime('%H:%M') == @@slots[row]
                         arr << ["#{a.name} #{a.surname} \n#{"(" + a.professional.to_s + ")" unless @professional}"]
-                        filas[row][1] = make_table(arr, :cell_style => { :overflow => :shrink_to_fit, :max_font_size => 8,
-                                                                        :height => 40, :borders => [:bottom] })
+                        filas[row][1] = make_table(arr, :cell_style => { :overflow => :shrink_to_fit, 
+                                                                         :max_font_size => 8,
+                                                                         :height => 40, :borders => [], 
+                                                                         :padding => 2, :margins => 2})
                     end
                 end
             end
@@ -58,7 +60,7 @@ class ExportPdf < Prawn::Document
             row(0).background_color = "FF9900"
             row(0).font_style       = :bold
 
-            # columns(0.@.slots.size).borders = [:right]
+            # columns(0.@slots.size).borders = [:right]
 
             row(0..@@slots.size).columns(0..1).borders = [:top, :bottom, :left, :right]
         end 
@@ -91,9 +93,9 @@ class ExportPdf < Prawn::Document
                 arr = Array.new
                 appts.each do |a|
                     if ((a.time.strftime('%H:%M') == @@slots[row]) && (a.date.wday == cell)) then
-                        arr << ["#{a.name} #{a.surname}\n#{"(" + a.professional.to_s + ")" unless @professional}"]
-                        filas[row][cell] = make_table(arr, :cell_style => { :overflow => :shrink_to_fit, :max_font_size => 8,
-                                                                            :height => 40, :borders => [:bottom] })
+                        arr << ["#{a.name.first}. #{a.surname}\n#{"(" + a.professional.to_s + ")" unless @professional}"]
+                        filas[row][cell] = make_table(arr, :cell_style => { :overflow => :shrink_to_fit, :margin => 0, :max_font_size => 6,
+                                                                            :height => 40, :borders => [], :padding => [0,0,5,0]})
                     end
                 end
             end 
@@ -101,11 +103,11 @@ class ExportPdf < Prawn::Document
 
 
   
-          table(filas, :width => 960) do
+          table(filas, :width => 760) do
             cells.borders = []
-  
+            cells.padding = 2
             # row(0).borders      = [:bottom]
-            row(0).width = 72
+            row(0).width = 50
             row(0).border_width = 2
             row(0).background_color = "FF9900"
             row(0).font_style = :bold

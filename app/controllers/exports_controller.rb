@@ -4,6 +4,10 @@ class ExportsController < ApplicationController
   # GET /exports/new
   def new
     @export = Export.new
+    respond_to do |format|
+      format.html
+      format.pdf  { redirect_to :root }  
+      end 
   end
 
   # POST /exports
@@ -16,7 +20,7 @@ class ExportsController < ApplicationController
                 pdf = ExportPdf.new(date: @export.date, professional: @export.professional, type: @export.type )
                 send_data( pdf.render, filename: 
                     "Appointments_for_#{@export.type}_#{@export.date.strftime("%d/%m/%Y")}.pdf",
-                    type: "application/pdf"  )   and return
+                    type: "application/pdf", status: "200 OK", disposition: "inline" ) 
                   
             end 
         end 

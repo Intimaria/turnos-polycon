@@ -81,6 +81,9 @@ Para correr los tests, ejecutar ``` ruby test/spec.rb ``` en el root del proyect
 
 Se borra la app CLI, mantendiendo lo minimo. Se crea una nueva aplicacion rails en la raiz "Polycon". 
 
+### Usuarios 
+
+Se implementa un modelo de Usuarios. 
 ###  Gemas 
 
 ####  BD
@@ -106,7 +109,7 @@ Se considera utilizaren algun momento la gema Whenever para elminar turnos antig
 
 Se agregan rutas, modelo, controlador y vistas para facilitar la exportacion de las grillas. Se refactoriza la logica de exportacion y se saca afuera algunos metodos en Utils. Se crea un formulario y se hacecn las validaciones en el modelo usando ActiveModel. Al inicializar el modelo Export se crean los objetos de fecha y de profesional correspondientes.
 
-### Estilos 
+### Estilos
 
 Se agrega bootstrap y se modifican algunos estilos usando sass (styles.scss en assets).
 
