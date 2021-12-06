@@ -9,12 +9,13 @@ class Appointment < ApplicationRecord
 
     scope :active, -> {where(active: true)}
     scope :order_by_latest_first, -> { order(date: :asc)}
+    scope :all_valid_appointments, -> {where(active: true).where("date > ?", Date.yesterday)}
 
     after_create :increment_total_count
     after_destroy :decrement_total_count
 
-    def self.all_valid_appointments
-        all.where(active: true).where("date > ?", Date.yesterday)
+    def valid_and_future 
+        active && date > Date.yesterday
     end 
 
     def appointee

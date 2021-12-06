@@ -22,7 +22,7 @@ class Professional < ApplicationRecord
     protected 
 
     def can_destroy?
-        if total > 0
+        if appointments?
             errors.add(:base, "This professional cannot be deleted, they still have appointments.") 
             throw :abort
         end 

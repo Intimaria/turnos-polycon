@@ -46,7 +46,7 @@ class ProfessionalsController < ApplicationController
     if @professional.destroy
       redirect_to professionals_url, notice: 'Professional was successfully destroyed.'
     else
-      redirect_to professionals_url, alert: @professional.errors.full_messages
+      redirect_to professionals_url, alert: @professional.errors.full_messages.join
     end
   end
 
