@@ -8,7 +8,14 @@ class ExportsController < ApplicationController
 
   # POST /exports
   def create
-    @export = Export.new(export_params)
+    @export = Export.new
+    @export.date = Date.parse(export_params["date"]) if export_params["date"].present?
+    @export.type = export_params["type"].to_sym if export_params["type"].present?
+    if export_params["professional"].blank?
+      @export.professional = nil
+    else
+      @export.professional = Professional.find(export_params["professional"])
+    end
     if @export.valid?
       pdf = ExportPdf.new(date: @export.date, professional: @export.professional, type: @export.type)
       send_data(pdf.render, filename:
