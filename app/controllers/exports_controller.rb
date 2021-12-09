@@ -20,7 +20,7 @@ class ExportsController < ApplicationController
       pdf = ExportPdf.new(date: @export.date, professional: @export.professional, type: @export.type)
       send_data(pdf.render, filename:
           "Appointments_for_#{@export.type}_#{@export.date.strftime("%d/%m/%Y")}.pdf",
-                            type: "application/pdf", status: "200 OK")
+                            type: "application/pdf", status: "200 OK", disposition: "inline")
     else
       render :new, alert: 'Could not export file.'
     end

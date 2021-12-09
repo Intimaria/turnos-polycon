@@ -6,7 +6,7 @@ class ExportPdf < Prawn::Document
   def initialize(date:, type:, professional: nil)
     puts type
     if type == :week
-      super(:page_layout => :landscape, :page_size => [324, 900],)
+      super(:page_layout => :landscape, :page_size => [800, 900],)
     else
       super(:page_layout => :portrait)
     end
@@ -65,10 +65,10 @@ class ExportPdf < Prawn::Document
   end
 
   def export_week
-    monday = @date - (@date.wday - 1) % 7
+    monday = @date.beginning_of_week
 
     appts = @appts.filter do |appt|
-      appt.date.between?(monday, monday + 6)
+      appt.date.between?(monday, monday.advance(weeks: 1))
     end
 
     text "For week of #{monday} #{@professional.to_s if @professional}"
