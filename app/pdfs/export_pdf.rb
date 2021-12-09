@@ -6,7 +6,7 @@ class ExportPdf < Prawn::Document
   def initialize(date:, type:, professional: nil)
     puts type
     if type == :week
-      super(:page_layout => :landscape)
+      super(:page_layout => :landscape, :page_size => [324, 900],)
     else
       super(:page_layout => :portrait)
     end

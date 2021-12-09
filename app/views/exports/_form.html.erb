@@ -1,4 +1,4 @@
-<%= form_with(model: export) do |form| %>
+<%= form_with(model: export, html:   {target: "_blank"}) do |form| %>
   <% if export.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(export.errors.count, "error") %> prohibited this export from being saved:</h2>
@@ -35,7 +35,7 @@
     </div>
 
     <div class="actions">
-      <%= form.submit class: "btn btn-primary btn-sm"%>
+      <%= form.submit class: "btn btn-primary btn-sm", data: { disable_with: false }%>
     </div>
   </div>
 </div>
