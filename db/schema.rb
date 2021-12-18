@@ -10,26 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_04_214609) do
+ActiveRecord::Schema.define(version: 2021_12_18_234216) do
 
   create_table "appointments", force: :cascade do |t|
     t.integer "professional_id", null: false
-    t.string "name"
-    t.string "surname"
-    t.string "phone"
+    t.string "name", default: "", null: false
+    t.string "surname", default: "", null: false
+    t.string "phone", default: "", null: false
     t.text "notes"
-    t.date "date"
+    t.date "date", null: false
     t.boolean "active", default: true, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.time "time"
+    t.time "time", null: false
     t.index ["professional_id"], name: "index_appointments_on_professional_id"
   end
 
   create_table "professionals", force: :cascade do |t|
-    t.string "title"
-    t.string "name"
-    t.string "surname"
+    t.string "title", default: "", null: false
+    t.string "name", default: "", null: false
+    t.string "surname", default: "", null: false
     t.boolean "active", default: true, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
