@@ -36,6 +36,7 @@ gem 'validates_timeliness', '~> 6.0.0.alpha1'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap4'
 
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
 

@@ -1,7 +1,6 @@
 class AppointmentsController < ApplicationController
-  load_and_authorize_resource
-  before_action :set_professional
-  # before_action :set_appointment, only: [:show, :edit, :update, :destroy]
+  load_and_authorize_resource :professional
+  load_and_authorize_resource :appointment, through: :professional
 
   # GET /appointments
   def index
@@ -57,11 +56,5 @@ class AppointmentsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def appointment_params
     params.require(:appointment).permit(:name, :surname, :phone, :notes, :date, :time, :active)
-  end
-
-  # Use callbacks to share common setup or constraints between actions.
-
-  def set_professional
-    @professional = Professional.find(params[:professional_id])
   end
 end

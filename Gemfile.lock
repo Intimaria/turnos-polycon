@@ -39,6 +39,9 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
+    active_model_attributes (1.6.0)
+      activemodel (>= 5.0)
+      activesupport (>= 5.0)
     activejob (6.1.4.1)
       activesupport (= 6.1.4.1)
       globalid (>= 0.3.6)
@@ -247,6 +250,7 @@ PLATFORMS
   x86_64-darwin-16
 
 DEPENDENCIES
+  active_model_attributes
   bootsnap (>= 1.4.4)
   byebug
   cancancan

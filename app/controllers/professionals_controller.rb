@@ -1,6 +1,6 @@
 class ProfessionalsController < ApplicationController
   load_and_authorize_resource
-  before_action :set_titles, only: [:new, :edit]
+  before_action :load_titles, only: [:new, :edit]
 
   # GET /professionals
   def index
@@ -51,11 +51,7 @@ class ProfessionalsController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
-  # def set_professional
-  #   @professional = Professional.find(params[:id])
-  # end
-  def set_titles
+  def load_titles
     @titles = %w[Dr. Lic. Ing.]
   end
 
